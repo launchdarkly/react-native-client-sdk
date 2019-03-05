@@ -25,10 +25,12 @@ jobs:
           timeout: 1200
           no_output_timeout: 20m
       - run: sudo npm install -g react-native-cli
-      - run: cd HelloReactNative && npm install
+      - run: cd .. && git clone https://github.com/launchdarkly/hello-react-native.git
+      - run: cd ../hello-react-native && npm install
+      - run: cp -r ../project/ ../hello-react-native/node_modules/launchdarkly-react-native-client/
       - run: circle-android wait-for-boot
       - run: 
-          command: cd ReactNativeRestwrapper && react-native run-android
+          command: cd ../hello-react-native && react-native run-android
           background: true
           timeout: 1200
 
@@ -41,8 +43,10 @@ jobs:
       - run: xcrun simctl create rn-ios com.apple.CoreSimulator.SimDeviceType.iPhone-X com.apple.CoreSimulator.SimRuntime.iOS-12-1
       - run: xcrun simctl boot rn-ios
       - run: sudo npm install -g react-native-cli
-      - run: cd HelloReactNative && npm install
-      - run: cd HelloReactNative && react-native run-ios --configuration Release
+      - run: cd .. && git clone https://github.com/launchdarkly/hello-react-native.git
+      - run: cd ../hello-react-native && npm install
+      - run: cp -r ../project/ ../hello-react-native/node_modules/launchdarkly-react-native-client/
+      - run: cd ../hello-react-native && react-native run-ios --configuration Release
 
 workflows:
   version: 2
