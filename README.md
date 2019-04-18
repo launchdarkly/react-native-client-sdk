@@ -2,8 +2,6 @@
 launchdarkly-react-native-client
 ================================
 
-*This software is a **beta** version and should not be considered ready for production use until tagged at least 1.0*
-
 Getting started
 ---------------
 
