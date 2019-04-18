@@ -1,7 +1,7 @@
 
 Pod::Spec.new do |s|
   s.name         = "LaunchdarklyReactNativeClient"
-  s.version      = "1.0.0-beta.1"
+  s.version      = "1.0.0"
   s.summary      = "LaunchdarklyReactNativeClient"
   s.description  = <<-DESC
                   LaunchdarklyReactNativeClient
@@ -16,6 +16,6 @@ Pod::Spec.new do |s|
   s.swift_version = "3.0"
 
   s.dependency "React"
-  s.dependency "LaunchDarkly", "~> 3.0.0-beta.2"
+  s.dependency "LaunchDarkly", "~> 3.0.0-beta.3"
 
 end

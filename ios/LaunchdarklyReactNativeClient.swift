@@ -4,7 +4,7 @@ import LaunchDarkly
 
 @objc(LaunchdarklyReactNativeClient)
 class LaunchdarklyReactNativeClient: RCTEventEmitter {
-    private var listenerKeys: [String:LDFlagChangeOwner] = [:]
+    private var listenerKeys: [String:LDObserverOwner] = [:]
     
     private let EVENT_PREFIX = "LaunchDarkly--"
     private let ERROR_INIT = "E_INITIALIZE"
@@ -119,7 +119,7 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
         }
         
         if userConfig["anonymous"] != nil {
-            user.isAnonymous = userConfig["isAnonymous"] as! Bool
+            user.isAnonymous = userConfig["anonymous"] as! Bool
         }
         
         if userConfig["privateAttributeNames"] != nil  {
@@ -242,11 +242,11 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
         let user = userBuild(userConfig: options)
         if let usr = user {
             LDClient.shared.observeFlagsUnchanged(owner: self) {
-                LDClient.shared.stopObserving(owner: self as LDFlagChangeOwner)
+                LDClient.shared.stopObserving(owner: self as LDObserverOwner)
                 resolve(nil)
             }
             LDClient.shared.observeAll(owner: self) {_ in
-                LDClient.shared.stopObserving(owner: self as LDFlagChangeOwner)
+                LDClient.shared.stopObserving(owner: self as LDObserverOwner)
                 resolve(nil)
             }
             LDClient.shared.user = usr
@@ -266,7 +266,7 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
     }
     
     @objc func registerFeatureFlagListener(_ flagKey: String) -> Void {
-        let flagChangeOwner = flagKey as LDFlagChangeOwner
+        let flagChangeOwner = flagKey as LDObserverOwner
         if listenerKeys[flagKey] == nil {
             listenerKeys[flagKey] = flagChangeOwner
         } else {
@@ -280,7 +280,7 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
     }
     
     @objc func unregisterFeatureFlagListener(_ flagKey: String) -> Void {
-        let flagChangeOwner = flagKey as LDFlagChangeOwner
+        let flagChangeOwner = flagKey as LDObserverOwner
         if listenerKeys[flagKey] == nil {
             listenerKeys.removeValue(forKey: flagKey)
         } else {
