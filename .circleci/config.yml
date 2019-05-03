@@ -27,7 +27,7 @@ jobs:
       - run: sudo npm install -g react-native-cli
       - run: cd .. && git clone https://github.com/launchdarkly/hello-react-native.git
       - run: cd ../hello-react-native && npm install
-      - run: cp -r ../project/ ../hello-react-native/node_modules/launchdarkly-react-native-client/
+      - run: cp -r ../project/ ../hello-react-native/node_modules/launchdarkly-react-native-client-sdk/
       - run: circle-android wait-for-boot
       - run: 
           command: cd ../hello-react-native && react-native run-android
@@ -45,7 +45,7 @@ jobs:
       - run: sudo npm install -g react-native-cli
       - run: cd .. && git clone https://github.com/launchdarkly/hello-react-native.git
       - run: cd ../hello-react-native && npm install
-      - run: cp -r ../project/ ../hello-react-native/node_modules/launchdarkly-react-native-client/
+      - run: cp -r ../project/ ../hello-react-native/node_modules/launchdarkly-react-native-client-sdk/
       - run: cd ../hello-react-native && react-native run-ios --configuration Release
 
 workflows:
