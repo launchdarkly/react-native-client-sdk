@@ -9,18 +9,18 @@ All notable changes to the LaunchDarkly React Native SDK will be documented in t
 
 There are no other changes in this release. Substituting `launchdarkly-react-native-client` version 1.0.0 with `launchdarkly-react-native-client-sdk` version 1.0.1 will not affect functionality.
 
-# Note on future releases
-
-The LaunchDarkly SDK repositories are being renamed for consistency. This repository is now `react-native-client-sdk` rather than `react-native-client`.
-
-The package name will also change. In the 1.0.0 release, it is still `launchdarkly-react-native-client`; in all future releases, it will be `launchdarkly-react-native-client-sdk`.
-
 ## [1.0.0] - 2019-04-18
 ### Changed
 - Android and iOS client versions
 ### Fixed
 - Added correct anonymous property
 - Removed dependencies and added caret to peer dependencies
+
+### Note on future releases
+
+The LaunchDarkly SDK repositories are being renamed for consistency. This repository is now `react-native-client-sdk` rather than `react-native-client`.
+
+The package name will also change. In the 1.0.0 release, it is still `launchdarkly-react-native-client`; in all future releases, it will be `launchdarkly-react-native-client-sdk`.
 
 ## [1.0.0-beta.1] - 2019-03-01
 ### Added
