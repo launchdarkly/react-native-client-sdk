@@ -1,6 +1,6 @@
 {
-  "name": "launchdarkly-react-native-client",
-  "version": "1.0.0",
+  "name": "launchdarkly-react-native-client-sdk",
+  "version": "1.0.1",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/launchdarkly/react-native-client.git"
+    "url": "https://github.com/launchdarkly/react-native-client-sdk.git"
   },
   "keywords": [
     "react-native"
@@ -16,9 +16,9 @@
   "author": "LaunchDarkly",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/launchdarkly/react-native-client/issues"
+    "url": "https://github.com/launchdarkly/react-native-client-sdk/issues"
   },
-  "homepage": "https://docs.launchdarkly.com/v2.0/docs/react-native-sdk-reference",
+  "homepage": "https://docs.launchdarkly.com/docs/react-native-sdk-reference",
   "peerDependencies": {
     "react-native": "^0.57.7",
     "react": "^16.6.1"
