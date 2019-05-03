@@ -8,6 +8,13 @@ The LaunchDarkly SDK repositories are being renamed for consistency. This reposi
 
 The package name will also change. In the 1.0.0 release, it is still `launchdarkly-react-native-client`; in all future releases, it will be `launchdarkly-react-native-client-sdk`.
 
+## [1.0.1] - 2019-05-03
+## Changed
+- Changed the package name from `launchdarkly-react-native-client` to `launchdarkly-react-native-client-sdk`
+- Changed repository references to use the new URL
+
+There are no other changes in this release. Substituting `launchdarkly-react-native-client` version 1.0.0 with `launchdarkly-react-native-client-sdk` version 1.0.1 will not affect functionality.
+
 ## [1.0.0] - 2019-04-18
 ### Changed
 - Android and iOS client versions
