@@ -4,10 +4,9 @@ All notable changes to the LaunchDarkly React Native SDK will be documented in t
 
 ## [2.0.0] - 2019-05-14
 ## Changed
-- Updated Android Client SDK to version 2.8.2
-- Updated iOS Client SDK to version 4.0.0
+- Updated Android Client SDK to version 2.8.3
 - Updated React Native to version 0.59.8 and updated React to version 16.8.6
-- Updated Xcode to version 10.2.1
+- Updated to allow usage with Xcode 10.2.1
 - Updated Swift to version 5.0
 
  This is a major version because of breaking version updates.
