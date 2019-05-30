@@ -26,5 +26,5 @@ You can modify and verify changes by developing within the LaunchDarkly React Na
 
 1. In your `react-native-client-sdk` directory, run `npm link`.
 2. Clone and setup the [`hello-react-native`](https://github.com/launchdarkly/hello-react-native) repository.
-3. In your `hello-react-native` directory, run `npm link react-native-client-sdk`.
+3. In your `hello-react-native` directory, copy your `react-native-client-sdk` into `node_modules` or use [wml](https://github.com/wix/wml) to monitor and copy files.
 4. Test your changes in `hello-react-native` by running either `react-native run-ios` or `react-native run-android` depending on your desired runtime environment.

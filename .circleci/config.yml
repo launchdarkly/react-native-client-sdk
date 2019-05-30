@@ -36,11 +36,11 @@ jobs:
 
   ios:
     macos:
-      xcode: "10.1.0"
+      xcode: "10.2.0"
     steps:
       - checkout
 
-      - run: xcrun simctl create rn-ios com.apple.CoreSimulator.SimDeviceType.iPhone-X com.apple.CoreSimulator.SimRuntime.iOS-12-1
+      - run: xcrun simctl create rn-ios com.apple.CoreSimulator.SimDeviceType.iPhone-X com.apple.CoreSimulator.SimRuntime.iOS-12-2
       - run: xcrun simctl boot rn-ios
       - run: sudo npm install -g react-native-cli
       - run: cd .. && git clone https://github.com/launchdarkly/hello-react-native.git

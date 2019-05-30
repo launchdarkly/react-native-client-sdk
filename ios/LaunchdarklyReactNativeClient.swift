@@ -295,7 +295,7 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
 }
 
 extension NSDictionary {
-    var swiftDictionary: Dictionary<String, Any> {
+    @objc var swiftDictionary: Dictionary<String, Any> {
         var swiftDictionary = Dictionary<String, Any>()
         
         for key : Any in self.allKeys {
