@@ -21,7 +21,7 @@
   "homepage": "https://docs.launchdarkly.com/docs/react-native-sdk-reference",
   "peerDependencies": {
     "react-native": "0.59.9",
-    "react": "16.8.6"
+    "react": "16.8.3"
   },
   "devDependencies": {
     "metro-react-native-babel-preset": "0.50.0"
