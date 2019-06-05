@@ -20,7 +20,7 @@
   },
   "homepage": "https://docs.launchdarkly.com/docs/react-native-sdk-reference",
   "peerDependencies": {
-    "react-native": "0.59.8",
+    "react-native": "0.59.9",
     "react": "16.8.6"
   },
   "devDependencies": {
