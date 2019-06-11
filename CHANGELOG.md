@@ -9,6 +9,9 @@ All notable changes to the LaunchDarkly React Native SDK will be documented in t
 - Updated to allow usage with Xcode 10.2.1
 - Updated Swift to version 5.0
 
+## Fixed
+- Changes polling mode to not be ignored in config.
+
  This is a major version because of breaking version updates.
 
 ## [1.0.1] - 2019-05-03
