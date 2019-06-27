@@ -1,6 +1,8 @@
 LaunchDarkly Client-side SDK for React Native
 ===========================
 
+[![CircleCI](https://circleci.com/gh/launchdarkly/react-native-client-sdk.svg?style=svg)](https://circleci.com/gh/launchdarkly/react-native-client-sdk)
+
 LaunchDarkly overview
 -------------------------
 [LaunchDarkly](https://www.launchdarkly.com) is a feature management platform that serves over 100 billion feature flags daily to help teams build better software, faster. [Get started](https://docs.launchdarkly.com/docs/getting-started) using LaunchDarkly today!
