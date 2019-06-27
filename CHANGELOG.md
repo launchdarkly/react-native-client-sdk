@@ -2,7 +2,7 @@
 
 All notable changes to the LaunchDarkly React Native SDK will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
-## [2.0.0] - 2019-05-14
+## [2.0.0] - 2019-06-26
 ## Changed
 - Updated Android Client SDK to version 2.8.4
 - Updated React Native to version 0.59.9 and updated React to version 16.8.3
