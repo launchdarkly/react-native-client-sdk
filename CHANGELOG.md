@@ -2,20 +2,21 @@
 
 All notable changes to the LaunchDarkly React Native SDK will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
-## [2.0.0] - 2019-06-26
-## Changed
+## [2.0.0] - 2019-06-27
+### Fixed
+- Changes polling mode to not be ignored in config.
+
+### Changed
 - Updated Android Client SDK to version 2.8.4
+- Updated iOS Client SDK to version 4.1.0
 - Updated React Native to version 0.59.9 and updated React to version 16.8.3
 - Updated to allow usage with Xcode 10.2.1
 - Updated Swift to version 5.0
 
-## Fixed
-- Changes polling mode to not be ignored in config.
-
  This is a major version because of breaking version updates.
 
 ## [1.0.1] - 2019-05-03
-## Changed
+### Changed
 - Changed the package name from `launchdarkly-react-native-client` to `launchdarkly-react-native-client-sdk`
 - Changed repository references to use the new URL
 
