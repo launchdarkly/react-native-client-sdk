@@ -80,7 +80,7 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
         }
         
         if config["stream"] != nil  {
-            ldConfig.streamingMode = (config["stream"] != nil) ? LDStreamingMode.streaming : LDStreamingMode.polling
+            ldConfig.streamingMode = (config["stream"] as! Bool) ? LDStreamingMode.streaming : LDStreamingMode.polling
         }
         
         if config["disableBackgroundUpdating"] != nil  {
@@ -295,7 +295,7 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
 }
 
 extension NSDictionary {
-    var swiftDictionary: Dictionary<String, Any> {
+    @objc var swiftDictionary: Dictionary<String, Any> {
         var swiftDictionary = Dictionary<String, Any>()
         
         for key : Any in self.allKeys {

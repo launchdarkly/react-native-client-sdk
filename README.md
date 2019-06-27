@@ -1,6 +1,8 @@
 LaunchDarkly Client-side SDK for React Native
 ===========================
 
+[![CircleCI](https://circleci.com/gh/launchdarkly/react-native-client-sdk.svg?style=svg)](https://circleci.com/gh/launchdarkly/react-native-client-sdk)
+
 LaunchDarkly overview
 -------------------------
 [LaunchDarkly](https://www.launchdarkly.com) is a feature management platform that serves over 100 billion feature flags daily to help teams build better software, faster. [Get started](https://docs.launchdarkly.com/docs/getting-started) using LaunchDarkly today!
@@ -10,7 +12,7 @@ LaunchDarkly overview
 Supported versions
 -------------------------
 
-This SDK is compatible with React Native 0.57.7 and is tested in Android 27 and iOS 12.1.
+This SDK is compatible with React Native 0.59.9 and Xcode 10.2.1 and is tested in Android 27 and iOS 12.2. Earlier versions of this SDK are compatible with prior versions of React Native, Android, and iOS.
 
 Getting started
 ---------------
