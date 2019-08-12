@@ -22,6 +22,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonParseException;
 import com.launchdarkly.android.FeatureFlagChangeListener;
 import com.launchdarkly.android.LDClient;
 import com.launchdarkly.android.LDConfig;
@@ -601,7 +603,18 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
             if (entry.getValue() == null) {
                 response.putNull(entry.getKey());
             } else if (entry.getValue() instanceof String) {
-                response.putString(entry.getKey(), (String) entry.getValue());
+                try {
+                    JsonElement parsedJson = new JsonParser().parse((String) entry.getValue());
+                    if (parsedJson.isJsonObject()) {
+                        response.putMap(entry.getKey(), fromJsonObject((JsonObject) parsedJson.getAsJsonObject()));
+                    } else if (parsedJson.isJsonArray()) {
+                        response.putArray(entry.getKey(), fromJsonArray((JsonArray) parsedJson.getAsJsonArray()));
+                    } else {
+                        response.putString(entry.getKey(),(String) entry.getValue());
+                    }
+                } catch (JsonParseException e) {
+                    response.putString(entry.getKey(),(String) entry.getValue());
+                }
             } else if (entry.getValue() instanceof Boolean) {
                 response.putBoolean(entry.getKey(), (Boolean) entry.getValue());
             } else if (entry.getValue() instanceof Double) {
@@ -825,7 +838,7 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
 
                 getReactApplicationContext()
                         .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-                        .emit(EVENT_PREFIX.concat(flagKey), result);
+                        .emit(EVENT_PREFIX, result);
             }
         };
 

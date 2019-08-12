@@ -2,6 +2,15 @@
 
 All notable changes to the LaunchDarkly React Native SDK will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [2.0.1] - 2019-06-27
+### Fixed
+- Listeners on Android now have the proper event emitter key and work properly.
+- Flag values in the object returned by `allFlags`  will no longer be Strings when they should be JSON Objects on Android.
+
+### Changed
+- Updated Android Client SDK to version 2.8.5
+- Updated iOS Client SDK to version 4.1.2
+
 ## [2.0.0] - 2019-06-27
 ### Fixed
 - Changes polling mode to not be ignored in config.

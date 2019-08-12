@@ -17,7 +17,7 @@ jobs:
       - run: mkdir -p ~/.gradle && echo "org.gradle.daemon=false" >> ~/.gradle/gradle.properties
       - run: sdkmanager "system-images;android-24;default;armeabi-v7a"
       - run: sdkmanager --licenses
-      - run: sudo apt-get install libpulse0
+      - run: sudo apt-get update && sudo apt-get install libpulse0
       - run: echo no | avdmanager create avd -n rn-android -f -k "system-images;android-24;default;armeabi-v7a"
       - run: 
           command: emulator -avd rn-android -netdelay none -netspeed full -no-audio -no-window -no-snapshot -use-system-libs -no-boot-anim
