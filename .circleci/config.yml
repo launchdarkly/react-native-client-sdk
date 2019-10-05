@@ -2,7 +2,7 @@ version: 2
 jobs:
   android:
     docker:
-      - image: circleci/android:api-27-node
+      - image: circleci/android@sha256:9d2e4571898fd9b1dc97bfb9da942aaeea46859eb5b1e4cfc85a44c42733643c
     environment:
       QEMU_AUDIO_DRV: none
       _JAVA_OPTIONS: "-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -Xms2048m -Xmx4096m"
@@ -36,7 +36,7 @@ jobs:
 
   ios:
     macos:
-      xcode: "10.2.0"
+      xcode: "10.2.1"
     steps:
       - checkout
 
