@@ -2,6 +2,10 @@
 
 All notable changes to the LaunchDarkly React Native SDK will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [2.0.2] - 2019-10-04
+### Changed
+- Updated React Native to version 0.61.2 and updated React to version 16.9.0
+
 ## [2.0.1] - 2019-06-27
 ### Fixed
 - Listeners on Android now have the proper event emitter key and work properly.
