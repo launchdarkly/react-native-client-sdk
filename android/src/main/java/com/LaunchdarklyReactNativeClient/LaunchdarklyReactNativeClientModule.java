@@ -1,4 +1,4 @@
-package com.reactlibrary;
+package com.LaunchdarklyReactNativeClient;
 
 import android.app.Application;
 import android.net.Uri;
