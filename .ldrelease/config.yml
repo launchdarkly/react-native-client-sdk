@@ -8,6 +8,8 @@ publications:
 
 template:
   name: npm
+  skip:
+    - test
 
 sdk:
   displayName: React Native
