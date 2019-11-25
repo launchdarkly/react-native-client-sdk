@@ -2,6 +2,13 @@
 
 All notable changes to the LaunchDarkly React Native SDK will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [2.0.3] - 2019-11-25
+### Changed:
+- The SDK's dependency on React Native has been expanded to include subsequent patch releases after `0.61.2`.
+
+### Fixed:
+- The Android package is properly namespaced now as `com.launchdarkly.reactnative`. Previously the Android module's package was `com.reactlibrary` which was prone to clash with other third-party modules' packages. ([#25](https://github.com/launchdarkly/react-native-client-sdk/issues/25))
+
 ## [2.0.2] - 2019-10-04
 ### Changed
 - Updated React Native to version 0.61.2 and updated React to version 16.9.0
