@@ -10,4 +10,4 @@ template:
   name: npm
 
 sdk:
-  displayName: React Native 
+  displayName: React Native
