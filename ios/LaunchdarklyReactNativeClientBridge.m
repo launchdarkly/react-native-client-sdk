@@ -53,6 +53,8 @@ RCT_EXTERN_METHOD(setOnline:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRe
 
 RCT_EXTERN_METHOD(flush)
 
+RCT_EXTERN_METHOD(close:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
+
 RCT_EXTERN_METHOD(identify:(NSDictionary *)options resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 
 RCT_EXTERN_METHOD(allFlags:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)

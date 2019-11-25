@@ -174,6 +174,7 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
     // Constants used in promise rejection
     private static final String ERROR_INIT = "E_INITIALIZE";
     private static final String ERROR_IDENTIFY = "E_IDENTIFY";
+    private static final String ERROR_CLOSE = "E_CLOSE";
     private static final String ERROR_UNKNOWN = "E_UNKNOWN";
 
     // Prefix for events sent over the React Native event bridge
@@ -784,6 +785,19 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
     @ReactMethod
     public void flush() {
         ldClient.flush();
+    }
+
+    /**
+     * Triggers a background flush and then closes all connections to LaunchDarkly.
+     */
+    @ReactMethod
+    public void close(Promise promise) {
+        try {
+            ldClient.close();
+            promise.resolve(true);
+        } catch (Exception e) {
+            promise.reject(ERROR_CLOSE, e);
+        }
     }
 
     /**

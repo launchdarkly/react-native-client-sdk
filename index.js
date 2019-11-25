@@ -107,6 +107,10 @@ export default class LDClient {
     LaunchdarklyReactNativeClient.flush();
   }
 
+  close() {
+    LaunchdarklyReactNativeClient.close();
+  }
+
   identify(userConfig) {
     return LaunchdarklyReactNativeClient.identify(userConfig);
   }

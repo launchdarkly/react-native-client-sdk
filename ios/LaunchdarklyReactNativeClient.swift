@@ -238,6 +238,11 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
         LDClient.shared.reportEvents()
     }
     
+    @objc func close(_ resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+        LDClient.shared.stop()
+        resolve(true)
+    }
+    
     @objc func identify(_ options: NSDictionary, resolve: @escaping RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
         let user = userBuild(userConfig: options)
         if let usr = user {
