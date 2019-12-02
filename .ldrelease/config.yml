@@ -1,0 +1,15 @@
+repo:
+  public: react-native-client-sdk
+  private: react-native-client-sdk-private
+
+publications:
+  - url: https://www.npmjs.com/package/launchdarkly-react-native-client-sdk
+    description: npm
+
+template:
+  name: npm
+  skip:
+    - test
+
+sdk:
+  displayName: React Native
