@@ -2,6 +2,21 @@
 
 All notable changes to the LaunchDarkly React Native SDK will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [2.1.0] - 2019-12-23
+### Added:
+- Implemented `variationDetail` which returns an Evaluation Reason giving developers greater insight into why a value was returned.
+- Added `allFlagsListener` method, this returns flag keys whenever any flag key is updated.
+- Added `metricValue` parameter to `track` method.
+- The Connection Status API allows greater introspection into the current LaunchDarkly connection and the health of local flags.
+	- This feature adds a new method called `getConnectionInformation` that returns an object that contains the current connection mode e.g. streaming or polling, when and how a connection failed, and the last time flags were updated.
+	- Additionally, a new observer function called `registerCurrentConnectionModeListener` allows your application to listen to changes in the SDK's connection to LaunchDarkly.
+- A `close()` method which flushes the event queue and closes all open connections to LaunchDarkly. This method should be invoked as part of your application's termination lifecycle event.
+
+### Changed:
+- Updated the iOS SDK to version 4.3.2. This enables the removal of `use_frameworks!` from the Podfile in a project using the LaunchDarkly React Native SDK.
+- Updated the Android SDK to version 2.9.0.
+- Switched iOS user switching from the deprecated `user` object to the `identify` method.
+
 ## [2.0.3] - 2019-11-25
 ### Changed:
 - The SDK's dependency on React Native has been expanded to include subsequent patch releases after `0.61.2`.
