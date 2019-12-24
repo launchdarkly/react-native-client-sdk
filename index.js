@@ -6,7 +6,11 @@ export default class LDClient {
   constructor() {
     this.eventEmitter = new NativeEventEmitter(LaunchdarklyReactNativeClient);
     this.flagListeners = {};
-    this.eventEmitter.addListener(LaunchdarklyReactNativeClient.EVENT_PREFIX, body => this._flagUpdateListener(body));
+    this.allFlagsListeners = {};
+    this.connectionModeListeners = {};
+    this.eventEmitter.addListener(LaunchdarklyReactNativeClient.FLAG_PREFIX, body => this._flagUpdateListener(body));
+    this.eventEmitter.addListener(LaunchdarklyReactNativeClient.ALL_FLAGS_PREFIX, body => this._allFlagsUpdateListener(body));
+    this.eventEmitter.addListener(LaunchdarklyReactNativeClient.CONNECTION_MODE_PREFIX, body => this._connectionModeUpdateListener(body));
   }
 
   configure(config, userConfig) {
@@ -62,24 +66,90 @@ export default class LDClient {
     }
   }
 
+  boolVariationDetail(flagKey, fallback) {
+    if (fallback == undefined) {
+      return LaunchdarklyReactNativeClient.boolVariationDetail(flagKey);
+    } else {
+      return LaunchdarklyReactNativeClient.boolVariationDetailFallback(flagKey, fallback);
+    }
+  }
+
+  intVariationDetail(flagKey, fallback) {
+    if (fallback == undefined) {
+      return LaunchdarklyReactNativeClient.intVariationDetail(flagKey);
+    } else {
+      return LaunchdarklyReactNativeClient.intVariationDetailFallback(flagKey, fallback);
+    }
+  }
+
+  floatVariationDetail(flagKey, fallback) {
+    if (fallback == undefined) {
+      return LaunchdarklyReactNativeClient.floatVariationDetail(flagKey);
+    } else {
+      return LaunchdarklyReactNativeClient.floatVariationDetailFallback(flagKey, fallback);
+    }
+  }
+
+  stringVariationDetail(flagKey, fallback) {
+    if (fallback == undefined) {
+      return LaunchdarklyReactNativeClient.stringVariationDetail(flagKey);
+    } else {
+      return LaunchdarklyReactNativeClient.stringVariationDetailFallback(flagKey, fallback);
+    }
+  }
+
+  jsonVariationDetail(flagKey, fallback) {
+    if (fallback == undefined) {
+      return LaunchdarklyReactNativeClient.jsonVariatioDetailNone(flagKey);
+    } else if (typeof fallback === 'number') {
+      return LaunchdarklyReactNativeClient.jsonVariationDetailNumber(flagKey, fallback);
+    } else if (typeof fallback === 'boolean') {
+      return LaunchdarklyReactNativeClient.jsonVariationDetailBool(flagKey, fallback);
+    } else if (typeof fallback === 'string') {
+      return LaunchdarklyReactNativeClient.jsonVariationDetailString(flagKey, fallback);
+    } else if (Array.isArray(fallback)) {
+      return LaunchdarklyReactNativeClient.jsonVariationDetailArray(flagKey, fallback);
+    } else {
+      // Should be an object
+      return LaunchdarklyReactNativeClient.jsonVariationDetailObject(flagKey, fallback);
+    }
+  }
+
   allFlags() {
     return LaunchdarklyReactNativeClient.allFlags();
   }
 
-  track(eventName, data) {
-    if (data === null || typeof data === 'undefined') {
-      LaunchdarklyReactNativeClient.track(eventName);
-    } else if (typeof data === 'number') {
-      LaunchdarklyReactNativeClient.trackNumber(eventName, data);
-    } else if (typeof data === 'boolean') {
-      LaunchdarklyReactNativeClient.trackBool(eventName, data);
-    } else if (typeof data === 'string') {
-      LaunchdarklyReactNativeClient.trackString(eventName, data);
-    } else if (Array.isArray(data)) {
-      LaunchdarklyReactNativeClient.trackArray(eventName, data);
+  track(eventName, data, metricValue) {
+    if (metricValue) {
+      if (data === null || typeof data === 'undefined') {
+        LaunchdarklyReactNativeClient.trackMetricValue(eventName, metricValue);
+      } else if (typeof data === 'number') {
+        LaunchdarklyReactNativeClient.trackNumberMetricValue(eventName, data, metricValue);
+      } else if (typeof data === 'boolean') {
+        LaunchdarklyReactNativeClient.trackBoolMetricValuel(eventName, data, metricValue);
+      } else if (typeof data === 'string') {
+        LaunchdarklyReactNativeClient.trackStringMetricValue(eventName, data, metricValue);
+      } else if (Array.isArray(data)) {
+        LaunchdarklyReactNativeClient.trackArrayMetricValue(eventName, data, metricValue);
+      } else {
+        // should be an object
+        LaunchdarklyReactNativeClient.trackObjectMetricValue(eventName, data, metricValue);
+      }
     } else {
-      // should be an object
-      LaunchdarklyReactNativeClient.trackObject(eventName, data);
+      if (data === null || typeof data === 'undefined') {
+        LaunchdarklyReactNativeClient.track(eventName);
+      } else if (typeof data === 'number') {
+        LaunchdarklyReactNativeClient.trackNumber(eventName, data);
+      } else if (typeof data === 'boolean') {
+        LaunchdarklyReactNativeClient.trackBool(eventName, data);
+      } else if (typeof data === 'string') {
+        LaunchdarklyReactNativeClient.trackString(eventName, data);
+      } else if (Array.isArray(data)) {
+        LaunchdarklyReactNativeClient.trackArray(eventName, data);
+      } else {
+        // should be an object
+        LaunchdarklyReactNativeClient.trackObject(eventName, data);
+      }
     }
   }
 
@@ -129,6 +199,22 @@ export default class LDClient {
     }
   }
 
+  _allFlagsUpdateListener(changedFlags) {
+    const flagKeys = changedFlags.flagKeys;
+    let listeners = Object.values(this.allFlagsListeners);
+    for (const listener of listeners) {
+      listener(flagKeys);
+    }
+  }
+
+  _connectionModeUpdateListener(connectionStatus) {
+    const connectionMode = connectionStatus.connectionMode;
+    let listeners = Object.values(this.connectionModeListeners);
+    for (const listener of listeners) {
+      listener(connectionMode);
+    }
+  }
+
   registerFeatureFlagListener(flagKey, callback) {
     if (typeof callback !== "function") {
       return;
@@ -154,5 +240,43 @@ export default class LDClient {
       LaunchdarklyReactNativeClient.unregisterFeatureFlagListener(flagKey);
       delete this.flagListeners[flagKey];
     }
+  }
+
+  getConnectionInformation() {
+    return LaunchdarklyReactNativeClient.getConnectionInformation();
+  }
+
+  registerCurrentConnectionModeListener(listenerId, callback) {
+    if (typeof callback !== "function") {
+      return;
+    }
+
+    this.connectionModeListeners[listenerId] = callback;
+    LaunchdarklyReactNativeClient.registerCurrentConnectionModeListener(listenerId);
+  }
+
+  unregisterCurrentConnectionModeListener(listenerId) {
+    if (!this.connectionModeListeners.hasOwnProperty(listenerId))
+      return;
+
+    LaunchdarklyReactNativeClient.unregisterCurrentConnectionModeListener(listenerId);
+    delete this.connectionModeListeners[listenerId];
+  }
+
+  registerAllFlagsListener(listenerId, callback) {
+    if (typeof callback !== "function") {
+      return;
+    }
+    
+    this.allFlagsListeners[listenerId] = callback;
+    LaunchdarklyReactNativeClient.registerAllFlagsListener(listenerId);
+  }
+
+  unregisterAllFlagsListener(listenerId) {
+    if (!this.allFlagsListeners.hasOwnProperty(listenerId))
+      return;
+
+    LaunchdarklyReactNativeClient.unregisterAllFlagsListener(listenerId);
+    delete this.allFlagsListeners[listenerId];
   }
 }
