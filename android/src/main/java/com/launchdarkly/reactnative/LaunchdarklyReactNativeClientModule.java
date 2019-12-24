@@ -17,6 +17,7 @@ import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeArray;
 import com.facebook.react.bridge.WritableNativeMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
@@ -29,6 +30,11 @@ import com.launchdarkly.android.LDClient;
 import com.launchdarkly.android.LDConfig;
 import com.launchdarkly.android.LDCountryCode;
 import com.launchdarkly.android.LDUser;
+import com.launchdarkly.android.ConnectionInformation;
+import com.launchdarkly.android.LDStatusListener;
+import com.launchdarkly.android.LDAllFlagsListener;
+import com.launchdarkly.android.EvaluationDetail;
+import com.launchdarkly.android.LDFailure;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -37,6 +43,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import timber.log.Timber;
@@ -154,6 +161,8 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
     private LDClient ldClient;
     // Current feature flag listeners
     private Map<String, FeatureFlagChangeListener> listeners = new HashMap<>();
+    private Map<String, LDStatusListener> connectionModeListeners = new HashMap<>();
+    private Map<String, LDAllFlagsListener> allFlagsListeners = new HashMap<>();
 
     public LaunchdarklyReactNativeClientModule(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -178,7 +187,9 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
     private static final String ERROR_UNKNOWN = "E_UNKNOWN";
 
     // Prefix for events sent over the React Native event bridge
-    private static final String EVENT_PREFIX = "LaunchDarkly--";
+    private static final String FLAG_PREFIX = "LaunchDarkly-Flag-";
+    private static final String ALL_FLAGS_PREFIX = "LaunchDarkly-All-Flags-";
+    private static final String CONNECTION_MODE_PREFIX = "LaunchDarkly-Connection-Mode-";
 
 
     /**
@@ -190,7 +201,9 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
     @Override
     public Map<String, Object> getConstants() {
         final Map<String, Object> constants = new HashMap<>();
-        constants.put("EVENT_PREFIX", EVENT_PREFIX);
+        constants.put("FLAG_PREFIX", FLAG_PREFIX);
+        constants.put("ALL_FLAGS_PREFIX", ALL_FLAGS_PREFIX);
+        constants.put("CONNECTION_MODE_PREFIX", CONNECTION_MODE_PREFIX);
         return constants;
     }
 
@@ -546,6 +559,92 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
         jsonVariationBase(flagKey, toJsonObject(fallback), promise);
     }
 
+    @ReactMethod
+    public void boolVariationDetail(String flagKey, Promise promise) {
+        boolVariationDetailFallback(flagKey, null, promise);
+    }
+
+    @ReactMethod
+    public void boolVariationDetailFallback(String flagKey, Boolean fallback, Promise promise) {
+        try {
+            promise.resolve(ldClient.boolVariationDetail(flagKey, fallback));
+        } catch (Exception e) {
+            promise.resolve(fallback);
+        }
+    }
+
+    @ReactMethod
+    public void intVariationDetail(String flagKey, Promise promise) {
+        intVariationDetailFallback(flagKey, null, promise);
+    }
+
+    @ReactMethod
+    public void intVariationDetailFallback(String flagKey, Integer fallback, Promise promise) {
+        try {
+            promise.resolve(ldClient.intVariationDetail(flagKey, fallback));
+        } catch (Exception e) {
+            promise.resolve(fallback);
+        }
+    }
+
+    @ReactMethod
+    public void floatVariationDetail(String flagKey, Promise promise) {
+        floatVariationDetailFallback(flagKey, null, promise);
+    }
+
+    @ReactMethod
+    public void floatVariationDetailFallback(String flagKey, Float fallback, Promise promise) {
+        try {
+            promise.resolve(ldClient.floatVariationDetail(flagKey, fallback));
+        } catch (Exception e) {
+            promise.resolve(fallback);
+        }
+    }
+
+    @ReactMethod
+    public void stringVariationDetail(String flagKey, Promise promise) {
+        stringVariationDetailFallback(flagKey, null, promise);
+    }
+
+    @ReactMethod
+    public void stringVariationDetailFallback(String flagKey, String fallback, Promise promise) {
+        try {
+            promise.resolve(ldClient.stringVariationDetail(flagKey, fallback));
+        } catch (Exception e) {
+            promise.resolve(fallback);
+        }
+    }
+
+    @ReactMethod
+    public void jsonVariationDetailNone(String flagKey, Promise promise) {
+        jsonVariationDetailBase(flagKey, null, promise);
+    }
+
+    @ReactMethod
+    public void jsonVariationDetailNumber(String flagKey, Double fallback, Promise promise) {
+        jsonVariationDetailBase(flagKey, new JsonPrimitive(fallback), promise);
+    }
+
+    @ReactMethod
+    public void jsonVariationDetailBool(String flagKey, Boolean fallback, Promise promise) {
+        jsonVariationDetailBase(flagKey, new JsonPrimitive(fallback), promise);
+    }
+
+    @ReactMethod
+    public void jsonVariationDetailString(String flagKey, String fallback, Promise promise) {
+        jsonVariationDetailBase(flagKey, new JsonPrimitive(fallback), promise);
+    }
+
+    @ReactMethod
+    public void jsonVariationDetailArray(String flagKey, ReadableArray fallback, Promise promise) {
+        jsonVariationDetailBase(flagKey, toJsonArray(fallback), promise);
+    }
+
+    @ReactMethod
+    public void jsonVariationDetailObject(String flagKey, ReadableMap fallback, Promise promise) {
+        jsonVariationDetailBase(flagKey, toJsonObject(fallback), promise);
+    }
+
     /**
      * Helper for jsonVariation methods.
      *
@@ -557,6 +656,15 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
         try {
             JsonElement jsonElement = ldClient.jsonVariation(flagKey, fallback);
             resolveJsonElement(promise, jsonElement);
+        } catch (Exception e) {
+            resolveJsonElement(promise, fallback);
+        }
+    }
+
+    private void jsonVariationDetailBase(String flagKey, JsonElement fallback, Promise promise) {
+        try {
+            EvaluationDetail<JsonElement> jsonElementDetail = ldClient.jsonVariationDetail(flagKey, fallback);
+            resolveJsonElementDetail(promise, jsonElementDetail);
         } catch (Exception e) {
             resolveJsonElement(promise, fallback);
         }
@@ -587,6 +695,11 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
                 promise.resolve(prim.getAsNumber().doubleValue());
             }
         }
+    }
+
+    private void resolveJsonElementDetail(Promise promise, EvaluationDetail<JsonElement> jsonElementDetail) {
+        JsonElement jsonElement = jsonElementDetail.getValue();
+        resolveJsonElement(promise, jsonElement);
     }
 
     /**
@@ -729,6 +842,36 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
         ldClient.track(eventName);
     }
 
+    @ReactMethod
+    public void trackNumberMetricValue(String eventName, Double data, Double metricValue) {
+        ldClient.track(eventName, new JsonPrimitive(data), metricValue);
+    }
+
+    @ReactMethod
+    public void trackBoolMetricValue(String eventName, Boolean data, Double metricValue) {
+        ldClient.track(eventName, new JsonPrimitive(data), metricValue);
+    }
+
+    @ReactMethod
+    public void trackStringMetricValue(String eventName, String data, Double metricValue) {
+        ldClient.track(eventName, new JsonPrimitive(data), metricValue);
+    }
+
+    @ReactMethod
+    public void trackArrayMetricValue(String eventName, ReadableArray data, Double metricValue) {
+        ldClient.track(eventName, toJsonArray(data), metricValue);
+    }
+
+    @ReactMethod
+    public void trackObjectMetricValue(String eventName, ReadableMap data, Double metricValue) {
+        ldClient.track(eventName, toJsonObject(data), metricValue);
+    }
+
+    @ReactMethod
+    public void trackMetricValue(String eventName, Double metricValue) {
+        ldClient.track(eventName, new JsonPrimitive(""), metricValue);
+    }
+
     /**
      * Shuts down any network connections maintained by the client and puts the client in offline
      * mode.
@@ -843,6 +986,16 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
     }
 
     @ReactMethod
+    public void getConnectionInformation(Promise promise) {
+        try {
+            ConnectionInformation result = ldClient.getConnectionInformation();
+            promise.resolve(result);
+        } catch (Exception e) {
+            promise.reject(ERROR_UNKNOWN, e);
+        }
+    }
+
+    @ReactMethod
     public void registerFeatureFlagListener(String flagKey) {
         FeatureFlagChangeListener listener = new FeatureFlagChangeListener() {
             @Override
@@ -852,7 +1005,7 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
 
                 getReactApplicationContext()
                         .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-                        .emit(EVENT_PREFIX, result);
+                        .emit(FLAG_PREFIX, result);
             }
         };
 
@@ -865,6 +1018,61 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
         if (listeners.containsKey(flagKey)) {
             ldClient.unregisterFeatureFlagListener(flagKey, listeners.get(flagKey));
             listeners.remove(flagKey);
+        }
+    }
+
+    @ReactMethod
+    public void registerCurrentConnectionModeListener(String listenerId) {
+        LDStatusListener listener = new LDStatusListener() {
+            @Override
+            public void onConnectionModeChanged(ConnectionInformation connectionInfo) {
+                WritableMap result = Arguments.createMap();
+                result.putString("connectionMode", new Gson().toJson(connectionInfo));
+
+                getReactApplicationContext()
+                        .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                        .emit(CONNECTION_MODE_PREFIX, result);
+            }
+
+            @Override
+            public void onInternalFailure(LDFailure ldFailure) {}
+        };
+
+        ldClient.registerStatusListener(listener);
+        connectionModeListeners.put(listenerId, listener);
+    }
+
+    @ReactMethod
+    public void unregisterCurrentConnectionModeListener(String listenerId) {
+        if (connectionModeListeners.containsKey(listenerId)) {
+            ldClient.unregisterStatusListener(connectionModeListeners.get(listenerId));
+            connectionModeListeners.remove(listenerId);
+        }
+    }
+
+    @ReactMethod
+    public void registerAllFlagsListener(String listenerId) {
+        LDAllFlagsListener listener = new LDAllFlagsListener() {
+            @Override
+            public void onChange(List<String> flagKeys) {
+                WritableMap result = Arguments.createMap();
+                result.putString("flagKeys", new Gson().toJson(flagKeys));
+
+                getReactApplicationContext()
+                        .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                        .emit(ALL_FLAGS_PREFIX, result);
+            }
+        };
+
+        ldClient.registerAllFlagsListener(listener);
+        allFlagsListeners.put(listenerId, listener);
+    }
+
+    @ReactMethod
+    public void unregisterAllFlagsListener(String listenerId) {
+        if (allFlagsListeners.containsKey(listenerId)) {
+            ldClient.unregisterAllFlagsListener(allFlagsListeners.get(listenerId));
+            allFlagsListeners.remove(listenerId);
         }
     }
 

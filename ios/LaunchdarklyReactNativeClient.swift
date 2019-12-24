@@ -6,16 +6,18 @@ import LaunchDarkly
 class LaunchdarklyReactNativeClient: RCTEventEmitter {
     private var listenerKeys: [String:LDObserverOwner] = [:]
     
-    private let EVENT_PREFIX = "LaunchDarkly--"
+    private let FLAG_PREFIX = "LaunchDarkly-Flag-"
+    private let ALL_FLAGS_PREFIX = "LaunchDarkly-All-Flags-"
+    private let CONNECTION_MODE_PREFIX = "LaunchDarkly-Connection-Mode-"
     private let ERROR_INIT = "E_INITIALIZE"
     private let ERROR_IDENTIFY = "E_IDENTIFY"
     
     override func supportedEvents() -> [String]! {
-        return [EVENT_PREFIX]
+        return [FLAG_PREFIX, ALL_FLAGS_PREFIX, CONNECTION_MODE_PREFIX]
     }
     
     override func constantsToExport() -> [AnyHashable: Any] {
-        return ["EVENT_PREFIX": EVENT_PREFIX]
+        return ["FLAG_PREFIX": FLAG_PREFIX, "ALL_FLAGS_PREFIX": ALL_FLAGS_PREFIX, "CONNECTION_MODE_PREFIX": CONNECTION_MODE_PREFIX]
     }
     
     override static func requiresMainQueueSetup() -> Bool {
@@ -193,6 +195,67 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
     @objc func jsonVariationObject(_ flagKey: String, fallback: NSDictionary, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
         resolve(LDClient.shared.variation(forKey: flagKey, fallback: fallback.swiftDictionary) as NSDictionary)
     }
+    
+    @objc func boolVariationDetailFallback(_ flagKey: String, fallback: ObjCBool, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+        resolve(LDClient.shared.variationDetail(forKey: flagKey, fallback: fallback.boolValue))
+    }
+    
+    @objc func intVariationDetailFallback(_ flagKey: String, fallback: Int, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+        resolve(LDClient.shared.variationDetail(forKey: flagKey, fallback: fallback))
+    }
+    
+    @objc func floatVariationDetailFallback(_ flagKey: String, fallback: CGFloat, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+        resolve(LDClient.shared.variationDetail(forKey: flagKey, fallback: Double(fallback)))
+    }
+    
+    @objc func stringVariationDetailFallback(_ flagKey: String, fallback: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+        resolve(LDClient.shared.variationDetail(forKey: flagKey, fallback: fallback))
+    }
+    
+    @objc func boolDetailVariation(_ flagKey: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+        let boolFlagValue: EvaluationDetail<Bool?> = LDClient.shared.variationDetail(forKey: flagKey)
+        resolve(boolFlagValue)
+    }
+    
+    @objc func intDetailVariation(_ flagKey: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+        let intFlagValue: EvaluationDetail<Int?> = LDClient.shared.variationDetail(forKey: flagKey)
+        resolve(intFlagValue)
+    }
+    
+    @objc func floatDetailVariation(_ flagKey: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+        let floatFlagValue: EvaluationDetail<Double?> = LDClient.shared.variationDetail(forKey: flagKey)
+        resolve(floatFlagValue)
+    }
+    
+    @objc func stringDetailVariation(_ flagKey: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+        let stringFlagValue: EvaluationDetail<String?> = LDClient.shared.variationDetail(forKey: flagKey)
+        resolve(stringFlagValue)
+    }
+    
+    @objc func jsonVariationDetailNone(_ flagKey: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+        let jsonFlagValue: EvaluationDetail<Dictionary<String, Any>?> = LDClient.shared.variationDetail(forKey: flagKey)
+        resolve(jsonFlagValue)
+    }
+    
+    @objc func jsonVariationDetailNumber(_ flagKey: String, fallback: Double, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+        resolve(LDClient.shared.variationDetail(forKey: flagKey, fallback: fallback))
+    }
+    
+    @objc func jsonVariationDetailBool(_ flagKey: String, fallback: Bool, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+        resolve(LDClient.shared.variationDetail(forKey: flagKey, fallback: fallback))
+    }
+    
+    @objc func jsonVariationDetailString(_ flagKey: String, fallback: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+        resolve(LDClient.shared.variationDetail(forKey: flagKey, fallback: fallback))
+    }
+    
+    @objc func jsonVariationDetailArray(_ flagKey: String, fallback: Array<RCTConvert>, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+        resolve(LDClient.shared.variationDetail(forKey: flagKey, fallback: fallback))
+    }
+    
+    @objc func jsonVariationDetailObject(_ flagKey: String, fallback: NSDictionary, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+        resolve(LDClient.shared.variationDetail(forKey: flagKey, fallback: fallback.swiftDictionary))
+    }
 
     @objc func trackNumber(_ eventName: String, data: NSNumber) -> Void {
         try? LDClient.shared.trackEvent(key: eventName, data: data)
@@ -216,6 +279,30 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
 
     @objc func track(_ eventName: String) -> Void {
         try? LDClient.shared.trackEvent(key: eventName)
+    }
+    
+    @objc func trackNumberMetricValue(_ eventName: String, data: NSNumber, metricValue: Double) -> Void {
+        try? LDClient.shared.trackEvent(key: eventName, data: data, metricValue: metricValue)
+    }
+    
+    @objc func trackBoolMetricValue(_ eventName: String, data: ObjCBool, metricValue: Double) -> Void {
+        try? LDClient.shared.trackEvent(key: eventName, data: data.boolValue, metricValue: metricValue)
+    }
+    
+    @objc func trackStringMetricValue(_ eventName: String, data: String, metricValue: Double) -> Void {
+        try? LDClient.shared.trackEvent(key: eventName, data: data, metricValue: metricValue)
+    }
+    
+    @objc func trackArrayMetricValue(_ eventName: String, data: NSArray, metricValue: Double) -> Void {
+        try? LDClient.shared.trackEvent(key: eventName, data: data, metricValue: metricValue)
+    }
+    
+    @objc func trackObjectMetricValue(_ eventName: String, data: NSDictionary, metricValue: Double) -> Void {
+        try? LDClient.shared.trackEvent(key: eventName, data: data.swiftDictionary, metricValue: metricValue)
+    }
+    
+    @objc func trackMetricValue(_ eventName: String, metricValue: Double) -> Void {
+        try? LDClient.shared.trackEvent(key: eventName, metricValue: metricValue)
     }
 
     @objc func setOffline(_ resolve: @escaping RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
@@ -246,15 +333,9 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
     @objc func identify(_ options: NSDictionary, resolve: @escaping RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
         let user = userBuild(userConfig: options)
         if let usr = user {
-            LDClient.shared.observeFlagsUnchanged(owner: self) {
-                LDClient.shared.stopObserving(owner: self as LDObserverOwner)
+            LDClient.shared.identify(user: usr) {
                 resolve(nil)
             }
-            LDClient.shared.observeAll(owner: self) {_ in
-                LDClient.shared.stopObserving(owner: self as LDObserverOwner)
-                resolve(nil)
-            }
-            LDClient.shared.user = usr
         } else {
             reject(ERROR_IDENTIFY, "User could not be built using supplied configuration", nil)
         }
@@ -279,23 +360,63 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
         }
         LDClient.shared.observe(keys: [flagKey], owner: flagChangeOwner, handler: { (changedFlags) in
             if changedFlags[flagKey] != nil {
-                self.sendEvent(withName: self.EVENT_PREFIX, body: ["flagKey": flagKey])
+                self.sendEvent(withName: self.FLAG_PREFIX, body: ["flagKey": flagKey])
             }
         })
     }
     
-    @objc func unregisterFeatureFlagListener(_ flagKey: String) -> Void {
-        let flagChangeOwner = flagKey as LDObserverOwner
-        if listenerKeys[flagKey] == nil {
-            listenerKeys.removeValue(forKey: flagKey)
+    private func unregisterListener(_ key: String) -> Void {
+        let owner = key as LDObserverOwner
+        if listenerKeys[key] != nil {
+            listenerKeys.removeValue(forKey: key)
         } else {
             return
         }
-        LDClient.shared.stopObserving(owner: flagChangeOwner)
+        LDClient.shared.stopObserving(owner: owner)
+    }
+    
+    @objc func unregisterFeatureFlagListener(_ flagKey: String) -> Void {
+        unregisterListener(flagKey)
     }
     
     @objc func isDisableBackgroundPolling(_ resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
         resolve(LDClient.shared.config.enableBackgroundUpdates)
+    }
+    
+    @objc func getConnectionInformation(_ resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+        resolve(LDClient.shared.getConnectionInformation())
+    }
+    
+    @objc func registerCurrentConnectionModeListener(_ listenerId: String) -> Void {
+        let currentConnectionModeOwner = listenerId as LDObserverOwner
+        if listenerKeys[listenerId] == nil {
+            listenerKeys.removeValue(forKey: listenerId)
+        } else {
+            return
+        }
+        LDClient.shared.observeCurrentConnectionMode(owner: currentConnectionModeOwner, handler: { (connectionMode) in
+            self.sendEvent(withName: self.CONNECTION_MODE_PREFIX, body: ["connectionMode": connectionMode])
+        })
+    }
+    
+    @objc func unregisterCurrentConnectionModeListener(_ listenerId: String) -> Void {
+        unregisterListener(listenerId)
+    }
+    
+    @objc func registerAllFlagsListener(_ listenerId: String) -> Void {
+        let flagChangeOwner = listenerId as LDObserverOwner
+        if listenerKeys[listenerId] == nil {
+            listenerKeys[listenerId] = flagChangeOwner
+        } else {
+            return
+        }
+        LDClient.shared.observeAll(owner: flagChangeOwner, handler: { (changedFlags) in
+            self.sendEvent(withName: self.ALL_FLAGS_PREFIX, body: ["flagKeys": changedFlags.description])
+        })
+    }
+    
+    @objc func unregisterAllFlagsListener(_ listenerId: String) -> Void {
+        unregisterListener(listenerId)
     }
 }
 
