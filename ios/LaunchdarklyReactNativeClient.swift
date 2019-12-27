@@ -124,6 +124,10 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
             user.isAnonymous = userConfig["anonymous"] as! Bool
         }
         
+        if userConfig["country"] != nil {
+            user.country = userConfig["country"] as? String
+        }
+        
         if userConfig["privateAttributeNames"] != nil  {
             user.privateAttributes = userConfig["privateAttributeNames"] as? [String]
         }
