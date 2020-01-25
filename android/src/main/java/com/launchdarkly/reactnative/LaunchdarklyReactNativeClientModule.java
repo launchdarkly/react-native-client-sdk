@@ -64,7 +64,6 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
      * option, see @see ConfigEntryType for more. The internal setter is a String name of the setter
      * method used to pass the parsed configuration value into a LDConfig builder used for LDClient
      * setup.
-     * </p>
      */
     enum ConfigMapping {
         CONFIG_MOBILE_KEY("mobileKey", ConfigEntryType.String, "setMobileKey"),
@@ -80,7 +79,8 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
         CONFIG_STREAM("stream", ConfigEntryType.Boolean, "setStream"),
         CONFIG_DISABLE_BACKGROUND_UPDATING("disableBackgroundUpdating", ConfigEntryType.Boolean, "setDisableBackgroundUpdating"),
         CONFIG_OFFLINE("offline", ConfigEntryType.Boolean, "setOffline"),
-        CONFIG_PRIVATE_ATTRIBUTES("privateAttributeNames", ConfigEntryType.StringSet, "setPrivateAttributeNames");
+        CONFIG_PRIVATE_ATTRIBUTES("privateAttributeNames", ConfigEntryType.StringSet, "setPrivateAttributeNames"),
+        CONFIG_EVALUATION_REASONS("evaluationReasons", ConfigEntryType.Boolean, "setEvaluationReasons");
 
         final String key;
         final ConfigEntryType type;
@@ -115,7 +115,6 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
      * ReadableMap as well as any additional conversion needed before setting the internal LDUser
      * option, @see ConfigEntryType for more. The internal setter is a String name of the setter
      * method used to pass the parsed configuration value into a LDUser builder.
-     * </p>
      */
     enum UserConfigMapping {
         USER_ANONYMOUS("anonymous", ConfigEntryType.Boolean, "anonymous", null),
@@ -163,6 +162,8 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
     private Map<String, FeatureFlagChangeListener> listeners = new HashMap<>();
     private Map<String, LDStatusListener> connectionModeListeners = new HashMap<>();
     private Map<String, LDAllFlagsListener> allFlagsListeners = new HashMap<>();
+
+    private static Gson gson = new Gson();
 
     public LaunchdarklyReactNativeClientModule(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -267,7 +268,6 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
      *
      * <p>
      * This will look for all configuration values specified in {@link ConfigMapping}.
-     * </p>
      *
      * @param options A ReadableMap of configuration options
      * @return A LDConfig.Builder configured with options
@@ -287,7 +287,6 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
      *
      * <p>
      * This will look for all configuration values specified in {@link UserConfigMapping}.
-     * </p>
      *
      * @param options A ReadableMap of configuration options
      * @return A LDUser.Builder configured with options
@@ -567,7 +566,10 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
     @ReactMethod
     public void boolVariationDetailFallback(String flagKey, Boolean fallback, Promise promise) {
         try {
-            promise.resolve(ldClient.boolVariationDetail(flagKey, fallback));
+            EvaluationDetail<Boolean> detailResult = ldClient.boolVariationDetail(flagKey, fallback);
+            JsonObject jsonObject = gson.toJsonTree(detailResult).getAsJsonObject();
+            WritableMap detailMap = fromJsonObject(jsonObject);
+            promise.resolve(detailMap);
         } catch (Exception e) {
             promise.resolve(fallback);
         }
@@ -581,7 +583,10 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
     @ReactMethod
     public void intVariationDetailFallback(String flagKey, Integer fallback, Promise promise) {
         try {
-            promise.resolve(ldClient.intVariationDetail(flagKey, fallback));
+            EvaluationDetail<Integer> detailResult = ldClient.intVariationDetail(flagKey, fallback);
+            JsonObject jsonObject = gson.toJsonTree(detailResult).getAsJsonObject();
+            WritableMap detailMap = fromJsonObject(jsonObject);
+            promise.resolve(detailMap);
         } catch (Exception e) {
             promise.resolve(fallback);
         }
@@ -595,7 +600,10 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
     @ReactMethod
     public void floatVariationDetailFallback(String flagKey, Float fallback, Promise promise) {
         try {
-            promise.resolve(ldClient.floatVariationDetail(flagKey, fallback));
+            EvaluationDetail<Float> detailResult = ldClient.floatVariationDetail(flagKey, fallback);
+            JsonObject jsonObject = gson.toJsonTree(detailResult).getAsJsonObject();
+            WritableMap detailMap = fromJsonObject(jsonObject);
+            promise.resolve(detailMap);
         } catch (Exception e) {
             promise.resolve(fallback);
         }
@@ -609,7 +617,10 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
     @ReactMethod
     public void stringVariationDetailFallback(String flagKey, String fallback, Promise promise) {
         try {
-            promise.resolve(ldClient.stringVariationDetail(flagKey, fallback));
+            EvaluationDetail<String> detailResult = ldClient.stringVariationDetail(flagKey, fallback);
+            JsonObject jsonObject = gson.toJsonTree(detailResult).getAsJsonObject();
+            WritableMap detailMap = fromJsonObject(jsonObject);
+            promise.resolve(detailMap);
         } catch (Exception e) {
             promise.resolve(fallback);
         }
@@ -762,7 +773,6 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
      * <p>
      * Separately typed methods are necessary at the React Native bridging layer requires that
      * bridged method types disambiguate the value type.
-     * </p>
      *
      * @param eventName Name of the event to track
      * @param data      The Double data to attach to the tracking event
@@ -777,7 +787,6 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
      * <p>
      * Separately typed methods are necessary at the React Native bridging layer requires that
      * bridged method types disambiguate the value type.
-     * </p>
      *
      * @param eventName Name of the event to track
      * @param data      The Boolean data to attach to the tracking event
@@ -792,7 +801,6 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
      * <p>
      * Separately typed methods are necessary at the React Native bridging layer requires that
      * bridged method types disambiguate the value type.
-     * </p>
      *
      * @param eventName Name of the event to track
      * @param data      The String data to attach to the tracking event
@@ -807,7 +815,6 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
      * <p>
      * Separately typed methods are necessary at the React Native bridging layer requires that
      * bridged method types disambiguate the value type.
-     * </p>
      *
      * @param eventName Name of the event to track
      * @param data      The Array data to attach to the tracking event
@@ -822,7 +829,6 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
      * <p>
      * Separately typed methods are necessary at the React Native bridging layer requires that
      * bridged method types disambiguate the value type.
-     * </p>
      *
      * @param eventName Name of the event to track
      * @param data      The Map(Object) data to attach to the tracking event
@@ -1027,7 +1033,7 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
             @Override
             public void onConnectionModeChanged(ConnectionInformation connectionInfo) {
                 WritableMap result = Arguments.createMap();
-                result.putString("connectionMode", new Gson().toJson(connectionInfo));
+                result.putString("connectionMode", gson.toJson(connectionInfo));
 
                 getReactApplicationContext()
                         .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
@@ -1056,7 +1062,7 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
             @Override
             public void onChange(List<String> flagKeys) {
                 WritableMap result = Arguments.createMap();
-                result.putString("flagKeys", new Gson().toJson(flagKeys));
+                result.putString("flagKeys", gson.toJson(flagKeys));
 
                 getReactApplicationContext()
                         .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
@@ -1081,7 +1087,6 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
      * <p>
      * This will recursively convert internal ReadableMaps and ReadableArrays into JsonObjects and
      * JsonArrays.
-     * </p>
      *
      * @param readableMap A ReadableMap to be converted to a JsonObject
      * @return A JsonObject containing the converted elements from the ReadableMap.
@@ -1128,7 +1133,6 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
      * <p>
      * This will recursively convert internal ReadableMaps and ReadableArrays into JsonObjects and
      * JsonArrays.
-     * </p>
      *
      * @param readableArray A ReadableArray to be converted to a JsonArray
      * @return A JsonArray containing the converted elements from the ReadableArray
@@ -1172,7 +1176,6 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
      * <p>
      * This will recursively convert internal JsonObjects and JsonArrays into WritableMaps and
      * WritableArrays.
-     * </p>
      *
      * @param jsonArray A JsonArray to be converted into a WritableArray
      * @return A WritableArray containing converted elements from the JsonArray
@@ -1209,7 +1212,6 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
      * <p>
      * This will recursively convert internal JsonObjects and JsonArrays into WritableMaps and
      * WritableArrays.
-     * </p>
      *
      * @param jsonObject A JsonObject to be converted into a WritableMap
      * @return A WritableMap containing converted elements from the jsonObject
@@ -1265,7 +1267,6 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
      * Each type of config entry has a base ReadableType for checking that a ReadableMap contains an
      * entry of the correct type, as well as an implementation of ConvertFromReadable for retrieving
      * and converting a ReadableMap entry into a non base type for configuration processing.
-     * </p>
      */
     enum ConfigEntryType implements ConvertFromReadable {
         String(ReadableType.String) {

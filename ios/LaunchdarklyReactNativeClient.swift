@@ -30,7 +30,7 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
         let user = userBuild(userConfig: userConfig)
 
         if config != nil && user != nil {
-            LDClient.shared.start(config: config!, user: user, completion: {() -> Void in
+            LDClient.shared.startCompleteWhenFlagsReceived(config: config!, user: user, completion: {() -> Void in
                 resolve(nil)})
         }
     }
@@ -95,6 +95,10 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
         
         if config["debugMode"] != nil {
             ldConfig.isDebugMode = config["debugMode"] as! Bool
+        }
+
+        if config["evaluationReasons"] != nil {
+            ldConfig.evaluationReasons = config["evaluationReasons"] as! Bool
         }
         
         return ldConfig
@@ -201,64 +205,143 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
     }
     
     @objc func boolVariationDetailFallback(_ flagKey: String, fallback: ObjCBool, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-        resolve(LDClient.shared.variationDetail(forKey: flagKey, fallback: fallback.boolValue))
+        let detail = LDClient.shared.variationDetail(forKey: flagKey, fallback: fallback.boolValue)
+        let jsonObject: NSDictionary = [
+            "value": detail.value,
+            "variationIndex": detail.variationIndex,
+            "reason": detail.reason
+        ]
+        resolve(jsonObject)
     }
     
     @objc func intVariationDetailFallback(_ flagKey: String, fallback: Int, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-        resolve(LDClient.shared.variationDetail(forKey: flagKey, fallback: fallback))
+        let detail = LDClient.shared.variationDetail(forKey: flagKey, fallback: fallback)
+        let jsonObject: NSDictionary = [
+            "value": detail.value,
+            "variationIndex": detail.variationIndex,
+            "reason": detail.reason
+        ]
+        resolve(jsonObject)
     }
     
     @objc func floatVariationDetailFallback(_ flagKey: String, fallback: CGFloat, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-        resolve(LDClient.shared.variationDetail(forKey: flagKey, fallback: Double(fallback)))
+        let detail = LDClient.shared.variationDetail(forKey: flagKey, fallback: Double(fallback))
+        let jsonObject: NSDictionary = [
+            "value": detail.value,
+            "variationIndex": detail.variationIndex,
+            "reason": detail.reason
+        ]
+        resolve(jsonObject)
     }
     
     @objc func stringVariationDetailFallback(_ flagKey: String, fallback: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-        resolve(LDClient.shared.variationDetail(forKey: flagKey, fallback: fallback))
+        let detail = LDClient.shared.variationDetail(forKey: flagKey, fallback: fallback)
+        let jsonObject: NSDictionary = [
+            "value": detail.value,
+            "variationIndex": detail.variationIndex,
+            "reason": detail.reason
+        ]
+        resolve(jsonObject)
     }
     
-    @objc func boolDetailVariation(_ flagKey: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-        let boolFlagValue: EvaluationDetail<Bool?> = LDClient.shared.variationDetail(forKey: flagKey)
-        resolve(boolFlagValue)
+    @objc func boolVariationDetail(_ flagKey: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+        let detail: EvaluationDetail<Bool?> = LDClient.shared.variationDetail(forKey: flagKey)
+        let jsonObject: NSDictionary = [
+            "value": detail.value,
+            "variationIndex": detail.variationIndex,
+            "reason": detail.reason
+        ]
+        resolve(jsonObject)
     }
     
-    @objc func intDetailVariation(_ flagKey: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-        let intFlagValue: EvaluationDetail<Int?> = LDClient.shared.variationDetail(forKey: flagKey)
-        resolve(intFlagValue)
+    @objc func intVariationDetail(_ flagKey: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+        let detail: EvaluationDetail<Int?> = LDClient.shared.variationDetail(forKey: flagKey)
+        let jsonObject: NSDictionary = [
+            "value": detail.value,
+            "variationIndex": detail.variationIndex,
+            "reason": detail.reason
+        ]
+        resolve(jsonObject)
     }
     
-    @objc func floatDetailVariation(_ flagKey: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-        let floatFlagValue: EvaluationDetail<Double?> = LDClient.shared.variationDetail(forKey: flagKey)
-        resolve(floatFlagValue)
+    @objc func floatVariationDetail(_ flagKey: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+        let detail: EvaluationDetail<Double?> = LDClient.shared.variationDetail(forKey: flagKey)
+        let jsonObject: NSDictionary = [
+            "value": detail.value,
+            "variationIndex": detail.variationIndex,
+            "reason": detail.reason
+        ]
+        resolve(jsonObject)
     }
     
-    @objc func stringDetailVariation(_ flagKey: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-        let stringFlagValue: EvaluationDetail<String?> = LDClient.shared.variationDetail(forKey: flagKey)
-        resolve(stringFlagValue)
+    @objc func stringVariationDetail(_ flagKey: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+        let detail: EvaluationDetail<String?> = LDClient.shared.variationDetail(forKey: flagKey)
+        let jsonObject: NSDictionary = [
+            "value": detail.value,
+            "variationIndex": detail.variationIndex,
+            "reason": detail.reason
+        ]
+        resolve(jsonObject)
     }
     
     @objc func jsonVariationDetailNone(_ flagKey: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-        let jsonFlagValue: EvaluationDetail<Dictionary<String, Any>?> = LDClient.shared.variationDetail(forKey: flagKey)
-        resolve(jsonFlagValue)
+        let detail: EvaluationDetail<Dictionary<String, Any>?> = LDClient.shared.variationDetail(forKey: flagKey)
+        let jsonObject: NSDictionary = [
+            "value": detail.value,
+            "variationIndex": detail.variationIndex,
+            "reason": detail.reason
+        ]
+        resolve(jsonObject)
     }
     
     @objc func jsonVariationDetailNumber(_ flagKey: String, fallback: Double, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-        resolve(LDClient.shared.variationDetail(forKey: flagKey, fallback: fallback))
+        let detail = LDClient.shared.variationDetail(forKey: flagKey, fallback: fallback)
+        let jsonObject: NSDictionary = [
+            "value": detail.value,
+            "variationIndex": detail.variationIndex,
+            "reason": detail.reason
+        ]
+        resolve(jsonObject)
     }
     
     @objc func jsonVariationDetailBool(_ flagKey: String, fallback: Bool, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-        resolve(LDClient.shared.variationDetail(forKey: flagKey, fallback: fallback))
+        let detail = LDClient.shared.variationDetail(forKey: flagKey, fallback: fallback)
+        let jsonObject: NSDictionary = [
+            "value": detail.value,
+            "variationIndex": detail.variationIndex,
+            "reason": detail.reason
+        ]
+        resolve(jsonObject)
     }
     
     @objc func jsonVariationDetailString(_ flagKey: String, fallback: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-        resolve(LDClient.shared.variationDetail(forKey: flagKey, fallback: fallback))
+        let detail = LDClient.shared.variationDetail(forKey: flagKey, fallback: fallback)
+        let jsonObject: NSDictionary = [
+            "value": detail.value,
+            "variationIndex": detail.variationIndex,
+            "reason": detail.reason
+        ]
+        resolve(jsonObject)
     }
     
     @objc func jsonVariationDetailArray(_ flagKey: String, fallback: Array<RCTConvert>, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-        resolve(LDClient.shared.variationDetail(forKey: flagKey, fallback: fallback))
+        let detail = LDClient.shared.variationDetail(forKey: flagKey, fallback: fallback)
+        let jsonObject: NSDictionary = [
+            "value": detail.value,
+            "variationIndex": detail.variationIndex,
+            "reason": detail.reason
+        ]
+        resolve(jsonObject)
     }
     
     @objc func jsonVariationDetailObject(_ flagKey: String, fallback: NSDictionary, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-        resolve(LDClient.shared.variationDetail(forKey: flagKey, fallback: fallback.swiftDictionary))
+        let detail = LDClient.shared.variationDetail(forKey: flagKey, fallback: fallback.swiftDictionary)
+        let jsonObject: NSDictionary = [
+            "value": detail.value,
+            "variationIndex": detail.variationIndex,
+            "reason": detail.reason
+        ]
+        resolve(jsonObject)
     }
 
     @objc func trackNumber(_ eventName: String, data: NSNumber) -> Void {
