@@ -2,26 +2,6 @@
 
 All notable changes to the LaunchDarkly React Native SDK will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
-## [2.2.1] - 2020-01-24
-### Added:
-- Adds `evaluationReasons` configuration option.
-- Adds `user.country` user option.
-
-### Fixed:
-- Fixes iOS start completion by adding new method `startCompleteWhenFlagsReceived`. This change creates feature parity between the start completion on iOS and Android. They now both complete when flag values are received.
-- Fixes `EvaluationDetail` parsing from native to JS.
-
-
-## [2.2.0] - 2020-01-24
-### Added:
-- Adds `evaluationReasons` configuration option.
-- Adds `user.country` user option.
-
-### Fixed:
-- Fixes iOS start completion by adding new method `startCompleteWhenFlagsReceived`. This change creates feature parity between the start completion on iOS and Android. They now both complete when flag values are received.
-- Fixes `EvaluationDetail` parsing from native to JS.
-
-
 ## [2.1.0] - 2019-12-23
 ### Added:
 - Implemented `variationDetail` which returns an Evaluation Reason giving developers greater insight into why a value was returned.
