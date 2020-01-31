@@ -446,7 +446,7 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
             return
         }
         LDClient.shared.observe(keys: [flagKey], owner: flagChangeOwner, handler: { (changedFlags) in
-            if changedFlags[flagKey] != nil {
+            if changedFlags[flagKey] != nil && self.bridge != nil {
                 self.sendEvent(withName: self.FLAG_PREFIX, body: ["flagKey": flagKey])
             }
         })
@@ -482,7 +482,9 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
             return
         }
         LDClient.shared.observeCurrentConnectionMode(owner: currentConnectionModeOwner, handler: { (connectionMode) in
-            self.sendEvent(withName: self.CONNECTION_MODE_PREFIX, body: ["connectionMode": connectionMode])
+            if self.bridge != nil {
+                self.sendEvent(withName: self.CONNECTION_MODE_PREFIX, body: ["connectionMode": connectionMode])
+            }
         })
     }
     
@@ -498,7 +500,9 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
             return
         }
         LDClient.shared.observeAll(owner: flagChangeOwner, handler: { (changedFlags) in
-            self.sendEvent(withName: self.ALL_FLAGS_PREFIX, body: ["flagKeys": changedFlags.description])
+            if self.bridge != nil {
+                self.sendEvent(withName: self.ALL_FLAGS_PREFIX, body: ["flagKeys": changedFlags.description])
+            }
         })
     }
     
