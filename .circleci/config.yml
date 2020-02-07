@@ -48,9 +48,19 @@ jobs:
       - run: cp -r ../project/ ../hello-react-native/node_modules/launchdarkly-react-native-client-sdk/
       - run: cd ../hello-react-native && react-native run-ios --configuration Release --simulator rn-ios
 
+  common:
+    docker:
+      - image: circleci/node:11.10.1
+    steps:
+      - checkout
+
+      - run: npm install
+      - run: npm run check-typescript
+
 workflows:
   version: 2
   android-ios:
     jobs:
       - android
       - ios
+      - common
