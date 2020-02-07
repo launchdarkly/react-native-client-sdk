@@ -64,16 +64,19 @@ async function tests() {
     const stringFlagValue: string = await client.stringVariation('key', 'default');
     const jsonFlagValue: Record<string, any> = await client.jsonVariation('key', jsonObj);
 
-    const boolDetail: LDEvaluationDetail<boolean> | boolean = await client.boolVariationDetail('key', false);
-    const intDetail: LDEvaluationDetail<number> | number = await client.intVariationDetail('key', 2);
-    const floatDetail: LDEvaluationDetail<number> | number = await client.floatVariationDetail('key', 2.3);
-    const stringDetail: LDEvaluationDetail<string> | string = await client.stringVariationDetail('key', 'default');
-    const jsonDetail: LDEvaluationDetail<Record<string, any>> | Record<string, any> = await client.jsonVariationDetail('key', jsonObj);
+    const boolDetail: LDEvaluationDetail<boolean> = await client.boolVariationDetail('key', false);
+    const intDetail: LDEvaluationDetail<number> = await client.intVariationDetail('key', 2);
+    const floatDetail: LDEvaluationDetail<number> = await client.floatVariationDetail('key', 2.3);
+    const stringDetail: LDEvaluationDetail<string> = await client.stringVariationDetail('key', 'default');
+    const jsonDetail: LDEvaluationDetail<Record<string, any>> = await client.jsonVariationDetail('key', jsonObj);
 
-    const detailCasted = boolDetail as LDEvaluationDetail<boolean>;
-    const detailValue: boolean = detailCasted.value;
-    const detailIndex: number | undefined = detailCasted.variationIndex;
-    const detailReason: LDEvaluationReason = detailCasted.reason;
+    const detailIndex: number | undefined = boolDetail.variationIndex;
+    const detailReason: LDEvaluationReason = boolDetail.reason;
+    const detailBoolValue: boolean = boolDetail.value;
+    const detailIntValue: number = intDetail.value;
+    const detailFloatValue: number = floatDetail.value;
+    const detailStringValue: string = stringDetail.value;
+    const detailJsonValue: Record<string, any> = jsonDetail.value;
 
     const flagSet: LDFlagSet = await client.allFlags();
     const flagSetValue: any = flagSet['key'];

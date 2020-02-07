@@ -280,7 +280,7 @@ declare module 'launchdarkly-react-native-client-sdk' {
         PREREQUISITE_FAILED = 'PREREQUISITE_FAILED',
 
         /**
-         * The flag could not be evaluated, so the default value was returned
+         * The flag could not be evaluated, so the default value was returned.
          */
         ERROR = 'ERROR',
     }
@@ -499,7 +499,7 @@ declare module 'launchdarkly-react-native-client-sdk' {
         boolVariationDetail(
             flagKey: string,
             fallback: boolean,
-        ): Promise<LDEvaluationDetail<boolean> | boolean>;
+        ): Promise<LDEvaluationDetail<boolean>>;
 
         /**
          * Determines the variation of an integer feature flag for a user, along with information about how it was
@@ -520,7 +520,7 @@ declare module 'launchdarkly-react-native-client-sdk' {
         intVariationDetail(
             flagKey: string,
             fallback: number,
-        ): Promise<LDEvaluationDetail<number> | number>;
+        ): Promise<LDEvaluationDetail<number>>;
 
         /**
          * Determines the variation of a floating-point feature flag for a user, along with information about how it was
@@ -541,7 +541,7 @@ declare module 'launchdarkly-react-native-client-sdk' {
         floatVariationDetail(
             flagKey: string,
             fallback: number,
-        ): Promise<LDEvaluationDetail<number> | number>;
+        ): Promise<LDEvaluationDetail<number>>;
 
         /**
          * Determines the variation of a string feature flag for a user, along with information about how it was
@@ -562,7 +562,7 @@ declare module 'launchdarkly-react-native-client-sdk' {
         stringVariationDetail(
             flagKey: string,
             fallback: string,
-        ): Promise<LDEvaluationDetail<string> | string>;
+        ): Promise<LDEvaluationDetail<string>>;
 
         /**
          * Determines the variation of a JSON feature flag for a user, along with information about how it was
@@ -583,7 +583,7 @@ declare module 'launchdarkly-react-native-client-sdk' {
         jsonVariationDetail(
             flagKey: string,
             fallback: Record<string, any>,
-        ): Promise<LDEvaluationDetail<Record<string, any>> | Record<string, any>>;
+        ): Promise<LDEvaluationDetail<Record<string, any>>>;
         
         /**
          * Returns a map of all available flags to the current user's values.
