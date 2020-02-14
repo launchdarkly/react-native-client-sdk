@@ -571,7 +571,7 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
             detailResult = ldClient.boolVariationDetail(flagKey, fallback);
         } catch (Exception e) {
             e.printStackTrace();
-            detailResult = new EvaluationDetail<Boolean>(EvaluationReason.error(EvaluationReason.ErrorKind.EXCEPTION, null, fallback));
+            detailResult = new EvaluationDetail<Boolean>(EvaluationReason.error(EvaluationReason.ErrorKind.EXCEPTION), null, fallback);
         }
         JsonObject jsonObject = gson.toJsonTree(detailResult).getAsJsonObject();
         WritableMap detailMap = fromJsonObject(jsonObject);
@@ -590,7 +590,7 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
             detailResult = ldClient.intVariationDetail(flagKey, fallback);
         } catch (Exception e) {
             e.printStackTrace();
-            detailResult = new EvaluationDetail<Integer>(EvaluationReason.error(EvaluationReason.ErrorKind.EXCEPTION, null, fallback));
+            detailResult = new EvaluationDetail<Integer>(EvaluationReason.error(EvaluationReason.ErrorKind.EXCEPTION), null, fallback);
         }
         JsonObject jsonObject = gson.toJsonTree(detailResult).getAsJsonObject();
         WritableMap detailMap = fromJsonObject(jsonObject);
@@ -609,7 +609,7 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
             detailResult = ldClient.floatVariationDetail(flagKey, fallback);
         } catch (Exception e) {
             e.printStackTrace();
-            detailResult = new EvaluationDetail<Float>(EvaluationReason.error(EvaluationReason.ErrorKind.EXCEPTION, null, fallback));
+            detailResult = new EvaluationDetail<Float>(EvaluationReason.error(EvaluationReason.ErrorKind.EXCEPTION), null, fallback);
         }
         JsonObject jsonObject = gson.toJsonTree(detailResult).getAsJsonObject();
         WritableMap detailMap = fromJsonObject(jsonObject);
@@ -628,7 +628,7 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
             detailResult = ldClient.stringVariationDetail(flagKey, fallback);
         } catch (Exception e) {
             e.printStackTrace();
-            detailResult = new EvaluationDetail<String>(EvaluationReason.error(EvaluationReason.ErrorKind.EXCEPTION, null, fallback));
+            detailResult = new EvaluationDetail<String>(EvaluationReason.error(EvaluationReason.ErrorKind.EXCEPTION), null, fallback);
         }
         JsonObject jsonObject = gson.toJsonTree(detailResult).getAsJsonObject();
         WritableMap detailMap = fromJsonObject(jsonObject);
@@ -687,7 +687,7 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
             jsonElementDetail = ldClient.jsonVariationDetail(flagKey, fallback);
         } catch (Exception e) {
             e.printStackTrace();
-            jsonElementDetail = new EvaluationDetail<JsonElement>(EvaluationReason.error(EvaluationReason.ErrorKind.EXCEPTION, null, fallback));
+            jsonElementDetail = new EvaluationDetail<JsonElement>(EvaluationReason.error(EvaluationReason.ErrorKind.EXCEPTION), null, fallback);
         }
         resolveJsonElementDetail(promise, jsonElementDetail);
     }
