@@ -2,6 +2,21 @@
 
 All notable changes to the LaunchDarkly React Native SDK will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [3.0.0] - 2020-02-20
+### Added:
+- Added TypeScript type definitions (thanks, [eeynard](https://github.com/launchdarkly/react-native-client-sdk/pull/32)!)
+- Added TypeDoc comments
+- The SDK now specifies a uniquely identifiable request header when sending events to LaunchDarkly to ensure that events are only processed once, even if the SDK sends them two times due to a failed initial attempt.
+
+### Changed:
+- Changed the default value for the `anonymous` user property has been changed to `false`. Previously this default was inconsistent; the default value was `true` when running in iOS and `false` when running in Android.
+- Changed the default value for the `backgroundPollingIntervalMillis` SDK configuration property has been changed to `3600000` (one hour). Previously this default was inconsistent; the default value was `900000` (15 minutes) when running in iOS and `3600000` (one hour) when running in Android.
+- Changed the default value for the `disableBackgroundUpdating ` SDK configuration property has been changed to `false`. Previously this default was inconsistent; the default value was `true` when running in iOS and `false` when running in Android.
+
+### Fixed:
+- Fixed the `*VariationDetail` methods so that they now always return a promise containing the variation detail information. Previously, when running in Android, this promise would have instead contained just the variation value if the underlying process threw an exception.
+- Fixed an issue where React Native apps could crash after reloading when running in iOS (thanks, [shercoder](https://github.com/launchdarkly/react-native-client-sdk/pull/39)!)
+
 ## [2.2.0] - 2020-01-24
 ### Added:
 - Adds `evaluationReasons` configuration option.
