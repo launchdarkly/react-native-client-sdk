@@ -3,7 +3,9 @@
   "version": "2.2.0",
   "description": "",
   "main": "index.js",
+  "types": "index.d.ts",
   "scripts": {
+    "check-typescript": "node_modules/typescript/bin/tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -24,6 +26,7 @@
     "react": "16.9.0"
   },
   "devDependencies": {
-    "metro-react-native-babel-preset": "0.56.0"
+    "metro-react-native-babel-preset": "0.56.0",
+    "typescript": "3.0.1"
   }
 }

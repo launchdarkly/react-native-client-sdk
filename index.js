@@ -14,7 +14,12 @@ export default class LDClient {
   }
 
   configure(config, userConfig) {
-    return LaunchdarklyReactNativeClient.configure(config, userConfig);
+    const configWithOverriddenDefaults = Object.assign({
+      backgroundPollingIntervalMillis: 3600000, // the iOS SDK defaults this to 900000
+      disableBackgroundUpdating: false          // the iOS SDK defaults this to true
+    }, config);
+    
+    return LaunchdarklyReactNativeClient.configure(configWithOverriddenDefaults, this._addUserOverrides(userConfig));
   }
 
   boolVariation(flagKey, fallback) {
@@ -182,7 +187,13 @@ export default class LDClient {
   }
 
   identify(userConfig) {
-    return LaunchdarklyReactNativeClient.identify(userConfig);
+    return LaunchdarklyReactNativeClient.identify(this._addUserOverrides(userConfig));
+  }
+
+  _addUserOverrides(userConfig) {
+    return Object.assign({
+      anonymous: false   // the iOS SDK defaults this to true
+    }, userConfig);
   }
 
   isDisableBackgroundPolling() {

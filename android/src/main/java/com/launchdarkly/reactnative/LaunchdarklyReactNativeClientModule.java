@@ -34,6 +34,7 @@ import com.launchdarkly.android.ConnectionInformation;
 import com.launchdarkly.android.LDStatusListener;
 import com.launchdarkly.android.LDAllFlagsListener;
 import com.launchdarkly.android.EvaluationDetail;
+import com.launchdarkly.android.EvaluationReason;
 import com.launchdarkly.android.LDFailure;
 
 import java.lang.reflect.InvocationTargetException;
@@ -565,14 +566,16 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
 
     @ReactMethod
     public void boolVariationDetailFallback(String flagKey, Boolean fallback, Promise promise) {
+        EvaluationDetail<Boolean> detailResult;
         try {
-            EvaluationDetail<Boolean> detailResult = ldClient.boolVariationDetail(flagKey, fallback);
-            JsonObject jsonObject = gson.toJsonTree(detailResult).getAsJsonObject();
-            WritableMap detailMap = fromJsonObject(jsonObject);
-            promise.resolve(detailMap);
+            detailResult = ldClient.boolVariationDetail(flagKey, fallback);
         } catch (Exception e) {
-            promise.resolve(fallback);
+            e.printStackTrace();
+            detailResult = new EvaluationDetail<Boolean>(EvaluationReason.error(EvaluationReason.ErrorKind.EXCEPTION), null, fallback);
         }
+        JsonObject jsonObject = gson.toJsonTree(detailResult).getAsJsonObject();
+        WritableMap detailMap = fromJsonObject(jsonObject);
+        promise.resolve(detailMap);
     }
 
     @ReactMethod
@@ -582,14 +585,16 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
 
     @ReactMethod
     public void intVariationDetailFallback(String flagKey, Integer fallback, Promise promise) {
+        EvaluationDetail<Integer> detailResult;
         try {
-            EvaluationDetail<Integer> detailResult = ldClient.intVariationDetail(flagKey, fallback);
-            JsonObject jsonObject = gson.toJsonTree(detailResult).getAsJsonObject();
-            WritableMap detailMap = fromJsonObject(jsonObject);
-            promise.resolve(detailMap);
+            detailResult = ldClient.intVariationDetail(flagKey, fallback);
         } catch (Exception e) {
-            promise.resolve(fallback);
+            e.printStackTrace();
+            detailResult = new EvaluationDetail<Integer>(EvaluationReason.error(EvaluationReason.ErrorKind.EXCEPTION), null, fallback);
         }
+        JsonObject jsonObject = gson.toJsonTree(detailResult).getAsJsonObject();
+        WritableMap detailMap = fromJsonObject(jsonObject);
+        promise.resolve(detailMap);
     }
 
     @ReactMethod
@@ -599,14 +604,16 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
 
     @ReactMethod
     public void floatVariationDetailFallback(String flagKey, Float fallback, Promise promise) {
+        EvaluationDetail<Float> detailResult;
         try {
-            EvaluationDetail<Float> detailResult = ldClient.floatVariationDetail(flagKey, fallback);
-            JsonObject jsonObject = gson.toJsonTree(detailResult).getAsJsonObject();
-            WritableMap detailMap = fromJsonObject(jsonObject);
-            promise.resolve(detailMap);
+            detailResult = ldClient.floatVariationDetail(flagKey, fallback);
         } catch (Exception e) {
-            promise.resolve(fallback);
+            e.printStackTrace();
+            detailResult = new EvaluationDetail<Float>(EvaluationReason.error(EvaluationReason.ErrorKind.EXCEPTION), null, fallback);
         }
+        JsonObject jsonObject = gson.toJsonTree(detailResult).getAsJsonObject();
+        WritableMap detailMap = fromJsonObject(jsonObject);
+        promise.resolve(detailMap);
     }
 
     @ReactMethod
@@ -616,14 +623,16 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
 
     @ReactMethod
     public void stringVariationDetailFallback(String flagKey, String fallback, Promise promise) {
+        EvaluationDetail<String> detailResult;
         try {
-            EvaluationDetail<String> detailResult = ldClient.stringVariationDetail(flagKey, fallback);
-            JsonObject jsonObject = gson.toJsonTree(detailResult).getAsJsonObject();
-            WritableMap detailMap = fromJsonObject(jsonObject);
-            promise.resolve(detailMap);
+            detailResult = ldClient.stringVariationDetail(flagKey, fallback);
         } catch (Exception e) {
-            promise.resolve(fallback);
+            e.printStackTrace();
+            detailResult = new EvaluationDetail<String>(EvaluationReason.error(EvaluationReason.ErrorKind.EXCEPTION), null, fallback);
         }
+        JsonObject jsonObject = gson.toJsonTree(detailResult).getAsJsonObject();
+        WritableMap detailMap = fromJsonObject(jsonObject);
+        promise.resolve(detailMap);
     }
 
     @ReactMethod
@@ -673,12 +682,14 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
     }
 
     private void jsonVariationDetailBase(String flagKey, JsonElement fallback, Promise promise) {
+        EvaluationDetail<JsonElement> jsonElementDetail;
         try {
-            EvaluationDetail<JsonElement> jsonElementDetail = ldClient.jsonVariationDetail(flagKey, fallback);
-            resolveJsonElementDetail(promise, jsonElementDetail);
+            jsonElementDetail = ldClient.jsonVariationDetail(flagKey, fallback);
         } catch (Exception e) {
-            resolveJsonElement(promise, fallback);
+            e.printStackTrace();
+            jsonElementDetail = new EvaluationDetail<JsonElement>(EvaluationReason.error(EvaluationReason.ErrorKind.EXCEPTION), null, fallback);
         }
+        resolveJsonElementDetail(promise, jsonElementDetail);
     }
 
 
