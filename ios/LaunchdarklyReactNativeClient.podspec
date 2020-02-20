@@ -1,7 +1,7 @@
 
 Pod::Spec.new do |s|
   s.name         = "LaunchdarklyReactNativeClient"
-  s.version      = "2.2.0"
+  s.version      = "3.0.0"
   s.summary      = "LaunchdarklyReactNativeClient"
   s.description  = <<-DESC
                   LaunchdarklyReactNativeClient
