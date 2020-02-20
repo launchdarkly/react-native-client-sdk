@@ -18,13 +18,8 @@ export default class LDClient {
       backgroundPollingIntervalMillis: 3600000, // the iOS SDK defaults this to 900000
       disableBackgroundUpdating: false          // the iOS SDK defaults this to true
     }, config);
-
-    // The Android SDK expects the events URI to be in the form of "<baseUri>/mobile" whereas iOS only expects "<baseUri>".
-    if (configWithOverriddenDefaults.eventsUri && Platform.OS === 'android') {
-      configWithOverriddenDefaults.eventsUri = configWithOverriddenDefaults.eventsUri + '/mobile';
-    }
     
-    return LaunchdarklyReactNativeClient.configure(configWithOverriddenDefaults, _addUserOverrides(userConfig));
+    return LaunchdarklyReactNativeClient.configure(configWithOverriddenDefaults, this._addUserOverrides(userConfig));
   }
 
   boolVariation(flagKey, fallback) {
@@ -192,7 +187,7 @@ export default class LDClient {
   }
 
   identify(userConfig) {
-    return LaunchdarklyReactNativeClient.identify(_addUserOverrides(userConfig));
+    return LaunchdarklyReactNativeClient.identify(this._addUserOverrides(userConfig));
   }
 
   _addUserOverrides(userConfig) {

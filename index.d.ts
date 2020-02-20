@@ -402,7 +402,7 @@ declare module 'launchdarkly-react-native-client-sdk' {
      *
      * For more information, see the [SDK Reference Guide](https://docs.launchdarkly.com/docs/react-native-sdk-reference).
      */
-    export class LDClient {
+    export default class LDClient {
         constructor();
 
         /**
