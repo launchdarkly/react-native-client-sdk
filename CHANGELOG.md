@@ -2,6 +2,14 @@
 
 All notable changes to the LaunchDarkly React Native SDK will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [3.0.1] - 2020-02-26
+### Added:
+- Generated TypeDoc documentation for all types, properties, and methods is now available online at https://launchdarkly.github.io/react-native-client-sdk/. Currently this will only be for the latest released version.
+
+### Fixed:
+- Fixed some incorrect and incomplete typedoc comments.
+
+
 ## [3.0.0] - 2020-02-20
 ### Added:
 - Added TypeScript type definitions (thanks, [eeynard](https://github.com/launchdarkly/react-native-client-sdk/pull/32)!)
