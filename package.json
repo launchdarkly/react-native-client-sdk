@@ -20,7 +20,7 @@
   "bugs": {
     "url": "https://github.com/launchdarkly/react-native-client-sdk/issues"
   },
-  "homepage": "https://docs.launchdarkly.com/docs/react-native-sdk-reference",
+  "homepage": "https://docs.launchdarkly.com/sdk/client-side/react-native",
   "peerDependencies": {
     "react-native": "~0.61.2",
     "react": "16.9.0"

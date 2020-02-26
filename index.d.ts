@@ -1,10 +1,10 @@
 /**
- * This is the API reference for the LaunchDarkly SDK for React Native.
+ * This is the API reference for the LaunchDarkly Client-Side SDK for React Native.
  *
  * In typical usage, you will instantiate [[LDClient]] and then call [[configure]] once at startup time to 
  * set up your connection to LaunchDarkly.
  *
- * For more information, see the [SDK reference guide](http://docs.launchdarkly.com/docs/react-native-sdk-reference).
+ * For more information, see the [SDK reference guide](https://docs.launchdarkly.com/sdk/client-side/react-native).
  */
 declare module 'launchdarkly-react-native-client-sdk' {
 
@@ -15,7 +15,7 @@ declare module 'launchdarkly-react-native-client-sdk' {
         /**
          * The mobile SDK key associated with your LaunchDarkly environment.
          * 
-         * This field is required as your the React Native SDK will use this value to unique 
+         * This field is required as the React Native SDK will use this value to uniquely 
          * identify your LaunchDarkly account.
          */
         mobileKey: string;
@@ -367,7 +367,10 @@ declare module 'launchdarkly-react-native-client-sdk' {
      *
      * This is the result of calling one of the `LDClient.*VariationDetail` methods.
      *
-     * For more information, see the [documentation](https://docs.launchdarkly.com/docs/evaluation-reasons).
+     * For more information, see the [documentation](https://docs.launchdarkly.com/sdk/concepts/evaluation-reasons).
+     * 
+     * @typeparam T
+     *   The type of flag being evaluated.
      */
     export type LDEvaluationDetail<T> = {
         /**
@@ -400,7 +403,7 @@ declare module 'launchdarkly-react-native-client-sdk' {
      *
      * Applications should configure the client at application startup time and reuse the same instance.
      *
-     * For more information, see the [SDK Reference Guide](https://docs.launchdarkly.com/docs/react-native-sdk-reference).
+     * For more information, see the [SDK Reference Guide](https://docs.launchdarkly.com/sdk/client-side/react-native).
      */
     export default class LDClient {
         constructor();
@@ -487,7 +490,7 @@ declare module 'launchdarkly-react-native-client-sdk' {
          * Note that this will only work if you have set `evaluationReasons` to true in [[LDClientConfig]].
          * Otherwise, the `reason` property of the result will be null.
          *
-         * For more information, see the [SDK reference guide](https://docs.launchdarkly.com/docs/evaluation-reasons).
+         * For more information, see the [SDK reference guide](https://docs.launchdarkly.com/sdk/concepts/evaluation-reasons).
          *
          * @param flagKey
          *   The unique key of the feature flag.
@@ -508,7 +511,7 @@ declare module 'launchdarkly-react-native-client-sdk' {
          * Note that this will only work if you have set `evaluationReasons` to true in [[LDClientConfig]].
          * Otherwise, the `reason` property of the result will be null.
          *
-         * For more information, see the [SDK reference guide](https://docs.launchdarkly.com/docs/evaluation-reasons).
+         * For more information, see the [SDK reference guide](https://docs.launchdarkly.com/sdk/concepts/evaluation-reasons).
          *
          * @param flagKey
          *   The unique key of the feature flag.
@@ -529,7 +532,7 @@ declare module 'launchdarkly-react-native-client-sdk' {
          * Note that this will only work if you have set `evaluationReasons` to true in [[LDClientConfig]].
          * Otherwise, the `reason` property of the result will be null.
          *
-         * For more information, see the [SDK reference guide](https://docs.launchdarkly.com/docs/evaluation-reasons).
+         * For more information, see the [SDK reference guide](https://docs.launchdarkly.com/sdk/concepts/evaluation-reasons).
          *
          * @param flagKey
          *   The unique key of the feature flag.
@@ -550,7 +553,7 @@ declare module 'launchdarkly-react-native-client-sdk' {
          * Note that this will only work if you have set `evaluationReasons` to true in [[LDClientConfig]].
          * Otherwise, the `reason` property of the result will be null.
          *
-         * For more information, see the [SDK reference guide](https://docs.launchdarkly.com/docs/evaluation-reasons).
+         * For more information, see the [SDK reference guide](https://docs.launchdarkly.com/sdk/concepts/evaluation-reasons).
          *
          * @param flagKey
          *   The unique key of the feature flag.
@@ -571,7 +574,7 @@ declare module 'launchdarkly-react-native-client-sdk' {
          * Note that this will only work if you have set `evaluationReasons` to true in [[LDClientConfig]].
          * Otherwise, the `reason` property of the result will be null.
          *
-         * For more information, see the [SDK reference guide](https://docs.launchdarkly.com/docs/evaluation-reasons).
+         * For more information, see the [SDK reference guide](https://docs.launchdarkly.com/sdk/concepts/evaluation-reasons).
          *
          * @param flagKey
          *   The unique key of the feature flag.
