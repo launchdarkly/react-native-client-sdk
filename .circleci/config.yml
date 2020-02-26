@@ -1,52 +1,16 @@
+# stub configuration to prevent CircleCI from building this branch
 version: 2
 jobs:
-  android:
+  empty-job:
     docker:
-      - image: circleci/android:api-27-node
-    environment:
-      QEMU_AUDIO_DRV: none
-      _JAVA_OPTIONS: "-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -Xms2048m -Xmx4096m"
-      GRADLE_OPTS: "-Dorg.gradle.daemon=false"
-    steps:
-      - checkout
-
-      - setup_remote_docker:
-          docker_layer_caching: true
-          reusable: true  # Deprecated version of above
-
-      - run: mkdir -p ~/.gradle && echo "org.gradle.daemon=false" >> ~/.gradle/gradle.properties
-      - run: sdkmanager "system-images;android-24;default;armeabi-v7a"
-      - run: sdkmanager --licenses
-      - run: sudo apt-get install libpulse0
-      - run: echo no | avdmanager create avd -n rn-android -f -k "system-images;android-24;default;armeabi-v7a"
-      - run: 
-          command: emulator -avd rn-android -netdelay none -netspeed full -no-audio -no-window -no-snapshot -use-system-libs -no-boot-anim
-          background: true
-          timeout: 1200
-          no_output_timeout: 20m
-      - run: sudo npm install -g react-native-cli
-      - run: cd HelloReactNative && npm install
-      - run: circle-android wait-for-boot
-      - run: 
-          command: cd ReactNativeRestwrapper && react-native run-android
-          background: true
-          timeout: 1200
-
-  ios:
-    macos:
-      xcode: "10.1.0"
-    steps:
-      - checkout
-
-      - run: xcrun simctl create rn-ios com.apple.CoreSimulator.SimDeviceType.iPhone-X com.apple.CoreSimulator.SimRuntime.iOS-12-1
-      - run: xcrun simctl boot rn-ios
-      - run: sudo npm install -g react-native-cli
-      - run: cd HelloReactNative && npm install
-      - run: cd HelloReactNative && react-native run-ios --configuration Release
+      - image: ubuntu:18.10
+    steps: []
 
 workflows:
   version: 2
-  android-ios:
+  empty-build:
     jobs:
-      - android
-      - ios
+      - empty-job:
+          filters:
+            branches: 
+              only: not-gh-pages
