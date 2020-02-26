@@ -1,7 +1,7 @@
-Contributing to the LaunchDarkly Client-side SDK for React Native
+Contributing to the LaunchDarkly Client-Side SDK for React Native
 ================================================
 
-LaunchDarkly has published an [SDK contributor's guide](https://docs.launchdarkly.com/docs/sdk-contributors-guide) that provides a detailed explanation of how our SDKs work. See below for additional information on how to contribute to this SDK.
+LaunchDarkly has published an [SDK contributor's guide](https://docs.launchdarkly.com/sdk/concepts/contributors-guide) that provides a detailed explanation of how our SDKs work. See below for additional information on how to contribute to this SDK.
 
 Submitting bug reports and feature requests
 ------------------

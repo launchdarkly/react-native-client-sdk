@@ -11,5 +11,9 @@ template:
   skip:
     - test
 
+documentation:
+  githubPages: true
+  title: LaunchDarkly Client-Side SDK for React Native
+
 sdk:
   displayName: React Native
