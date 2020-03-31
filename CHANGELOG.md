@@ -2,6 +2,10 @@
 
 All notable changes to the LaunchDarkly React Native SDK will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [3.0.2] - 2020-03-31
+### Changed:
+- Updated SDK code to build, run, and test on Xcode 11.4.
+
 ## [3.0.1] - 2020-02-26
 ### Added:
 - Generated TypeDoc documentation for all types, properties, and methods is now available online at https://launchdarkly.github.io/react-native-client-sdk/. Currently this will only be for the latest released version.
