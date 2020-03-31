@@ -36,7 +36,7 @@ jobs:
 
   ios:
     macos:
-      xcode: "10.2.1"
+      xcode: "11.4"
     steps:
       - checkout
 
