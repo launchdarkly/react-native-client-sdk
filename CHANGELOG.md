@@ -2,6 +2,10 @@
 
 All notable changes to the LaunchDarkly React Native SDK will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [3.1.1] - 2020-04-24
+### Changed:
+- Updated the Android target and compile versions to 28
+
 ## [3.1.0] - 2020-04-01
 ### Changed:
 - The SDK is now compatible with React Native version 0.62.x and React version 16.11.x
