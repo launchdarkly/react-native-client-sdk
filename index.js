@@ -131,7 +131,7 @@ export default class LDClient {
       } else if (typeof data === 'number') {
         LaunchdarklyReactNativeClient.trackNumberMetricValue(eventName, data, metricValue);
       } else if (typeof data === 'boolean') {
-        LaunchdarklyReactNativeClient.trackBoolMetricValuel(eventName, data, metricValue);
+        LaunchdarklyReactNativeClient.trackBoolMetricValue(eventName, data, metricValue);
       } else if (typeof data === 'string') {
         LaunchdarklyReactNativeClient.trackStringMetricValue(eventName, data, metricValue);
       } else if (Array.isArray(data)) {
