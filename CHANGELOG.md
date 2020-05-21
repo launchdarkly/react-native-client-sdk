@@ -2,6 +2,10 @@
 
 All notable changes to the LaunchDarkly React Native SDK will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [3.1.2] - 2020-05-21
+### Fixed:
+- The `track` method failed when called with a boolean `data` value and a non-null `metricValue`. (Thanks, [bolak](https://github.com/launchdarkly/react-native-client-sdk/pull/51)!)
+
 ## [3.1.1] - 2020-04-24
 ### Changed:
 - Updated the Android target and compile versions to 28
