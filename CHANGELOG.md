@@ -2,6 +2,13 @@
 
 All notable changes to the LaunchDarkly React Native SDK will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [3.2.0] - 2020-07-10
+### Changed:
+- The SDK is now compatible with React Native version 0.63.x and React version 16.13.x.
+
+### Removed:
+- The SDK no longer supports iOS 9. This change was made to correspond to React Native 0.63&#39;s dropped support for iOS 9.
+
 ## [3.1.2] - 2020-05-21
 ### Fixed:
 - The `track` method failed when called with a boolean `data` value and a non-null `metricValue`. (Thanks, [bolak](https://github.com/launchdarkly/react-native-client-sdk/pull/51)!)
