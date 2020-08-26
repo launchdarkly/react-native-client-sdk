@@ -2,6 +2,10 @@
 
 All notable changes to the LaunchDarkly React Native SDK will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [3.2.1] - 2020-08-26
+### Fixed:
+- `isInitialized` was failing when run in Android due to accessing an undefined variable. ([#55](https://github.com/launchdarkly/react-native-client-sdk/issues/55))
+
 ## [3.2.0] - 2020-07-10
 ### Changed:
 - The SDK is now compatible with React Native version 0.63.x and React version 16.13.x.
