@@ -172,7 +172,7 @@ export default class LDClient {
 
   isInitialized() {
     if(Platform.OS === 'android') {
-      return LaunchdarklyReactNativeClient.isInitialized(promise);
+      return LaunchdarklyReactNativeClient.isInitialized();
     } else {
       return Promise.reject("Function is not available on this platform");
     }
