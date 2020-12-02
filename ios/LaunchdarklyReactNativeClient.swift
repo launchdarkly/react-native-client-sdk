@@ -501,7 +501,7 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
         }
         LDClient.shared.observeAll(owner: flagChangeOwner, handler: { (changedFlags) in
             if self.bridge != nil {
-                self.sendEvent(withName: self.ALL_FLAGS_PREFIX, body: ["flagKeys": changedFlags.description])
+                self.sendEvent(withName: self.ALL_FLAGS_PREFIX, body: ["flagKeys": changedFlags.keys.description])
             }
         })
     }
