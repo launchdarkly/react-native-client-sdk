@@ -2,6 +2,12 @@
 
 All notable changes to the LaunchDarkly React Native SDK will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [3.2.2] - 2020-12-02
+### Fixed:
+- Changed iOS all flags listener to only return `[LDFlagKey]` instead of `[LDFlagKey: LDChangedFlag]`. ([#61](https://github.com/launchdarkly/react-native-client-sdk/issues/61))
+
+
+
 ## [3.2.1] - 2020-08-26
 ### Fixed:
 - `isInitialized` was failing when run in Android due to accessing an undefined variable. ([#55](https://github.com/launchdarkly/react-native-client-sdk/issues/55))
