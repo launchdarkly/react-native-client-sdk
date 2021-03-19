@@ -989,7 +989,7 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
                 }
             }
         });
-        background.run();
+        background.start();
     }
 
     @ReactMethod
