@@ -2,12 +2,14 @@
 // This file exists only so that we can run the TypeScript compiler in the CI build
 // to validate our index.d.ts file. The code will not actually be run.
 
-import LDClient, { 
-    LDClientConfig,
+import LDClient, {
+    LDConnectionMode,
+    LDConfig,
     LDEvaluationDetail, 
     LDEvaluationReason, 
+    LDFailureReason, 
     LDFlagSet,
-    LDUserConfig, 
+    LDUser, 
 } from 'launchdarkly-react-native-client-sdk';
 
 async function tests() {
@@ -20,12 +22,12 @@ async function tests() {
         'f': [ 1, 2 ]
     };
 
-    const configWithKeyOnly: LDClientConfig = {
+    const configWithKeyOnly: LDConfig = {
         mobileKey: ''
     };
-    const configWithAllOptions: LDClientConfig = {
+    const configWithAllOptions: LDConfig = {
         mobileKey: '',
-        baseUri: '',
+        pollUri: '',
         streamUri: '',
         eventsUri: '',
         eventsCapacity: 1,
@@ -39,9 +41,13 @@ async function tests() {
         offline: true,
         debugMode: true,
         evaluationReasons: true,
+        maxCachedUsers: 6,
+        diagnosticOptOut: true,
+        diagnosticRecordingIntervalMillis: 100000,
+        allUserAttributesPrivate: true,
     };
-    const userWithKeyOnly: LDUserConfig = { key: 'user' };
-    const user: LDUserConfig = {
+    const userWithKeyOnly: LDUser = { key: 'user' };
+    const user: LDUser = {
         key: 'user',
         name: 'name',
         firstName: 'first',
@@ -51,10 +57,14 @@ async function tests() {
         country: 'us',
         privateAttributeNames: [ 'name', 'email' ],
         custom: jsonObj,
+        avatar: 'avatar',
+        ip: '192.0.2.1',
     };
     const client: LDClient = new LDClient();
+    const timeoutClient: LDClient = new LDClient();
 
     const configure: null = await client.configure(configWithAllOptions, user);
+    const configureWithTimeout: null = await timeoutClient.configure(configWithAllOptions, user, 10);
     const identify: null = await client.identify(user);
 
     const boolFlagValue: boolean = await client.boolVariation('key', false);
@@ -94,7 +104,6 @@ async function tests() {
     const setOnline: boolean = await client.setOnline();
     const isOffline: boolean = await client.isOffline();
     const isInitialized: boolean = await client.isInitialized();
-    const isDisableBackgroundPolling: boolean = await client.isDisableBackgroundPolling();
 
     const callback = function(_: string): void { };
     const registerFeatureFlagListener: void = client.registerFeatureFlagListener('key', callback);
@@ -104,10 +113,15 @@ async function tests() {
     const registerCurrentConnectionModeListener: void = client.registerCurrentConnectionModeListener('id', callback);
     const unregisterCurrentConnectionModeListener: void = client.unregisterCurrentConnectionModeListener('id');
 
-    const getConnectionInformation: any = await client.getConnectionInformation();
+    const getConnectionMode: LDConnectionMode = await client.getConnectionMode();
+    const getSuccessfulConnection: number | null = await client.getLastSuccessfulConnection();
+    const getFailedConnection: number | null = await client.getLastFailedConnection();
+    const getFailureReason: LDFailureReason | null = await client.getLastFailure();
 
     const flush: void = await client.flush();
     const close: void = await client.close();
+    
+    const version: String = client.getVersion();
 };
 
 tests();
