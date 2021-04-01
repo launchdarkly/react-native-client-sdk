@@ -1,4 +1,5 @@
 import { NativeModules, NativeEventEmitter, Platform } from 'react-native';
+import { version } from './package.json';
 
 let LaunchdarklyReactNativeClient = NativeModules.LaunchdarklyReactNativeClient;
 
@@ -13,110 +14,124 @@ export default class LDClient {
     this.eventEmitter.addListener(LaunchdarklyReactNativeClient.CONNECTION_MODE_PREFIX, body => this._connectionModeUpdateListener(body));
   }
 
-  configure(config, userConfig) {
+  getVersion() {
+    return String(version);
+  }
+
+  configure(config, user, timeout) {
+    if (this.isInitialized() == true) {
+      Promise.reject('LaunchDarkly SDK already initialized');
+    }
     const configWithOverriddenDefaults = Object.assign({
       backgroundPollingIntervalMillis: 3600000, // the iOS SDK defaults this to 900000
-      disableBackgroundUpdating: false          // the iOS SDK defaults this to true
+      disableBackgroundUpdating: false,         // the iOS SDK defaults this to true
+      pollUri: 'https://clientsdk.launchdarkly.com',
+      wrapperName: 'react-native-client-sdk',
+      wrapperVersion: this.getVersion()
     }, config);
     
-    return LaunchdarklyReactNativeClient.configure(configWithOverriddenDefaults, this._addUserOverrides(userConfig));
+    if (timeout == undefined) {
+      return LaunchdarklyReactNativeClient.configure(configWithOverriddenDefaults, this._addUserOverrides(user));
+    } else {
+      return LaunchdarklyReactNativeClient.configureWithTimeout(configWithOverriddenDefaults, this._addUserOverrides(user), timeout);
+    }
   }
 
-  boolVariation(flagKey, fallback) {
-    if (fallback == undefined) {
+  boolVariation(flagKey, defaultValue) {
+    if (defaultValue == undefined) {
       return LaunchdarklyReactNativeClient.boolVariation(flagKey);
     } else {
-      return LaunchdarklyReactNativeClient.boolVariationFallback(flagKey, fallback);
+      return LaunchdarklyReactNativeClient.boolVariationDefaultValue(flagKey, defaultValue);
     }
   }
 
-  intVariation(flagKey, fallback) {
-    if (fallback == undefined) {
+  intVariation(flagKey, defaultValue) {
+    if (defaultValue == undefined) {
       return LaunchdarklyReactNativeClient.intVariation(flagKey);
     } else {
-      return LaunchdarklyReactNativeClient.intVariationFallback(flagKey, fallback);
+      return LaunchdarklyReactNativeClient.intVariationDefaultValue(flagKey, defaultValue);
     }
   }
 
-  floatVariation(flagKey, fallback) {
-    if (fallback == undefined) {
+  floatVariation(flagKey, defaultValue) {
+    if (defaultValue == undefined) {
       return LaunchdarklyReactNativeClient.floatVariation(flagKey);
     } else {
-      return LaunchdarklyReactNativeClient.floatVariationFallback(flagKey, fallback);
+      return LaunchdarklyReactNativeClient.floatVariationDefaultValue(flagKey, defaultValue);
     }
   }
 
-  stringVariation(flagKey, fallback) {
-    if (fallback == undefined) {
+  stringVariation(flagKey, defaultValue) {
+    if (defaultValue == undefined) {
       return LaunchdarklyReactNativeClient.stringVariation(flagKey);
     } else {
-      return LaunchdarklyReactNativeClient.stringVariationFallback(flagKey, fallback);
+      return LaunchdarklyReactNativeClient.stringVariationDefaultValue(flagKey, defaultValue);
     }
   }
 
-  jsonVariation(flagKey, fallback) {
-    if (fallback == undefined) {
+  jsonVariation(flagKey, defaultValue) {
+    if (defaultValue == undefined) {
       return LaunchdarklyReactNativeClient.jsonVariationNone(flagKey);
-    } else if (typeof fallback === 'number') {
-      return LaunchdarklyReactNativeClient.jsonVariationNumber(flagKey, fallback);
-    } else if (typeof fallback === 'boolean') {
-      return LaunchdarklyReactNativeClient.jsonVariationBool(flagKey, fallback);
-    } else if (typeof fallback === 'string') {
-      return LaunchdarklyReactNativeClient.jsonVariationString(flagKey, fallback);
-    } else if (Array.isArray(fallback)) {
-      return LaunchdarklyReactNativeClient.jsonVariationArray(flagKey, fallback);
+    } else if (typeof defaultValue === 'number') {
+      return LaunchdarklyReactNativeClient.jsonVariationNumber(flagKey, defaultValue);
+    } else if (typeof defaultValue === 'boolean') {
+      return LaunchdarklyReactNativeClient.jsonVariationBool(flagKey, defaultValue);
+    } else if (typeof defaultValue === 'string') {
+      return LaunchdarklyReactNativeClient.jsonVariationString(flagKey, defaultValue);
+    } else if (Array.isArray(defaultValue)) {
+      return LaunchdarklyReactNativeClient.jsonVariationArray(flagKey, defaultValue);
     } else {
       // Should be an object
-      return LaunchdarklyReactNativeClient.jsonVariationObject(flagKey, fallback);
+      return LaunchdarklyReactNativeClient.jsonVariationObject(flagKey, defaultValue);
     }
   }
 
-  boolVariationDetail(flagKey, fallback) {
-    if (fallback == undefined) {
+  boolVariationDetail(flagKey, defaultValue) {
+    if (defaultValue == undefined) {
       return LaunchdarklyReactNativeClient.boolVariationDetail(flagKey);
     } else {
-      return LaunchdarklyReactNativeClient.boolVariationDetailFallback(flagKey, fallback);
+      return LaunchdarklyReactNativeClient.boolVariationDetailDefaultValue(flagKey, defaultValue);
     }
   }
 
-  intVariationDetail(flagKey, fallback) {
-    if (fallback == undefined) {
+  intVariationDetail(flagKey, defaultValue) {
+    if (defaultValue == undefined) {
       return LaunchdarklyReactNativeClient.intVariationDetail(flagKey);
     } else {
-      return LaunchdarklyReactNativeClient.intVariationDetailFallback(flagKey, fallback);
+      return LaunchdarklyReactNativeClient.intVariationDetailDefaultValue(flagKey, defaultValue);
     }
   }
 
-  floatVariationDetail(flagKey, fallback) {
-    if (fallback == undefined) {
+  floatVariationDetail(flagKey, defaultValue) {
+    if (defaultValue == undefined) {
       return LaunchdarklyReactNativeClient.floatVariationDetail(flagKey);
     } else {
-      return LaunchdarklyReactNativeClient.floatVariationDetailFallback(flagKey, fallback);
+      return LaunchdarklyReactNativeClient.floatVariationDetailDefaultValue(flagKey, defaultValue);
     }
   }
 
-  stringVariationDetail(flagKey, fallback) {
-    if (fallback == undefined) {
+  stringVariationDetail(flagKey, defaultValue) {
+    if (defaultValue == undefined) {
       return LaunchdarklyReactNativeClient.stringVariationDetail(flagKey);
     } else {
-      return LaunchdarklyReactNativeClient.stringVariationDetailFallback(flagKey, fallback);
+      return LaunchdarklyReactNativeClient.stringVariationDetailDefaultValue(flagKey, defaultValue);
     }
   }
 
-  jsonVariationDetail(flagKey, fallback) {
-    if (fallback == undefined) {
+  jsonVariationDetail(flagKey, defaultValue) {
+    if (defaultValue == undefined) {
       return LaunchdarklyReactNativeClient.jsonVariatioDetailNone(flagKey);
-    } else if (typeof fallback === 'number') {
-      return LaunchdarklyReactNativeClient.jsonVariationDetailNumber(flagKey, fallback);
-    } else if (typeof fallback === 'boolean') {
-      return LaunchdarklyReactNativeClient.jsonVariationDetailBool(flagKey, fallback);
-    } else if (typeof fallback === 'string') {
-      return LaunchdarklyReactNativeClient.jsonVariationDetailString(flagKey, fallback);
-    } else if (Array.isArray(fallback)) {
-      return LaunchdarklyReactNativeClient.jsonVariationDetailArray(flagKey, fallback);
+    } else if (typeof defaultValue === 'number') {
+      return LaunchdarklyReactNativeClient.jsonVariationDetailNumber(flagKey, defaultValue);
+    } else if (typeof defaultValue === 'boolean') {
+      return LaunchdarklyReactNativeClient.jsonVariationDetailBool(flagKey, defaultValue);
+    } else if (typeof defaultValue === 'string') {
+      return LaunchdarklyReactNativeClient.jsonVariationDetailString(flagKey, defaultValue);
+    } else if (Array.isArray(defaultValue)) {
+      return LaunchdarklyReactNativeClient.jsonVariationDetailArray(flagKey, defaultValue);
     } else {
       // Should be an object
-      return LaunchdarklyReactNativeClient.jsonVariationDetailObject(flagKey, fallback);
+      return LaunchdarklyReactNativeClient.jsonVariationDetailObject(flagKey, defaultValue);
     }
   }
 
@@ -171,11 +186,7 @@ export default class LDClient {
   }
 
   isInitialized() {
-    if(Platform.OS === 'android') {
-      return LaunchdarklyReactNativeClient.isInitialized();
-    } else {
-      return Promise.reject("Function is not available on this platform");
-    }
+    return LaunchdarklyReactNativeClient.isInitialized();
   }
 
   flush() {
@@ -186,18 +197,14 @@ export default class LDClient {
     LaunchdarklyReactNativeClient.close();
   }
 
-  identify(userConfig) {
-    return LaunchdarklyReactNativeClient.identify(this._addUserOverrides(userConfig));
+  identify(user) {
+    return LaunchdarklyReactNativeClient.identify(this._addUserOverrides(user));
   }
 
-  _addUserOverrides(userConfig) {
+  _addUserOverrides(user) {
     return Object.assign({
       anonymous: false   // the iOS SDK defaults this to true
-    }, userConfig);
-  }
-
-  isDisableBackgroundPolling() {
-    return LaunchdarklyReactNativeClient.isDisableBackgroundPolling();
+    }, user);
   }
 
   _flagUpdateListener(changedFlag) {
@@ -253,10 +260,6 @@ export default class LDClient {
     }
   }
 
-  getConnectionInformation() {
-    return LaunchdarklyReactNativeClient.getConnectionInformation();
-  }
-
   registerCurrentConnectionModeListener(listenerId, callback) {
     if (typeof callback !== "function") {
       return;
@@ -289,5 +292,21 @@ export default class LDClient {
 
     LaunchdarklyReactNativeClient.unregisterAllFlagsListener(listenerId);
     delete this.allFlagsListeners[listenerId];
+  }
+
+  getConnectionMode() {
+    return LaunchdarklyReactNativeClient.getConnectionMode();
+  }
+
+  getLastSuccessfulConnection() {
+    return LaunchdarklyReactNativeClient.getLastSuccessfulConnection();
+  }
+
+  getLastFailedConnection() {
+    return LaunchdarklyReactNativeClient.getLastFailedConnection();
+  }
+
+  getLastFailure() {
+    return LaunchdarklyReactNativeClient.getLastFailure();
   }
 }

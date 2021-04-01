@@ -12,7 +12,7 @@ LaunchDarkly overview
 Supported versions
 -------------------------
 
-This SDK is compatible with React Native 0.62.x and Xcode 11.4 and is tested in Android 27 and iOS 12.4. Earlier versions of this SDK are compatible with prior versions of React Native, Android, and iOS.
+This SDK is compatible with React Native 0.62.x and Xcode 12 and is tested in Android 27 and iOS 13.5. Earlier versions of this SDK are compatible with prior versions of React Native, Android, and iOS.
 
 Getting started
 ---------------
@@ -48,4 +48,3 @@ About LaunchDarkly
     * [docs.launchdarkly.com](https://docs.launchdarkly.com/  "LaunchDarkly Documentation") for our documentation and SDK reference guides
     * [apidocs.launchdarkly.com](https://apidocs.launchdarkly.com/  "LaunchDarkly API Documentation") for our API documentation
     * [blog.launchdarkly.com](https://blog.launchdarkly.com/  "LaunchDarkly Blog Documentation") for the latest product updates
-    * [Feature Flagging Guide](https://github.com/launchdarkly/featureflags/  "Feature Flagging Guide") for best practices and strategies

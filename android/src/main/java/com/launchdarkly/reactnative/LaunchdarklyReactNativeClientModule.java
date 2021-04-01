@@ -36,6 +36,7 @@ import com.launchdarkly.android.LDAllFlagsListener;
 import com.launchdarkly.android.EvaluationDetail;
 import com.launchdarkly.android.EvaluationReason;
 import com.launchdarkly.android.LDFailure;
+import com.launchdarkly.android.LaunchDarklyException;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -68,7 +69,7 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
      */
     enum ConfigMapping {
         CONFIG_MOBILE_KEY("mobileKey", ConfigEntryType.String, "setMobileKey"),
-        CONFIG_BASE_URI("baseUri", ConfigEntryType.Uri, "setBaseUri"),
+        CONFIG_BASE_URI("pollUri", ConfigEntryType.Uri, "setPollUri"),
         CONFIG_EVENTS_URI("eventsUri", ConfigEntryType.UriMobile, "setEventsUri"),
         CONFIG_STREAM_URI("streamUri", ConfigEntryType.Uri, "setStreamUri"),
         CONFIG_EVENTS_CAPACITY("eventsCapacity", ConfigEntryType.Integer, "setEventsCapacity"),
@@ -81,7 +82,12 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
         CONFIG_DISABLE_BACKGROUND_UPDATING("disableBackgroundUpdating", ConfigEntryType.Boolean, "setDisableBackgroundUpdating"),
         CONFIG_OFFLINE("offline", ConfigEntryType.Boolean, "setOffline"),
         CONFIG_PRIVATE_ATTRIBUTES("privateAttributeNames", ConfigEntryType.StringSet, "setPrivateAttributeNames"),
-        CONFIG_EVALUATION_REASONS("evaluationReasons", ConfigEntryType.Boolean, "setEvaluationReasons");
+        CONFIG_EVALUATION_REASONS("evaluationReasons", ConfigEntryType.Boolean, "setEvaluationReasons"),
+        CONFIG_WRAPPER_NAME("wrapperName", ConfigEntryType.String, "setWrapperName"),
+        CONFIG_WRAPPER_VERSION("wrapperVersion", ConfigEntryType.String, "setWrapperVersion"),
+        CONFIG_MAX_CACHED_USERS("maxCachedUsers", ConfigEntryType.Integer, "setMaxCachedUsers"),
+        CONFIG_DIAGNOSTIC_OPT_OUT("diagnosticOptOut", ConfigEntryType.Boolean, "setDiagnosticOptOut"),
+        CONFIG_DIAGNOSTIC_RECORDING_INTERVAL("diagnosticRecordingIntervalMillis", ConfigEntryType.Integer, "setDiagnosticRecordingIntervalMillis");
 
         final String key;
         final ConfigEntryType type;
@@ -98,9 +104,9 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
                 try {
                     setter.invoke(builder, type.getFromMap(map, key));
                 } catch (IllegalAccessException e) {
-                    e.printStackTrace();
+                    Timber.w(e);
                 } catch (InvocationTargetException e) {
-                    e.printStackTrace();
+                    Timber.w(e);
                 }
             }
         }
@@ -149,9 +155,9 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
                         setter.invoke(builder, type.getFromMap(map, key));
                     }
                 } catch (IllegalAccessException e) {
-                    e.printStackTrace();
+                    Timber.w(e);
                 } catch (InvocationTargetException e) {
-                    e.printStackTrace();
+                    Timber.w(e);
                 }
             }
         }
@@ -214,19 +220,38 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
      * configuration.
      *
      * @param config     LDConfig configuration, @see configBuild
-     * @param userConfig LDUser configuration, @see userBuild
+     * @param user       LDUser configuration, @see userBuild
      * @param promise    Either rejected if an error was encountered, otherwise resolved with null
      *                   once client is initialized.
      */
     @ReactMethod
-    public void configure(ReadableMap config, ReadableMap userConfig, final Promise promise) {
+    public void configure(ReadableMap config, ReadableMap user, final Promise promise) {
+        internalConfigure(config, user, null, promise);
+    }
+
+    /**
+     * React Method called from JavaScript to initialize the LDClient using the supplied
+     * configuration with a timeout.
+     *
+     * @param config     LDConfig configuration, @see configBuild
+     * @param user       LDUser configuration, @see userBuild
+     * @param timeout    Integer that blocks until the latest feature flags have been retrieved from LaunchDarkly
+     * @param promise    Either rejected if an error was encountered, otherwise resolved with null
+     *                   once client is initialized.
+     */
+    @ReactMethod
+    public void configureWithTimeout(ReadableMap config, ReadableMap user, Integer timeout, final Promise promise) {
+        internalConfigure(config, user, timeout, promise);
+    }
+
+    private void internalConfigure(ReadableMap config, ReadableMap user, final Integer timeout, final Promise promise) {
         if (ldClient != null) {
             promise.reject(ERROR_INIT, "Client was already initialized");
             return;
         }
 
         final LDConfig.Builder ldConfigBuilder = configBuild(config);
-        final LDUser.Builder userBuilder = userBuild(userConfig);
+        final LDUser.Builder userBuilder = userBuild(user);
 
         if (ldConfigBuilder == null) {
             promise.reject(ERROR_INIT, "Client could not be built using supplied configuration");
@@ -238,6 +263,12 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
             return;
         }
 
+        if (config.hasKey("allUserAttributesPrivate")
+            && config.getType("allUserAttributesPrivate").equals(ConfigEntryType.Boolean.getReadableType())
+            && config.getBoolean("allUserAttributesPrivate")) {
+                ldConfigBuilder.allAttributesPrivate();
+        }
+
         final Application application = (Application) getReactApplicationContext().getApplicationContext();
 
         if (application != null) {
@@ -245,13 +276,20 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
                 @Override
                 public void run() {
                     try {
-                        ldClient = LDClient.init(application, ldConfigBuilder.build(), userBuilder.build()).get();
+                        if (timeout != null) {
+                            ldClient = LDClient.init(application, ldConfigBuilder.build(), userBuilder.build(), timeout).get();
+                        } else {
+                            ldClient = LDClient.init(application, ldConfigBuilder.build(), userBuilder.build()).get();
+                        }
                         promise.resolve(null);
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        Timber.w(e);
                         promise.reject(ERROR_INIT, e);
                     } catch (ExecutionException e) {
-                        e.printStackTrace();
+                        Timber.w(e);
+                        promise.reject(ERROR_INIT, e);
+                    } catch (LaunchDarklyException e) {
+                        Timber.w(e);
                         promise.reject(ERROR_INIT, e);
                     }
                 }
@@ -259,7 +297,7 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
 
             background.start();
         } else {
-            Timber.e("Couldn't initialize LaunchDarklyModule because the application was null");
+            Timber.e("Couldn't initialize the LaunchDarkly module because the application was null");
             promise.reject(ERROR_INIT, "Couldn't acquire application context");
         }
     }
@@ -396,89 +434,89 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
 
     @ReactMethod
     public void boolVariation(String flagKey, Promise promise) {
-        boolVariationFallback(flagKey, null, promise);
+        boolVariationDefaultValue(flagKey, null, promise);
     }
 
     /**
-     * Looks up the current value for a flag, in the case of any issues, returns the given fallback
+     * Looks up the current value for a flag, in the case of any issues, returns the given default
      * value.
      *
      * @param flagKey  The lookup key of the flag.
-     * @param fallback A fallback value to return if current value could not be acquired.
+     * @param defaultValue A default value to return if current value could not be acquired.
      * @param promise  Used to return the result to React Native
      */
     @ReactMethod
-    public void boolVariationFallback(String flagKey, Boolean fallback, Promise promise) {
+    public void boolVariationDefaultValue(String flagKey, Boolean defaultValue, Promise promise) {
         try {
-            promise.resolve(ldClient.boolVariation(flagKey, fallback));
+            promise.resolve(ldClient.boolVariation(flagKey, defaultValue));
         } catch (Exception e) {
-            promise.resolve(fallback);
+            promise.resolve(defaultValue);
         }
     }
 
     @ReactMethod
     public void intVariation(String flagKey, Promise promise) {
-        intVariationFallback(flagKey, null, promise);
+        intVariationDefaultValue(flagKey, null, promise);
     }
 
     /**
-     * Looks up the current value for a flag, in the case of any issues, returns the given fallback
+     * Looks up the current value for a flag, in the case of any issues, returns the given default
      * value.
      *
      * @param flagKey  The lookup key of the flag.
-     * @param fallback A fallback value to return if current value could not be acquired.
+     * @param defaultValue A default value to return if current value could not be acquired.
      * @param promise  Used to return the result to React Native
      */
     @ReactMethod
-    public void intVariationFallback(String flagKey, Integer fallback, Promise promise) {
+    public void intVariationDefaultValue(String flagKey, Integer defaultValue, Promise promise) {
         try {
-            promise.resolve(ldClient.intVariation(flagKey, fallback));
+            promise.resolve(ldClient.intVariation(flagKey, defaultValue));
         } catch (Exception e) {
-            promise.resolve(fallback);
+            promise.resolve(defaultValue);
         }
     }
 
     @ReactMethod
     public void floatVariation(String flagKey, Promise promise) {
-        floatVariationFallback(flagKey, null, promise);
+        floatVariationDefaultValue(flagKey, null, promise);
     }
 
     /**
-     * Looks up the current value for a flag, in the case of any issues, returns the given fallback
+     * Looks up the current value for a flag, in the case of any issues, returns the given default
      * value.
      *
      * @param flagKey  The lookup key of the flag.
-     * @param fallback A fallback value to return if current value could not be acquired.
+     * @param defaultValue A default value to return if current value could not be acquired.
      * @param promise  Used to return the result to React Native
      */
     @ReactMethod
-    public void floatVariationFallback(String flagKey, Float fallback, Promise promise) {
+    public void floatVariationDefaultValue(String flagKey, Double defaultValue, Promise promise) {
         try {
-            promise.resolve(ldClient.floatVariation(flagKey, fallback));
+            promise.resolve(ldClient.doubleVariation(flagKey, defaultValue));
         } catch (Exception e) {
-            promise.resolve(fallback);
+            promise.resolve(defaultValue);
         }
     }
 
     @ReactMethod
     public void stringVariation(String flagKey, Promise promise) {
-        stringVariationFallback(flagKey, null, promise);
+        stringVariationDefaultValue(flagKey, null, promise);
     }
 
     /**
-     * Looks up the current value for a flag, in the case of any issues, returns the given fallback
+     * Looks up the current value for a flag, in the case of any issues, returns the given default
      * value.
      *
      * @param flagKey  The lookup key of the flag.
-     * @param fallback A fallback value to return if current value could not be acquired.
+     * @param defaultValue A default value to return if current value could not be acquired.
      * @param promise  Used to return the result to React Native
      */
     @ReactMethod
-    public void stringVariationFallback(String flagKey, String fallback, Promise promise) {
+    public void stringVariationDefaultValue(String flagKey, String defaultValue, Promise promise) {
         try {
-            promise.resolve(ldClient.stringVariation(flagKey, fallback));
+            promise.resolve(ldClient.stringVariation(flagKey, defaultValue));
         } catch (Exception e) {
-            promise.resolve(fallback);
+            promise.resolve(defaultValue);
         }
     }
 
@@ -495,83 +533,83 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
     }
 
     /**
-     * Looks up the current value for a flag, in the case of any issues, returns the given fallback
+     * Looks up the current value for a flag, in the case of any issues, returns the given default
      * value.
      *
      * @param flagKey  The lookup key of the flag.
-     * @param fallback A fallback value to return if current value could not be acquired.
+     * @param defaultValue A default value to return if current value could not be acquired.
      * @param promise  Used to return the result to React Native
      */
     @ReactMethod
-    public void jsonVariationNumber(String flagKey, Double fallback, Promise promise) {
-        jsonVariationBase(flagKey, new JsonPrimitive(fallback), promise);
+    public void jsonVariationNumber(String flagKey, Double defaultValue, Promise promise) {
+        jsonVariationBase(flagKey, new JsonPrimitive(defaultValue), promise);
     }
 
     /**
-     * Looks up the current value for a flag, in the case of any issues, returns the given fallback
+     * Looks up the current value for a flag, in the case of any issues, returns the given default
      * value.
      *
      * @param flagKey  The lookup key of the flag.
-     * @param fallback A fallback value to return if current value could not be acquired.
+     * @param defaultValue A default value to return if current value could not be acquired.
      * @param promise  Used to return the result to React Native
      */
     @ReactMethod
-    public void jsonVariationBool(String flagKey, Boolean fallback, Promise promise) {
-        jsonVariationBase(flagKey, new JsonPrimitive(fallback), promise);
+    public void jsonVariationBool(String flagKey, Boolean defaultValue, Promise promise) {
+        jsonVariationBase(flagKey, new JsonPrimitive(defaultValue), promise);
     }
 
     /**
-     * Looks up the current value for a flag, in the case of any issues, returns the given fallback
+     * Looks up the current value for a flag, in the case of any issues, returns the given default
      * value.
      *
      * @param flagKey  The lookup key of the flag.
-     * @param fallback A fallback value to return if current value could not be acquired.
+     * @param defaultValue A default value to return if current value could not be acquired.
      * @param promise  Used to return the result to React Native
      */
     @ReactMethod
-    public void jsonVariationString(String flagKey, String fallback, Promise promise) {
-        jsonVariationBase(flagKey, new JsonPrimitive(fallback), promise);
+    public void jsonVariationString(String flagKey, String defaultValue, Promise promise) {
+        jsonVariationBase(flagKey, new JsonPrimitive(defaultValue), promise);
     }
 
     /**
-     * Looks up the current value for a flag, in the case of any issues, returns the given fallback
+     * Looks up the current value for a flag, in the case of any issues, returns the given default
      * value.
      *
      * @param flagKey  The lookup key of the flag.
-     * @param fallback A fallback value to return if current value could not be acquired.
+     * @param defaultValue A default value to return if current value could not be acquired.
      * @param promise  Used to return the result to React Native
      */
     @ReactMethod
-    public void jsonVariationArray(String flagKey, ReadableArray fallback, Promise promise) {
-        jsonVariationBase(flagKey, toJsonArray(fallback), promise);
+    public void jsonVariationArray(String flagKey, ReadableArray defaultValue, Promise promise) {
+        jsonVariationBase(flagKey, toJsonArray(defaultValue), promise);
     }
 
     /**
-     * Looks up the current value for a flag, in the case of any issues, returns the given fallback
+     * Looks up the current value for a flag, in the case of any issues, returns the given default
      * value.
      *
      * @param flagKey  The lookup key of the flag.
-     * @param fallback A fallback value to return if current value could not be acquired.
+     * @param defaultValue A default value to return if current value could not be acquired.
      * @param promise  Used to return the result to React Native
      */
     @ReactMethod
-    public void jsonVariationObject(String flagKey, ReadableMap fallback, Promise promise) {
-        jsonVariationBase(flagKey, toJsonObject(fallback), promise);
+    public void jsonVariationObject(String flagKey, ReadableMap defaultValue, Promise promise) {
+        jsonVariationBase(flagKey, toJsonObject(defaultValue), promise);
     }
 
     @ReactMethod
     public void boolVariationDetail(String flagKey, Promise promise) {
-        boolVariationDetailFallback(flagKey, null, promise);
+        boolVariationDetailDefaultValue(flagKey, null, promise);
     }
 
     @ReactMethod
-    public void boolVariationDetailFallback(String flagKey, Boolean fallback, Promise promise) {
+    public void boolVariationDetailDefaultValue(String flagKey, Boolean defaultValue, Promise promise) {
         EvaluationDetail<Boolean> detailResult;
         try {
-            detailResult = ldClient.boolVariationDetail(flagKey, fallback);
+            detailResult = ldClient.boolVariationDetail(flagKey, defaultValue);
         } catch (Exception e) {
-            e.printStackTrace();
-            detailResult = new EvaluationDetail<Boolean>(EvaluationReason.error(EvaluationReason.ErrorKind.EXCEPTION), null, fallback);
+            Timber.w(e);
+            detailResult = new EvaluationDetail<Boolean>(EvaluationReason.error(EvaluationReason.ErrorKind.EXCEPTION), null, defaultValue);
         }
         JsonObject jsonObject = gson.toJsonTree(detailResult).getAsJsonObject();
         WritableMap detailMap = fromJsonObject(jsonObject);
@@ -580,17 +618,17 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
 
     @ReactMethod
     public void intVariationDetail(String flagKey, Promise promise) {
-        intVariationDetailFallback(flagKey, null, promise);
+        intVariationDetailDefaultValue(flagKey, null, promise);
     }
 
     @ReactMethod
-    public void intVariationDetailFallback(String flagKey, Integer fallback, Promise promise) {
+    public void intVariationDetailDefaultValue(String flagKey, Integer defaultValue, Promise promise) {
         EvaluationDetail<Integer> detailResult;
         try {
-            detailResult = ldClient.intVariationDetail(flagKey, fallback);
+            detailResult = ldClient.intVariationDetail(flagKey, defaultValue);
         } catch (Exception e) {
-            e.printStackTrace();
-            detailResult = new EvaluationDetail<Integer>(EvaluationReason.error(EvaluationReason.ErrorKind.EXCEPTION), null, fallback);
+            Timber.w(e);
+            detailResult = new EvaluationDetail<Integer>(EvaluationReason.error(EvaluationReason.ErrorKind.EXCEPTION), null, defaultValue);
         }
         JsonObject jsonObject = gson.toJsonTree(detailResult).getAsJsonObject();
         WritableMap detailMap = fromJsonObject(jsonObject);
@@ -599,17 +637,17 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
 
     @ReactMethod
     public void floatVariationDetail(String flagKey, Promise promise) {
-        floatVariationDetailFallback(flagKey, null, promise);
+        floatVariationDetailDefaultValue(flagKey, null, promise);
     }
 
     @ReactMethod
-    public void floatVariationDetailFallback(String flagKey, Float fallback, Promise promise) {
-        EvaluationDetail<Float> detailResult;
+    public void floatVariationDetailDefaultValue(String flagKey, Double defaultValue, Promise promise) {
+        EvaluationDetail<Double> detailResult;
         try {
-            detailResult = ldClient.floatVariationDetail(flagKey, fallback);
+            detailResult = ldClient.doubleVariationDetail(flagKey, defaultValue);
         } catch (Exception e) {
-            e.printStackTrace();
-            detailResult = new EvaluationDetail<Float>(EvaluationReason.error(EvaluationReason.ErrorKind.EXCEPTION), null, fallback);
+            Timber.w(e);
+            detailResult = new EvaluationDetail<Double>(EvaluationReason.error(EvaluationReason.ErrorKind.EXCEPTION), null, defaultValue);
         }
         JsonObject jsonObject = gson.toJsonTree(detailResult).getAsJsonObject();
         WritableMap detailMap = fromJsonObject(jsonObject);
@@ -618,17 +656,17 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
 
     @ReactMethod
     public void stringVariationDetail(String flagKey, Promise promise) {
-        stringVariationDetailFallback(flagKey, null, promise);
+        stringVariationDetailDefaultValue(flagKey, null, promise);
     }
 
     @ReactMethod
-    public void stringVariationDetailFallback(String flagKey, String fallback, Promise promise) {
+    public void stringVariationDetailDefaultValue(String flagKey, String defaultValue, Promise promise) {
         EvaluationDetail<String> detailResult;
         try {
-            detailResult = ldClient.stringVariationDetail(flagKey, fallback);
+            detailResult = ldClient.stringVariationDetail(flagKey, defaultValue);
         } catch (Exception e) {
-            e.printStackTrace();
-            detailResult = new EvaluationDetail<String>(EvaluationReason.error(EvaluationReason.ErrorKind.EXCEPTION), null, fallback);
+            Timber.w(e);
+            detailResult = new EvaluationDetail<String>(EvaluationReason.error(EvaluationReason.ErrorKind.EXCEPTION), null, defaultValue);
         }
         JsonObject jsonObject = gson.toJsonTree(detailResult).getAsJsonObject();
         WritableMap detailMap = fromJsonObject(jsonObject);
@@ -641,53 +679,53 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
     }
 
     @ReactMethod
-    public void jsonVariationDetailNumber(String flagKey, Double fallback, Promise promise) {
-        jsonVariationDetailBase(flagKey, new JsonPrimitive(fallback), promise);
+    public void jsonVariationDetailNumber(String flagKey, Double defaultValue, Promise promise) {
+        jsonVariationDetailBase(flagKey, new JsonPrimitive(defaultValue), promise);
     }
 
     @ReactMethod
-    public void jsonVariationDetailBool(String flagKey, Boolean fallback, Promise promise) {
-        jsonVariationDetailBase(flagKey, new JsonPrimitive(fallback), promise);
+    public void jsonVariationDetailBool(String flagKey, Boolean defaultValue, Promise promise) {
+        jsonVariationDetailBase(flagKey, new JsonPrimitive(defaultValue), promise);
     }
 
     @ReactMethod
-    public void jsonVariationDetailString(String flagKey, String fallback, Promise promise) {
-        jsonVariationDetailBase(flagKey, new JsonPrimitive(fallback), promise);
+    public void jsonVariationDetailString(String flagKey, String defaultValue, Promise promise) {
+        jsonVariationDetailBase(flagKey, new JsonPrimitive(defaultValue), promise);
     }
 
     @ReactMethod
-    public void jsonVariationDetailArray(String flagKey, ReadableArray fallback, Promise promise) {
-        jsonVariationDetailBase(flagKey, toJsonArray(fallback), promise);
+    public void jsonVariationDetailArray(String flagKey, ReadableArray defaultValue, Promise promise) {
+        jsonVariationDetailBase(flagKey, toJsonArray(defaultValue), promise);
     }
 
     @ReactMethod
-    public void jsonVariationDetailObject(String flagKey, ReadableMap fallback, Promise promise) {
-        jsonVariationDetailBase(flagKey, toJsonObject(fallback), promise);
+    public void jsonVariationDetailObject(String flagKey, ReadableMap defaultValue, Promise promise) {
+        jsonVariationDetailBase(flagKey, toJsonObject(defaultValue), promise);
     }
 
     /**
      * Helper for jsonVariation methods.
      *
      * @param flagKey  The lookup key of the flag.
-     * @param fallback A fallback value to return if the current value could not be acquired.
+     * @param defaultValue A default value to return if the current value could not be acquired.
      * @param promise  Used to return the result to React Native.
      */
-    private void jsonVariationBase(String flagKey, JsonElement fallback, Promise promise) {
+    private void jsonVariationBase(String flagKey, JsonElement defaultValue, Promise promise) {
         try {
-            JsonElement jsonElement = ldClient.jsonVariation(flagKey, fallback);
+            JsonElement jsonElement = ldClient.jsonVariation(flagKey, defaultValue);
             resolveJsonElement(promise, jsonElement);
         } catch (Exception e) {
-            resolveJsonElement(promise, fallback);
+            resolveJsonElement(promise, defaultValue);
         }
     }
 
-    private void jsonVariationDetailBase(String flagKey, JsonElement fallback, Promise promise) {
+    private void jsonVariationDetailBase(String flagKey, JsonElement defaultValue, Promise promise) {
         EvaluationDetail<JsonElement> jsonElementDetail;
         try {
-            jsonElementDetail = ldClient.jsonVariationDetail(flagKey, fallback);
+            jsonElementDetail = ldClient.jsonVariationDetail(flagKey, defaultValue);
         } catch (Exception e) {
-            e.printStackTrace();
-            jsonElementDetail = new EvaluationDetail<JsonElement>(EvaluationReason.error(EvaluationReason.ErrorKind.EXCEPTION), null, fallback);
+            Timber.w(e);
+            jsonElementDetail = new EvaluationDetail<JsonElement>(EvaluationReason.error(EvaluationReason.ErrorKind.EXCEPTION), null, defaultValue);
         }
         resolveJsonElementDetail(promise, jsonElementDetail);
     }
@@ -731,6 +769,11 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
      */
     @ReactMethod
     public void allFlags(Promise promise) {
+        if (ldClient == null) {
+            promise.reject(ERROR_INIT, "Client is not yet initialized");
+            return;
+        }
+        
         Map<String, ?> flags = ldClient.allFlags();
 
         // Convert map of all flags into WritableMap for React Native
@@ -790,7 +833,11 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
      */
     @ReactMethod
     public void trackNumber(String eventName, Double data) {
-        ldClient.track(eventName, new JsonPrimitive(data));
+        try {
+            ldClient.track(eventName, new JsonPrimitive(data));
+        } catch (Exception e) {
+            Timber.w(e);
+        }
     }
 
     /**
@@ -804,7 +851,11 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
      */
     @ReactMethod
     public void trackBool(String eventName, Boolean data) {
-        ldClient.track(eventName, new JsonPrimitive(data));
+        try {
+            ldClient.track(eventName, new JsonPrimitive(data));
+        } catch (Exception e) {
+            Timber.w(e);
+        }
     }
 
     /**
@@ -818,7 +869,11 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
      */
     @ReactMethod
     public void trackString(String eventName, String data) {
-        ldClient.track(eventName, new JsonPrimitive(data));
+        try {
+            ldClient.track(eventName, new JsonPrimitive(data));
+        } catch (Exception e) {
+            Timber.w(e);
+        }
     }
 
     /**
@@ -832,7 +887,11 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
      */
     @ReactMethod
     public void trackArray(String eventName, ReadableArray data) {
-        ldClient.track(eventName, toJsonArray(data));
+        try {
+            ldClient.track(eventName, toJsonArray(data));
+        } catch (Exception e) {
+            Timber.w(e);
+        }
     }
 
     /**
@@ -846,7 +905,11 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
      */
     @ReactMethod
     public void trackObject(String eventName, ReadableMap data) {
-        ldClient.track(eventName, toJsonObject(data));
+        try {
+            ldClient.track(eventName, toJsonObject(data));
+        } catch (Exception e) {
+            Timber.w(e);
+        }
     }
 
     /**
@@ -856,37 +919,65 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
      */
     @ReactMethod
     public void track(String eventName) {
-        ldClient.track(eventName);
+        try {
+            ldClient.track(eventName);
+        } catch (Exception e) {
+            Timber.w(e);
+        }
     }
 
     @ReactMethod
     public void trackNumberMetricValue(String eventName, Double data, Double metricValue) {
-        ldClient.track(eventName, new JsonPrimitive(data), metricValue);
+        try {
+            ldClient.track(eventName, new JsonPrimitive(data), metricValue);
+        } catch (Exception e) {
+            Timber.w(e);
+        }
     }
 
     @ReactMethod
     public void trackBoolMetricValue(String eventName, Boolean data, Double metricValue) {
-        ldClient.track(eventName, new JsonPrimitive(data), metricValue);
+        try {
+            ldClient.track(eventName, new JsonPrimitive(data), metricValue);
+        } catch (Exception e) {
+            Timber.w(e);
+        }
     }
 
     @ReactMethod
     public void trackStringMetricValue(String eventName, String data, Double metricValue) {
-        ldClient.track(eventName, new JsonPrimitive(data), metricValue);
+        try {
+            ldClient.track(eventName, new JsonPrimitive(data), metricValue);
+        } catch (Exception e) {
+            Timber.w(e);
+        }
     }
 
     @ReactMethod
     public void trackArrayMetricValue(String eventName, ReadableArray data, Double metricValue) {
-        ldClient.track(eventName, toJsonArray(data), metricValue);
+        try {
+            ldClient.track(eventName, toJsonArray(data), metricValue);
+        } catch (Exception e) {
+            Timber.w(e);
+        }
     }
 
     @ReactMethod
     public void trackObjectMetricValue(String eventName, ReadableMap data, Double metricValue) {
-        ldClient.track(eventName, toJsonObject(data), metricValue);
+        try {
+            ldClient.track(eventName, toJsonObject(data), metricValue);
+        } catch (Exception e) {
+            Timber.w(e);
+        }
     }
 
     @ReactMethod
     public void trackMetricValue(String eventName, Double metricValue) {
-        ldClient.track(eventName, new JsonPrimitive(""), metricValue);
+        try {
+            ldClient.track(eventName, new JsonPrimitive(""), metricValue);
+        } catch (Exception e) {
+            Timber.w(e);
+        }
     }
 
     /**
@@ -895,8 +986,12 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
      */
     @ReactMethod
     public void setOffline(Promise promise) {
-        ldClient.setOffline();
-        promise.resolve(true);
+        try {
+            ldClient.setOffline();
+            promise.resolve(true);
+        } catch (Exception e) {
+            promise.reject(ERROR_UNKNOWN, e);
+        }
     }
 
     /**
@@ -919,8 +1014,12 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
      */
     @ReactMethod
     public void setOnline(Promise promise) {
-        ldClient.setOnline();
-        promise.resolve(true);
+        try {
+            ldClient.setOnline();
+            promise.resolve(true);
+        } catch (Exception e) {
+            promise.reject(ERROR_UNKNOWN, e);
+        }
     }
 
     /**
@@ -931,6 +1030,11 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
      */
     @ReactMethod
     public void isInitialized(Promise promise) {
+        if (ldClient == null) {
+            promise.resolve(false);
+            return;
+        }
+        
         try {
             boolean result = ldClient.isInitialized();
             promise.resolve(result);
@@ -944,7 +1048,11 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
      */
     @ReactMethod
     public void flush() {
-        ldClient.flush();
+        try {
+            ldClient.flush();
+        } catch (Exception e) {
+            Timber.w(e);
+        }
     }
 
     /**
@@ -981,32 +1089,51 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
                     ldClient.identify(userBuilder.build()).get();
                     promise.resolve(null);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    Timber.w(e);
                     promise.reject(ERROR_IDENTIFY, "Identify Interrupted");
                 } catch (ExecutionException e) {
-                    e.printStackTrace();
+                    Timber.w(e);
                     promise.reject(ERROR_IDENTIFY, "Exception while executing identify");
+                } catch (Exception e) {
+                    Timber.w(e);
+                    promise.reject(ERROR_UNKNOWN, e);
                 }
             }
         });
-        background.run();
+        background.start();
     }
 
     @ReactMethod
-    public void isDisableBackgroundPolling(Promise promise) {
+    public void getConnectionMode(Promise promise) {
         try {
-            boolean result = ldClient.isDisableBackgroundPolling();
-            promise.resolve(result);
+            promise.resolve(ldClient.getConnectionInformation().getConnectionMode().name());
         } catch (Exception e) {
             promise.reject(ERROR_UNKNOWN, e);
         }
     }
 
     @ReactMethod
-    public void getConnectionInformation(Promise promise) {
+    public void getLastSuccessfulConnection(Promise promise) {
         try {
-            ConnectionInformation result = ldClient.getConnectionInformation();
-            promise.resolve(result);
+            promise.resolve(ldClient.getConnectionInformation().getLastSuccessfulConnection().intValue());
+        } catch (Exception e) {
+            promise.reject(ERROR_UNKNOWN, e);
+        }
+    }
+
+    @ReactMethod
+    public void getLastFailedConnection(Promise promise) {
+        try {
+            promise.resolve(ldClient.getConnectionInformation().getLastFailedConnection().intValue());
+        } catch (Exception e) {
+            promise.reject(ERROR_UNKNOWN, e);
+        }
+    }
+
+    @ReactMethod
+    public void getLastFailure(Promise promise) {
+        try {
+            promise.resolve(ldClient.getConnectionInformation().getLastFailure().getFailureType().name());
         } catch (Exception e) {
             promise.reject(ERROR_UNKNOWN, e);
         }
@@ -1026,15 +1153,23 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
             }
         };
 
-        ldClient.registerFeatureFlagListener(flagKey, listener);
-        listeners.put(flagKey, listener);
+        try {
+            ldClient.registerFeatureFlagListener(flagKey, listener);
+            listeners.put(flagKey, listener);
+        } catch (Exception e) {
+            Timber.w(e);
+        }
     }
 
     @ReactMethod
     public void unregisterFeatureFlagListener(String flagKey) {
-        if (listeners.containsKey(flagKey)) {
-            ldClient.unregisterFeatureFlagListener(flagKey, listeners.get(flagKey));
-            listeners.remove(flagKey);
+        try {
+            if (listeners.containsKey(flagKey)) {
+                ldClient.unregisterFeatureFlagListener(flagKey, listeners.get(flagKey));
+                listeners.remove(flagKey);
+            }
+        } catch (Exception e) {
+            Timber.w(e);
         }
     }
 
@@ -1055,15 +1190,23 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
             public void onInternalFailure(LDFailure ldFailure) {}
         };
 
-        ldClient.registerStatusListener(listener);
-        connectionModeListeners.put(listenerId, listener);
+        try {
+            ldClient.registerStatusListener(listener);
+            connectionModeListeners.put(listenerId, listener);
+        } catch (Exception e) {
+            Timber.w(e);
+        }
     }
 
     @ReactMethod
     public void unregisterCurrentConnectionModeListener(String listenerId) {
-        if (connectionModeListeners.containsKey(listenerId)) {
-            ldClient.unregisterStatusListener(connectionModeListeners.get(listenerId));
-            connectionModeListeners.remove(listenerId);
+        try {
+            if (connectionModeListeners.containsKey(listenerId)) {
+                ldClient.unregisterStatusListener(connectionModeListeners.get(listenerId));
+                connectionModeListeners.remove(listenerId);
+            }
+        } catch (Exception e) {
+            Timber.w(e);
         }
     }
 
@@ -1081,15 +1224,23 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
             }
         };
 
-        ldClient.registerAllFlagsListener(listener);
-        allFlagsListeners.put(listenerId, listener);
+        try {
+            ldClient.registerAllFlagsListener(listener);
+            allFlagsListeners.put(listenerId, listener);
+        } catch (Exception e) {
+            Timber.w(e);
+        }
     }
 
     @ReactMethod
     public void unregisterAllFlagsListener(String listenerId) {
-        if (allFlagsListeners.containsKey(listenerId)) {
-            ldClient.unregisterAllFlagsListener(allFlagsListeners.get(listenerId));
-            allFlagsListeners.remove(listenerId);
+        try {
+            if (allFlagsListeners.containsKey(listenerId)) {
+                ldClient.unregisterAllFlagsListener(allFlagsListeners.get(listenerId));
+                allFlagsListeners.remove(listenerId);
+            }
+        } catch (Exception e) {
+            Timber.w(e);
         }
     }
 
