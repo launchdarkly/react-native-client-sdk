@@ -2,6 +2,56 @@
 
 All notable changes to the LaunchDarkly React Native SDK will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [4.0.0] - 2021-03-31
+### Added:
+- Added `getConnectionMode`, `getLastSuccessfulConnection`, `getLastFailedConnection`, and `getLastFailure` methods to `LDClient`. These methods can be used to report on the SDK&#39;s connection to LaunchDarkly. The new `LDConnectionMode` and `LDFailureReason` enum types have been added to support these methods. These methods replace the `getConnectionInformation` method which behaved differently across platforms.
+- Added a `getVersion` method to `LDClient` to get the version of the React Native SDK.
+- Added an optional `timeout` value to the `configure` method to specify that the SDK should block up to a specified duration while initializing.
+- Added a new client configuration option, `maxCachedUsers`, to `LDClientConfig`. You can now specify the number of users to be cached locally on the device or use `-1` for unlimited cached users.
+- Added new user configuration options, `ip` and `avatar`, to `LDUserConfig`.
+- The SDK now periodically sends diagnostic data to LaunchDarkly, describing the version and configuration of the SDK, the operating system the SDK is running on, the device type (such as &#34;iPad&#34;), and performance statistics. No credentials, device IDs, or other identifiable values are included. This behavior can be disabled or configured with the new `LDClientConfig` properties `diagnosticOptOut` and `diagnosticRecordingInterval`.
+- Added reporting of the SDK&#39;s &#34;wrapper name&#34; and &#34;wrapper version&#34; for internal reporting purposes.
+- iOS: Added XCode 12 support ([#64](https://github.com/launchdarkly/react-native-client-sdk/issues/64))
+- iOS: Added support for the `isInitialized` method. Previously this method only worked when running on Android.
+
+### Changed:
+- Renamed the `LDClientConfig` type to `LDConfig` for consistency with other LaunchDarkly SDKs. Corresponding parameter names and documentation have also been updated to reflect this change.
+- Renamed the `LDUserConfig` type to `LDUser` for consistency with other LaunchDarkly SDKs. Corresponding parameter names and documentation have also been updated to reflect this change.
+- Renamed `baseUri` in `LDConfig` (formerly `LDClientConfig`) to `pollUri` to clarify that this URI is only used when polling.
+- The `fallback` parameter of all `LDClient` variation methods has been renamed to `defaultValue` to help distinguish it from `fallback` values in rules specified in the LaunchDarkly dashboard.
+- Changed the default polling domain from `app.launchdarkly.com` to `clientsdk.launchdarkly.com`.
+- Android: Updated the Android SDK native module from 2.10.0 to [2.14.1](https://github.com/launchdarkly/android-client-sdk/releases/tag/2.14.1)
+- Android: Error stacktrace logging in the bridge layer now uses Timber instead of `System.err`
+- iOS: Updated the iOS SDK native module from 4.5.0 to [5.4.0](https://github.com/launchdarkly/ios-client-sdk/releases/tag/5.4.0) ([#65](https://github.com/launchdarkly/react-native-client-sdk/issues/65))
+- iOS: The minimum iOS deployment target has been updated from 8.0 to 10.0.
+- iOS: The maximum backoff delay between failed streaming connections has been reduced from an hour to 30 seconds. This is to prevent being unable to receive new flag values for up to an hour if the SDK has reached its maximum backoff due to a period of network connectivity loss.
+- iOS: The backoff on streaming connections will not be reset after just a successful connection, rather waiting for a healthy connection for one minute after receiving flags. This is to reduce congestion in poor network conditions or if extreme load prevents the LaunchDarkly service from maintaining an active streaming connection.
+- iOS: When sending events to LaunchDarkly, the SDK will now retry the request after a one second delay if it fails.
+- iOS: When events fail to be sent to LaunchDarkly, the SDK will no longer retain the events. This prevents double recording events when the LaunchDarkly service received the event but the SDK failed to receive the acknowledgement.
+
+### Fixed:
+- The `getConnectionInformation` method in `LDClient` had inconsistent return types across the iOS and Android platforms. This API has been split into separate methods which are consistently typed across platforms - see the notes above. ([#59](https://github.com/launchdarkly/react-native-client-sdk/issues/59))
+- Android: Fixed an issue where `identify` ran on the current thread instead of on a background thread (thanks, [orthanc](https://github.com/launchdarkly/react-native-client-sdk/pull/66) and [hackdie](https://github.com/launchdarkly/react-native-client-sdk/pull/58)!)
+- Android: Fixed an issue where an exception was thrown if `configure` was invoked multiple times. Now, subsequent invocations result in a rejected promise. ([#40](https://github.com/launchdarkly/react-native-client-sdk/issues/40))
+- Android: Fixed an issue where the `evaluationReasons` option in `LDClientConfig` was not used when configuring the Android SDK native module.
+- Android: Fixed an issue where `NullPointerException`s were possible if certain methods were invoked while the client was initializing (discussed in [#55](https://github.com/launchdarkly/react-native-client-sdk/issues/55#issuecomment-681173212))
+- Android: Fixed an issue where initialization may never complete if the network status of foreground state changed before the future had completed.
+- Android: Fixed an issue where a `NullPointerException` could occur when calling a variation method with a flag key that does not exist locally or is of the wrong type. This issue could only occur if a null fallback value was provided.
+- Android: Improved event summarization logic to avoid potential runtime exceptions.
+- Android: Internal throttling logic would sometimes delay new poll or stream connections even when there were no recent connections. This caused switching active user contexts using `identify` to sometimes delay retrieving the most recent flags, and therefore delay the completion of the returned Promise.
+- Android: Previously, the SDK manifest required the SET_ALARM permission. This permission was never used, so it has been removed.
+- Android: Improved handling of exceptions thrown by the alarm manager on Samsung devices.
+- iOS: Fixed an issue preventing private custom attribute names being recorded in events when all custom attributes are set to be private by including &#34;custom&#34; in the `LDUserConfig.privateAttributeNames` or `LDClientConfig.allUserAttributesPrivate` properties.
+- iOS: Fixed an issue to prevent a crash that would rarely occur as the SDK transitioned to an online state for a given configuration or user. This issue may have been exacerbated for a short period due to a temporary change in the behavior of the LaunchDarkly service streaming endpoint.
+- OS: Fix `metricValue` argument to `track` to work with all numbers.
+
+### Removed:
+- Removed the `LDClientConfig` type.
+- Removed the `LDUserConfig` type.
+- Removed the `getConnectionInformation` method in `LDClient`.
+- Removed the `isDisableBackgroundPolling` method in `LDClient`.
+- Removed the `baseUri` attribute in `LDConfig` (formerly `LDClientConfig`).
+
 ## [3.2.2] - 2020-12-02
 ### Fixed:
 - Changed iOS all flags listener to only return `[LDFlagKey]` instead of `[LDFlagKey: LDChangedFlag]`. ([#61](https://github.com/launchdarkly/react-native-client-sdk/issues/61))
