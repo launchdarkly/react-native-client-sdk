@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>LDEvaluationReasonKind | LaunchDarkly Client-Side SDK for React Native (4.0.0)</title>
+	<title>LDFailureReason | LaunchDarkly Client-Side SDK for React Native (4.0.0)</title>
 	<meta name="description" content="Documentation for LaunchDarkly Client-Side SDK for React Native (4.0.0)">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,10 +56,10 @@
 					<a href="../index.html">&quot;launchdarkly-react-native-client-sdk&quot;</a>
 				</li>
 				<li>
-					<a href="_launchdarkly_react_native_client_sdk_.ldevaluationreasonkind.html">LDEvaluationReasonKind</a>
+					<a href="_launchdarkly_react_native_client_sdk_.ldfailurereason.html">LDFailureReason</a>
 				</li>
 			</ul>
-			<h1>Enumeration LDEvaluationReasonKind</h1>
+			<h1>Enumeration LDFailureReason</h1>
 		</div>
 	</div>
 </header>
@@ -69,7 +69,7 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Describes the reason behind how a flag evaluation was calculated.</p>
+						<p>Describes why a connection request to LaunchDarkly failed.</p>
 					</div>
 				</div>
 			</section>
@@ -80,12 +80,14 @@
 						<section class="tsd-index-section ">
 							<h3>Enumeration members</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="_launchdarkly_react_native_client_sdk_.ldevaluationreasonkind.html#error" class="tsd-kind-icon">ERROR</a></li>
-								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="_launchdarkly_react_native_client_sdk_.ldevaluationreasonkind.html#fallthrough" class="tsd-kind-icon">FALLTHROUGH</a></li>
-								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="_launchdarkly_react_native_client_sdk_.ldevaluationreasonkind.html#off" class="tsd-kind-icon">OFF</a></li>
-								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="_launchdarkly_react_native_client_sdk_.ldevaluationreasonkind.html#prerequisite_failed" class="tsd-kind-icon">PREREQUISITE_<wbr>FAILED</a></li>
-								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="_launchdarkly_react_native_client_sdk_.ldevaluationreasonkind.html#rule_match" class="tsd-kind-icon">RULE_<wbr>MATCH</a></li>
-								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="_launchdarkly_react_native_client_sdk_.ldevaluationreasonkind.html#target_match" class="tsd-kind-icon">TARGET_<wbr>MATCH</a></li>
+								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="_launchdarkly_react_native_client_sdk_.ldfailurereason.html#http_error" class="tsd-kind-icon">HTTP_<wbr>ERROR</a></li>
+								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="_launchdarkly_react_native_client_sdk_.ldfailurereason.html#invalid_response_body" class="tsd-kind-icon">INVALID_<wbr>RESPONSE_<wbr>BODY</a></li>
+								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="_launchdarkly_react_native_client_sdk_.ldfailurereason.html#network_failure" class="tsd-kind-icon">NETWORK_<wbr>FAILURE</a></li>
+								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="_launchdarkly_react_native_client_sdk_.ldfailurereason.html#none" class="tsd-kind-icon">NONE</a></li>
+								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="_launchdarkly_react_native_client_sdk_.ldfailurereason.html#uknown_error" class="tsd-kind-icon">UKNOWN_<wbr>ERROR</a></li>
+								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="_launchdarkly_react_native_client_sdk_.ldfailurereason.html#unauthorized" class="tsd-kind-icon">UNAUTHORIZED</a></li>
+								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="_launchdarkly_react_native_client_sdk_.ldfailurereason.html#unexpected_response_code" class="tsd-kind-icon">UNEXPECTED_<wbr>RESPONSE_<wbr>CODE</a></li>
+								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="_launchdarkly_react_native_client_sdk_.ldfailurereason.html#unexpected_stream_element_type" class="tsd-kind-icon">UNEXPECTED_<wbr>STREAM_<wbr>ELEMENT_<wbr>TYPE</a></li>
 							</ul>
 						</section>
 					</div>
@@ -94,94 +96,125 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Enumeration members</h2>
 				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
-					<a name="error" class="tsd-anchor"></a>
-					<h3>ERROR</h3>
-					<div class="tsd-signature tsd-kind-icon">ERROR<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = &quot;ERROR&quot;</span></div>
+					<a name="http_error" class="tsd-anchor"></a>
+					<h3>HTTP_<wbr>ERROR</h3>
+					<div class="tsd-signature tsd-kind-icon">HTTP_<wbr>ERROR<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = &quot;HTTP_ERROR&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/launchdarkly/react-native-client-sdk/blob/a44abf8/index.d.ts#L317">index.d.ts:317</a></li>
+							<li>Defined in <a href="https://github.com/launchdarkly/react-native-client-sdk/blob/a44abf8/index.d.ts#L393">index.d.ts:393</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>The flag could not be evaluated, so the default value was returned.</p>
+							<p>(iOS specific enum value) This indicates when an error with an HTTP error code is present.</p>
 						</div>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
-					<a name="fallthrough" class="tsd-anchor"></a>
-					<h3>FALLTHROUGH</h3>
-					<div class="tsd-signature tsd-kind-icon">FALLTHROUGH<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = &quot;FALLTHROUGH&quot;</span></div>
+					<a name="invalid_response_body" class="tsd-anchor"></a>
+					<h3>INVALID_<wbr>RESPONSE_<wbr>BODY</h3>
+					<div class="tsd-signature tsd-kind-icon">INVALID_<wbr>RESPONSE_<wbr>BODY<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = &quot;INVALID_RESPONSE_BODY&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/launchdarkly/react-native-client-sdk/blob/a44abf8/index.d.ts#L295">index.d.ts:295</a></li>
+							<li>Defined in <a href="https://github.com/launchdarkly/react-native-client-sdk/blob/a44abf8/index.d.ts#L416">index.d.ts:416</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>The flag is on, but the user did not match any targets or rules, so it returned the value that appears on the dashboard under &quot;Default rule.&quot;</p>
+							<p>(Android specific enum value) A response body received either through polling or streaming was unable to be parsed.</p>
 						</div>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
-					<a name="off" class="tsd-anchor"></a>
-					<h3>OFF</h3>
-					<div class="tsd-signature tsd-kind-icon">OFF<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = &quot;OFF&quot;</span></div>
+					<a name="network_failure" class="tsd-anchor"></a>
+					<h3>NETWORK_<wbr>FAILURE</h3>
+					<div class="tsd-signature tsd-kind-icon">NETWORK_<wbr>FAILURE<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = &quot;NETWORK_FAILURE&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/launchdarkly/react-native-client-sdk/blob/a44abf8/index.d.ts#L290">index.d.ts:290</a></li>
+							<li>Defined in <a href="https://github.com/launchdarkly/react-native-client-sdk/blob/a44abf8/index.d.ts#L411">index.d.ts:411</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>The flag is off and therefore returned its configured off value.</p>
-						</div>
-						<p>This value appears on the dashboard next to &quot;If targeting is off, serve:&quot;.</p>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
-					<a name="prerequisite_failed" class="tsd-anchor"></a>
-					<h3>PREREQUISITE_<wbr>FAILED</h3>
-					<div class="tsd-signature tsd-kind-icon">PREREQUISITE_<wbr>FAILED<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = &quot;PREREQUISITE_FAILED&quot;</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/launchdarkly/react-native-client-sdk/blob/a44abf8/index.d.ts#L312">index.d.ts:312</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>The flag had at least one prerequisite flag that either was off or did not return the desired variation.</p>
-						</div>
-						<p>Because of this, the flag returned its &quot;off&quot; value.</p>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
-					<a name="rule_match" class="tsd-anchor"></a>
-					<h3>RULE_<wbr>MATCH</h3>
-					<div class="tsd-signature tsd-kind-icon">RULE_<wbr>MATCH<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = &quot;RULE_MATCH&quot;</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/launchdarkly/react-native-client-sdk/blob/a44abf8/index.d.ts#L305">index.d.ts:305</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>The user who encountered the flag matched one of the flag&#39;s rules.</p>
+							<p>(Android specific enum value) A network request for polling, or the EventSource stream reported a failure.</p>
 						</div>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
-					<a name="target_match" class="tsd-anchor"></a>
-					<h3>TARGET_<wbr>MATCH</h3>
-					<div class="tsd-signature tsd-kind-icon">TARGET_<wbr>MATCH<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = &quot;TARGET_MATCH&quot;</span></div>
+					<a name="none" class="tsd-anchor"></a>
+					<h3>NONE</h3>
+					<div class="tsd-signature tsd-kind-icon">NONE<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = &quot;NONE&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/launchdarkly/react-native-client-sdk/blob/a44abf8/index.d.ts#L300">index.d.ts:300</a></li>
+							<li>Defined in <a href="https://github.com/launchdarkly/react-native-client-sdk/blob/a44abf8/index.d.ts#L378">index.d.ts:378</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>The user key was specifically targeted for this flag in the &quot;Target individual users&quot; section.</p>
+							<p>This indicates when no error has been recorded.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
+					<a name="uknown_error" class="tsd-anchor"></a>
+					<h3>UKNOWN_<wbr>ERROR</h3>
+					<div class="tsd-signature tsd-kind-icon">UKNOWN_<wbr>ERROR<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = &quot;UNKNOWN_ERROR&quot;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/launchdarkly/react-native-client-sdk/blob/a44abf8/index.d.ts#L383">index.d.ts:383</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>This indicates when there is an internal error in the stream request.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
+					<a name="unauthorized" class="tsd-anchor"></a>
+					<h3>UNAUTHORIZED</h3>
+					<div class="tsd-signature tsd-kind-icon">UNAUTHORIZED<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = &quot;UNAUTHORIZED&quot;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/launchdarkly/react-native-client-sdk/blob/a44abf8/index.d.ts#L388">index.d.ts:388</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>(iOS specific enum value) This indicates when an incorrect mobile key is provided.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
+					<a name="unexpected_response_code" class="tsd-anchor"></a>
+					<h3>UNEXPECTED_<wbr>RESPONSE_<wbr>CODE</h3>
+					<div class="tsd-signature tsd-kind-icon">UNEXPECTED_<wbr>RESPONSE_<wbr>CODE<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = &quot;UNEXPECTED_RESPONSE_CODE&quot;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/launchdarkly/react-native-client-sdk/blob/a44abf8/index.d.ts#L399">index.d.ts:399</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>(Android specific enum value) This indicates the LDFailure is an instance of LDInvalidResponseCodeFailure.
+							See Android documentation for more details.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
+					<a name="unexpected_stream_element_type" class="tsd-anchor"></a>
+					<h3>UNEXPECTED_<wbr>STREAM_<wbr>ELEMENT_<wbr>TYPE</h3>
+					<div class="tsd-signature tsd-kind-icon">UNEXPECTED_<wbr>STREAM_<wbr>ELEMENT_<wbr>TYPE<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = &quot;UNEXPECTED_STREAM_ELEMENT_TYPE&quot;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/launchdarkly/react-native-client-sdk/blob/a44abf8/index.d.ts#L406">index.d.ts:406</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>(Android specific enum value) An event was received through the stream was had an unknown event name.
+								This could indicate a newer SDK is available if new event types have become available through the
+							flag stream since the SDKs release.</p>
 						</div>
 					</div>
 				</section>
@@ -203,36 +236,42 @@
 					<li class=" tsd-kind-enum tsd-parent-kind-module">
 						<a href="_launchdarkly_react_native_client_sdk_.ldevaluationreasonerrorkind.html" class="tsd-kind-icon">LDEvaluation<wbr>Reason<wbr>Error<wbr>Kind</a>
 					</li>
+					<li class=" tsd-kind-enum tsd-parent-kind-module">
+						<a href="_launchdarkly_react_native_client_sdk_.ldevaluationreasonkind.html" class="tsd-kind-icon">LDEvaluation<wbr>Reason<wbr>Kind</a>
+					</li>
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-enum tsd-parent-kind-module">
-						<a href="_launchdarkly_react_native_client_sdk_.ldevaluationreasonkind.html" class="tsd-kind-icon">LDEvaluation<wbr>Reason<wbr>Kind</a>
+						<a href="_launchdarkly_react_native_client_sdk_.ldfailurereason.html" class="tsd-kind-icon">LDFailure<wbr>Reason</a>
 						<ul>
 							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
-								<a href="_launchdarkly_react_native_client_sdk_.ldevaluationreasonkind.html#error" class="tsd-kind-icon">ERROR</a>
+								<a href="_launchdarkly_react_native_client_sdk_.ldfailurereason.html#http_error" class="tsd-kind-icon">HTTP_<wbr>ERROR</a>
 							</li>
 							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
-								<a href="_launchdarkly_react_native_client_sdk_.ldevaluationreasonkind.html#fallthrough" class="tsd-kind-icon">FALLTHROUGH</a>
+								<a href="_launchdarkly_react_native_client_sdk_.ldfailurereason.html#invalid_response_body" class="tsd-kind-icon">INVALID_<wbr>RESPONSE_<wbr>BODY</a>
 							</li>
 							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
-								<a href="_launchdarkly_react_native_client_sdk_.ldevaluationreasonkind.html#off" class="tsd-kind-icon">OFF</a>
+								<a href="_launchdarkly_react_native_client_sdk_.ldfailurereason.html#network_failure" class="tsd-kind-icon">NETWORK_<wbr>FAILURE</a>
 							</li>
 							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
-								<a href="_launchdarkly_react_native_client_sdk_.ldevaluationreasonkind.html#prerequisite_failed" class="tsd-kind-icon">PREREQUISITE_<wbr>FAILED</a>
+								<a href="_launchdarkly_react_native_client_sdk_.ldfailurereason.html#none" class="tsd-kind-icon">NONE</a>
 							</li>
 							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
-								<a href="_launchdarkly_react_native_client_sdk_.ldevaluationreasonkind.html#rule_match" class="tsd-kind-icon">RULE_<wbr>MATCH</a>
+								<a href="_launchdarkly_react_native_client_sdk_.ldfailurereason.html#uknown_error" class="tsd-kind-icon">UKNOWN_<wbr>ERROR</a>
 							</li>
 							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
-								<a href="_launchdarkly_react_native_client_sdk_.ldevaluationreasonkind.html#target_match" class="tsd-kind-icon">TARGET_<wbr>MATCH</a>
+								<a href="_launchdarkly_react_native_client_sdk_.ldfailurereason.html#unauthorized" class="tsd-kind-icon">UNAUTHORIZED</a>
+							</li>
+							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
+								<a href="_launchdarkly_react_native_client_sdk_.ldfailurereason.html#unexpected_response_code" class="tsd-kind-icon">UNEXPECTED_<wbr>RESPONSE_<wbr>CODE</a>
+							</li>
+							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
+								<a href="_launchdarkly_react_native_client_sdk_.ldfailurereason.html#unexpected_stream_element_type" class="tsd-kind-icon">UNEXPECTED_<wbr>STREAM_<wbr>ELEMENT_<wbr>TYPE</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
-					<li class=" tsd-kind-enum tsd-parent-kind-module">
-						<a href="_launchdarkly_react_native_client_sdk_.ldfailurereason.html" class="tsd-kind-icon">LDFailure<wbr>Reason</a>
-					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-module">
 						<a href="../classes/_launchdarkly_react_native_client_sdk_.ldclient.html" class="tsd-kind-icon">LDClient</a>
 					</li>

@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>LDEvaluationReasonKind | LaunchDarkly Client-Side SDK for React Native (4.0.0)</title>
+	<title>LDConnectionMode | LaunchDarkly Client-Side SDK for React Native (4.0.0)</title>
 	<meta name="description" content="Documentation for LaunchDarkly Client-Side SDK for React Native (4.0.0)">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,10 +56,10 @@
 					<a href="../index.html">&quot;launchdarkly-react-native-client-sdk&quot;</a>
 				</li>
 				<li>
-					<a href="_launchdarkly_react_native_client_sdk_.ldevaluationreasonkind.html">LDEvaluationReasonKind</a>
+					<a href="_launchdarkly_react_native_client_sdk_.ldconnectionmode.html">LDConnectionMode</a>
 				</li>
 			</ul>
-			<h1>Enumeration LDEvaluationReasonKind</h1>
+			<h1>Enumeration LDConnectionMode</h1>
 		</div>
 	</div>
 </header>
@@ -69,7 +69,7 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Describes the reason behind how a flag evaluation was calculated.</p>
+						<p>Describes what state of connection to LaunchDarkly the SDK is in.</p>
 					</div>
 				</div>
 			</section>
@@ -80,12 +80,14 @@
 						<section class="tsd-index-section ">
 							<h3>Enumeration members</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="_launchdarkly_react_native_client_sdk_.ldevaluationreasonkind.html#error" class="tsd-kind-icon">ERROR</a></li>
-								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="_launchdarkly_react_native_client_sdk_.ldevaluationreasonkind.html#fallthrough" class="tsd-kind-icon">FALLTHROUGH</a></li>
-								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="_launchdarkly_react_native_client_sdk_.ldevaluationreasonkind.html#off" class="tsd-kind-icon">OFF</a></li>
-								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="_launchdarkly_react_native_client_sdk_.ldevaluationreasonkind.html#prerequisite_failed" class="tsd-kind-icon">PREREQUISITE_<wbr>FAILED</a></li>
-								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="_launchdarkly_react_native_client_sdk_.ldevaluationreasonkind.html#rule_match" class="tsd-kind-icon">RULE_<wbr>MATCH</a></li>
-								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="_launchdarkly_react_native_client_sdk_.ldevaluationreasonkind.html#target_match" class="tsd-kind-icon">TARGET_<wbr>MATCH</a></li>
+								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="_launchdarkly_react_native_client_sdk_.ldconnectionmode.html#background_disabled" class="tsd-kind-icon">BACKGROUND_<wbr>DISABLED</a></li>
+								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="_launchdarkly_react_native_client_sdk_.ldconnectionmode.html#background_polling" class="tsd-kind-icon">BACKGROUND_<wbr>POLLING</a></li>
+								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="_launchdarkly_react_native_client_sdk_.ldconnectionmode.html#establishing_streaming_connection" class="tsd-kind-icon">ESTABLISHING_<wbr>STREAMING_<wbr>CONNECTION</a></li>
+								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="_launchdarkly_react_native_client_sdk_.ldconnectionmode.html#offline" class="tsd-kind-icon">OFFLINE</a></li>
+								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="_launchdarkly_react_native_client_sdk_.ldconnectionmode.html#polling" class="tsd-kind-icon">POLLING</a></li>
+								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="_launchdarkly_react_native_client_sdk_.ldconnectionmode.html#set_offline" class="tsd-kind-icon">SET_<wbr>OFFLINE</a></li>
+								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="_launchdarkly_react_native_client_sdk_.ldconnectionmode.html#shutdown" class="tsd-kind-icon">SHUTDOWN</a></li>
+								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="_launchdarkly_react_native_client_sdk_.ldconnectionmode.html#streaming" class="tsd-kind-icon">STREAMING</a></li>
 							</ul>
 						</section>
 					</div>
@@ -94,94 +96,128 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Enumeration members</h2>
 				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
-					<a name="error" class="tsd-anchor"></a>
-					<h3>ERROR</h3>
-					<div class="tsd-signature tsd-kind-icon">ERROR<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = &quot;ERROR&quot;</span></div>
+					<a name="background_disabled" class="tsd-anchor"></a>
+					<h3>BACKGROUND_<wbr>DISABLED</h3>
+					<div class="tsd-signature tsd-kind-icon">BACKGROUND_<wbr>DISABLED<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = &quot;BACKGROUND_DISABLED&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/launchdarkly/react-native-client-sdk/blob/a44abf8/index.d.ts#L317">index.d.ts:317</a></li>
+							<li>Defined in <a href="https://github.com/launchdarkly/react-native-client-sdk/blob/a44abf8/index.d.ts#L344">index.d.ts:344</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>The flag could not be evaluated, so the default value was returned.</p>
+							<p>(Android specific enum value) The SDK was configured with background polling disabled. The SDK has detected
+							the application is in the background and is not attempting to update the flag cache.</p>
 						</div>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
-					<a name="fallthrough" class="tsd-anchor"></a>
-					<h3>FALLTHROUGH</h3>
-					<div class="tsd-signature tsd-kind-icon">FALLTHROUGH<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = &quot;FALLTHROUGH&quot;</span></div>
+					<a name="background_polling" class="tsd-anchor"></a>
+					<h3>BACKGROUND_<wbr>POLLING</h3>
+					<div class="tsd-signature tsd-kind-icon">BACKGROUND_<wbr>POLLING<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = &quot;BACKGROUND_POLLING&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/launchdarkly/react-native-client-sdk/blob/a44abf8/index.d.ts#L295">index.d.ts:295</a></li>
+							<li>Defined in <a href="https://github.com/launchdarkly/react-native-client-sdk/blob/a44abf8/index.d.ts#L338">index.d.ts:338</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>The flag is on, but the user did not match any targets or rules, so it returned the value that appears on the dashboard under &quot;Default rule.&quot;</p>
+							<p>(Android specific enum value) The SDK has detected the application is in the background and has transitioned to
+							battery conscious background polling.</p>
 						</div>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
-					<a name="off" class="tsd-anchor"></a>
-					<h3>OFF</h3>
-					<div class="tsd-signature tsd-kind-icon">OFF<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = &quot;OFF&quot;</span></div>
+					<a name="establishing_streaming_connection" class="tsd-anchor"></a>
+					<h3>ESTABLISHING_<wbr>STREAMING_<wbr>CONNECTION</h3>
+					<div class="tsd-signature tsd-kind-icon">ESTABLISHING_<wbr>STREAMING_<wbr>CONNECTION<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = &quot;ESTABLISHING_STREAMING_CONNECTION&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/launchdarkly/react-native-client-sdk/blob/a44abf8/index.d.ts#L290">index.d.ts:290</a></li>
+							<li>Defined in <a href="https://github.com/launchdarkly/react-native-client-sdk/blob/a44abf8/index.d.ts#L368">index.d.ts:368</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>The flag is off and therefore returned its configured off value.</p>
-						</div>
-						<p>This value appears on the dashboard next to &quot;If targeting is off, serve:&quot;.</p>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
-					<a name="prerequisite_failed" class="tsd-anchor"></a>
-					<h3>PREREQUISITE_<wbr>FAILED</h3>
-					<div class="tsd-signature tsd-kind-icon">PREREQUISITE_<wbr>FAILED<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = &quot;PREREQUISITE_FAILED&quot;</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/launchdarkly/react-native-client-sdk/blob/a44abf8/index.d.ts#L312">index.d.ts:312</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>The flag had at least one prerequisite flag that either was off or did not return the desired variation.</p>
-						</div>
-						<p>Because of this, the flag returned its &quot;off&quot; value.</p>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
-					<a name="rule_match" class="tsd-anchor"></a>
-					<h3>RULE_<wbr>MATCH</h3>
-					<div class="tsd-signature tsd-kind-icon">RULE_<wbr>MATCH<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = &quot;RULE_MATCH&quot;</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/launchdarkly/react-native-client-sdk/blob/a44abf8/index.d.ts#L305">index.d.ts:305</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>The user who encountered the flag matched one of the flag&#39;s rules.</p>
+							<p>(iOS specific enum value) The SDK is attempting to connect to LaunchDarkly by streaming.</p>
 						</div>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
-					<a name="target_match" class="tsd-anchor"></a>
-					<h3>TARGET_<wbr>MATCH</h3>
-					<div class="tsd-signature tsd-kind-icon">TARGET_<wbr>MATCH<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = &quot;TARGET_MATCH&quot;</span></div>
+					<a name="offline" class="tsd-anchor"></a>
+					<h3>OFFLINE</h3>
+					<div class="tsd-signature tsd-kind-icon">OFFLINE<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = &quot;OFFLINE&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/launchdarkly/react-native-client-sdk/blob/a44abf8/index.d.ts#L300">index.d.ts:300</a></li>
+							<li>Defined in <a href="https://github.com/launchdarkly/react-native-client-sdk/blob/a44abf8/index.d.ts#L350">index.d.ts:350</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>The user key was specifically targeted for this flag in the &quot;Target individual users&quot; section.</p>
+							<p>The SDK has detected that the mobile device does not have an active network connection so has ceased flag update
+							attempts until the network status changes.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
+					<a name="polling" class="tsd-anchor"></a>
+					<h3>POLLING</h3>
+					<div class="tsd-signature tsd-kind-icon">POLLING<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = &quot;POLLING&quot;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/launchdarkly/react-native-client-sdk/blob/a44abf8/index.d.ts#L332">index.d.ts:332</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The SDK was configured with streaming disabled, and is in foreground polling mode.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
+					<a name="set_offline" class="tsd-anchor"></a>
+					<h3>SET_<wbr>OFFLINE</h3>
+					<div class="tsd-signature tsd-kind-icon">SET_<wbr>OFFLINE<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = &quot;SET_OFFLINE&quot;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/launchdarkly/react-native-client-sdk/blob/a44abf8/index.d.ts#L357">index.d.ts:357</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>(Android specific enum value) The SDK has been explicitly set offline, either in the initial configuration,
+								by setOffline(), or as a result of failed authentication to LaunchDarkly.
+							The SDK will stay offline unless setOnline() is called.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
+					<a name="shutdown" class="tsd-anchor"></a>
+					<h3>SHUTDOWN</h3>
+					<div class="tsd-signature tsd-kind-icon">SHUTDOWN<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = &quot;SHUTDOWN&quot;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/launchdarkly/react-native-client-sdk/blob/a44abf8/index.d.ts#L363">index.d.ts:363</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>(Android specific enum value) The shutdown state indicates the SDK has been permanently shutdown as a result of
+							a call to close().</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
+					<a name="streaming" class="tsd-anchor"></a>
+					<h3>STREAMING</h3>
+					<div class="tsd-signature tsd-kind-icon">STREAMING<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = &quot;STREAMING&quot;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/launchdarkly/react-native-client-sdk/blob/a44abf8/index.d.ts#L327">index.d.ts:327</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The SDK is either connected to the flag stream, or is actively attempting to acquire a connection.</p>
 						</div>
 					</div>
 				</section>
@@ -197,39 +233,45 @@
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-					<li class=" tsd-kind-enum tsd-parent-kind-module">
-						<a href="_launchdarkly_react_native_client_sdk_.ldconnectionmode.html" class="tsd-kind-icon">LDConnection<wbr>Mode</a>
-					</li>
-					<li class=" tsd-kind-enum tsd-parent-kind-module">
-						<a href="_launchdarkly_react_native_client_sdk_.ldevaluationreasonerrorkind.html" class="tsd-kind-icon">LDEvaluation<wbr>Reason<wbr>Error<wbr>Kind</a>
-					</li>
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-enum tsd-parent-kind-module">
-						<a href="_launchdarkly_react_native_client_sdk_.ldevaluationreasonkind.html" class="tsd-kind-icon">LDEvaluation<wbr>Reason<wbr>Kind</a>
+						<a href="_launchdarkly_react_native_client_sdk_.ldconnectionmode.html" class="tsd-kind-icon">LDConnection<wbr>Mode</a>
 						<ul>
 							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
-								<a href="_launchdarkly_react_native_client_sdk_.ldevaluationreasonkind.html#error" class="tsd-kind-icon">ERROR</a>
+								<a href="_launchdarkly_react_native_client_sdk_.ldconnectionmode.html#background_disabled" class="tsd-kind-icon">BACKGROUND_<wbr>DISABLED</a>
 							</li>
 							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
-								<a href="_launchdarkly_react_native_client_sdk_.ldevaluationreasonkind.html#fallthrough" class="tsd-kind-icon">FALLTHROUGH</a>
+								<a href="_launchdarkly_react_native_client_sdk_.ldconnectionmode.html#background_polling" class="tsd-kind-icon">BACKGROUND_<wbr>POLLING</a>
 							</li>
 							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
-								<a href="_launchdarkly_react_native_client_sdk_.ldevaluationreasonkind.html#off" class="tsd-kind-icon">OFF</a>
+								<a href="_launchdarkly_react_native_client_sdk_.ldconnectionmode.html#establishing_streaming_connection" class="tsd-kind-icon">ESTABLISHING_<wbr>STREAMING_<wbr>CONNECTION</a>
 							</li>
 							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
-								<a href="_launchdarkly_react_native_client_sdk_.ldevaluationreasonkind.html#prerequisite_failed" class="tsd-kind-icon">PREREQUISITE_<wbr>FAILED</a>
+								<a href="_launchdarkly_react_native_client_sdk_.ldconnectionmode.html#offline" class="tsd-kind-icon">OFFLINE</a>
 							</li>
 							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
-								<a href="_launchdarkly_react_native_client_sdk_.ldevaluationreasonkind.html#rule_match" class="tsd-kind-icon">RULE_<wbr>MATCH</a>
+								<a href="_launchdarkly_react_native_client_sdk_.ldconnectionmode.html#polling" class="tsd-kind-icon">POLLING</a>
 							</li>
 							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
-								<a href="_launchdarkly_react_native_client_sdk_.ldevaluationreasonkind.html#target_match" class="tsd-kind-icon">TARGET_<wbr>MATCH</a>
+								<a href="_launchdarkly_react_native_client_sdk_.ldconnectionmode.html#set_offline" class="tsd-kind-icon">SET_<wbr>OFFLINE</a>
+							</li>
+							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
+								<a href="_launchdarkly_react_native_client_sdk_.ldconnectionmode.html#shutdown" class="tsd-kind-icon">SHUTDOWN</a>
+							</li>
+							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
+								<a href="_launchdarkly_react_native_client_sdk_.ldconnectionmode.html#streaming" class="tsd-kind-icon">STREAMING</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
+					<li class=" tsd-kind-enum tsd-parent-kind-module">
+						<a href="_launchdarkly_react_native_client_sdk_.ldevaluationreasonerrorkind.html" class="tsd-kind-icon">LDEvaluation<wbr>Reason<wbr>Error<wbr>Kind</a>
+					</li>
+					<li class=" tsd-kind-enum tsd-parent-kind-module">
+						<a href="_launchdarkly_react_native_client_sdk_.ldevaluationreasonkind.html" class="tsd-kind-icon">LDEvaluation<wbr>Reason<wbr>Kind</a>
+					</li>
 					<li class=" tsd-kind-enum tsd-parent-kind-module">
 						<a href="_launchdarkly_react_native_client_sdk_.ldfailurereason.html" class="tsd-kind-icon">LDFailure<wbr>Reason</a>
 					</li>
