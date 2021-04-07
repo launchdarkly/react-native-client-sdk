@@ -2,6 +2,11 @@
 
 All notable changes to the LaunchDarkly React Native SDK will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [4.0.1] - 2021-04-06
+### Fixed:
+- iOS: Internal throttling logic would sometimes delay new poll or stream connections even when there were no recent connections. This caused switching active user contexts using `identify` to sometimes delay retrieving the most recent flags, and therefore delay the completion of the returned Promise.
+
+
 ## [4.0.0] - 2021-03-31
 ### Added:
 - Added `getConnectionMode`, `getLastSuccessfulConnection`, `getLastFailedConnection`, and `getLastFailure` methods to `LDClient`. These methods can be used to report on the SDK&#39;s connection to LaunchDarkly. The new `LDConnectionMode` and `LDFailureReason` enum types have been added to support these methods. These methods replace the `getConnectionInformation` method which behaved differently across platforms.
