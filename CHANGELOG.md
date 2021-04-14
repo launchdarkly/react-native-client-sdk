@@ -2,6 +2,14 @@
 
 All notable changes to the LaunchDarkly React Native SDK will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [4.1.0] - 2021-04-13
+### Added:
+- The SDK is now compatible with React Native version 0.64.x. ([#69](https://github.com/launchdarkly/react-native-client-sdk/issues/69))
+
+### Removed:
+- The SDK no longer requires React as a peer dependency. React compatibility is dictated based on its compatibility with the React Native version.
+
+
 ## [4.0.1] - 2021-04-06
 ### Fixed:
 - iOS: Internal throttling logic would sometimes delay new poll or stream connections even when there were no recent connections. This caused switching active user contexts using `identify` to sometimes delay retrieving the most recent flags, and therefore delay the completion of the returned Promise.
