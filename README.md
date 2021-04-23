@@ -12,7 +12,13 @@ LaunchDarkly overview
 Supported versions
 -------------------------
 
-This SDK is compatible with React Native 0.62.x and Xcode 12 and is tested in Android 27 and iOS 13.5. Earlier versions of this SDK are compatible with prior versions of React Native, Android, and iOS.
+This SDK is currently compatible with React Native 0.64.x and Xcode 12 and is tested in Android 30 and iOS 14. Earlier versions of this SDK are compatible with prior versions of React Native, Android, and iOS.
+
+| SDK version     | React Native version |
+|-----------------|----------------------|
+| 4.1.x - current | 0.64.x               |
+| 3.2.x - 4.0.x   | 0.63.x               |
+| 3.1.x           | 0.62.x               |
 
 Getting started
 ---------------
