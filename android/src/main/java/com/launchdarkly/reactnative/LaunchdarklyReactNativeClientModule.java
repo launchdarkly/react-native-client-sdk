@@ -758,8 +758,11 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
     }
 
     private void resolveJsonElementDetail(Promise promise, EvaluationDetail<JsonElement> jsonElementDetail) {
-        JsonElement jsonElement = jsonElementDetail.getValue();
-        resolveJsonElement(promise, jsonElement);
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.add("value", jsonElementDetail.getValue());
+        jsonObject.addProperty("variationIndex", jsonElementDetail.getVariationIndex());
+        jsonObject.add("reason", gson.toJsonTree(jsonElementDetail.getReason()));
+        resolveJsonElement(promise, jsonObject);
     }
 
     /**

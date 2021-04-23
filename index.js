@@ -120,7 +120,7 @@ export default class LDClient {
 
   jsonVariationDetail(flagKey, defaultValue) {
     if (defaultValue == undefined) {
-      return LaunchdarklyReactNativeClient.jsonVariatioDetailNone(flagKey);
+      return LaunchdarklyReactNativeClient.jsonVariationDetailNone(flagKey);
     } else if (typeof defaultValue === 'number') {
       return LaunchdarklyReactNativeClient.jsonVariationDetailNumber(flagKey, defaultValue);
     } else if (typeof defaultValue === 'boolean') {

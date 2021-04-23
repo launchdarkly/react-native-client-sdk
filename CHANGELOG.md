@@ -2,6 +2,10 @@
 
 All notable changes to the LaunchDarkly React Native SDK will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [4.0.2] - 2021-04-23
+### Fixed:
+- Android: Fixed an issue where the `jsonVariationDetail` method in `LDClient` returned `Promise<Record<string, any>>` instead of the declared return type of `Promise<LDEvaluationDetail<Record<string, any>>>`.
+
 ## [4.0.1] - 2021-04-06
 ### Fixed:
 - iOS: Internal throttling logic would sometimes delay new poll or stream connections even when there were no recent connections. This caused switching active user contexts using `identify` to sometimes delay retrieving the most recent flags, and therefore delay the completion of the returned Promise.
