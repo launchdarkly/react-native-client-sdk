@@ -2,13 +2,16 @@
 
 All notable changes to the LaunchDarkly React Native SDK will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [4.0.2] - 2021-04-23
+### Fixed:
+- Android: Fixed an issue where the `jsonVariationDetail` method in `LDClient` returned `Promise<Record<string, any>>` instead of the declared return type of `Promise<LDEvaluationDetail<Record<string, any>>>`.
+
 ## [4.1.0] - 2021-04-13
 ### Added:
 - The SDK is now compatible with React Native version 0.64.x. ([#69](https://github.com/launchdarkly/react-native-client-sdk/issues/69))
 
 ### Removed:
 - The SDK no longer requires React as a peer dependency. React compatibility is dictated based on its compatibility with the React Native version.
-
 
 ## [4.0.1] - 2021-04-06
 ### Fixed:
