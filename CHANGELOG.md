@@ -4,7 +4,7 @@ All notable changes to the LaunchDarkly React Native SDK will be documented in t
 
 ## [4.1.1] - 2021-04-23
 ### Fixed:
-- Android: Fixed an issue where the `jsonVariationDetail` method in `LDClient` returned `Promise&lt;Record&lt;string, any&gt;&gt;` instead of the declared return type of `Promise&lt;LDEvaluationDetail&lt;Record&lt;string, any&gt;&gt;&gt;`. This was also fixed in SDK version 4.0.2 with React Native 0.63 compatibility.
+- Android: Fixed an issue where the `jsonVariationDetail` method in `LDClient` returned `Promise<Record<string, any>>` instead of the declared return type of `Promise<LDEvaluationDetail<Record<string, any>>>`. This was also fixed in SDK version 4.0.2 with React Native 0.63 compatibility.
 
 ## [4.0.2] - 2021-04-23
 ### Fixed:
