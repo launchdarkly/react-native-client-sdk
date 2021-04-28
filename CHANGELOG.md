@@ -2,6 +2,10 @@
 
 All notable changes to the LaunchDarkly React Native SDK will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [4.0.3] - 2021-04-28
+### Fixed:
+- The `LDEvaluationReasonErrorKind`, `LDEvaluationReasonKind`, `LDConnectionMode`, and `LDFailureReason` enum TypeScript types were undefined when evaluated at runtime due to being defined in an ambient context.
+
 ## [4.0.2] - 2021-04-23
 ### Fixed:
 - Android: Fixed an issue where the `jsonVariationDetail` method in `LDClient` returned `Promise<Record<string, any>>` instead of the declared return type of `Promise<LDEvaluationDetail<Record<string, any>>>`.

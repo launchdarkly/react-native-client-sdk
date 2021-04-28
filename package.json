@@ -1,6 +1,6 @@
 {
   "name": "launchdarkly-react-native-client-sdk",
-  "version": "4.0.2",
+  "version": "4.0.3",
   "description": "",
   "main": "index.js",
   "types": "index.d.ts",
@@ -22,8 +22,8 @@
   },
   "homepage": "https://docs.launchdarkly.com/sdk/client-side/react-native",
   "peerDependencies": {
-    "react-native": "~0.63",
-    "react": "~16.13.0"
+    "react": "~16.13.0",
+    "react-native": "~0.63"
   },
   "devDependencies": {
     "metro-react-native-babel-preset": "0.59.0",
