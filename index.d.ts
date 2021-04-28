@@ -237,190 +237,45 @@ declare module 'launchdarkly-react-native-client-sdk' {
   
     /**
      * Describes the kind of error which occurred when a flag evaluation was calculated.
+     * 
+     * This extends String for backwards compatibility. In a future major release, references to this type
+     * may be replaced with String references.
      */
-    export enum LDEvaluationReasonErrorKind {
-        /**
-         * The client is not able to establish a connection to LaunchDarkly yet. 
-         * 
-         * If there is a persistent feature store, the store does not yet contain flag data.
-         */
-        CLIENT_NOT_READY = 'CLIENT_NOT_READY',
-
-        /**
-         * The flag key did not match any known flag.
-         */
-        FLAG_NOT_FOUND = 'FLAG_NOT_FOUND',
-
-        /**
-         * The user object or user key was not provided.
-         */
-        USER_NOT_SPECIFIED = 'USER_NOT_SPECIFIED',
-
-        /**
-         * There was an internal inconsistency in the flag data. For example, a rule specified a nonexistent variation.
-         * 
-         * This is an unusual condition that might require assistance from LaunchDarkly's Support team.
-         */
-        MALFORMED_FLAG = 'MALFORMED_FLAG',
-
-        /**
-         * The application code requested the flag value with a different data type than it actually is. 
-         * 
-         * For example, the code asked for a boolean when the flag type is actually a string.
-         */
-        WRONG_TYPE = 'WRONG_TYPE',
-
-        /**
-         * An unexpected error stopped flag evaluation. This could happen if you are using a persistent feature store and the database stops working.
-         * 
-         * When this happens, the SDK always prints the specific error to the log.
-         */
-        EXCEPTION = 'EXCEPTION',
+    export interface LDEvaluationReasonErrorKind extends String {
     }
   
     /**
      * Describes the reason behind how a flag evaluation was calculated.
+     * 
+     * This extends String for backwards compatibility. In a future major release, references to this type
+     * may be replaced with String references.
      */
-    export enum LDEvaluationReasonKind {
-        /**
-         * The flag is off and therefore returned its configured off value. 
-         * 
-         * This value appears on the dashboard next to "If targeting is off, serve:".
-         */
-        OFF = 'OFF',
-
-        /**
-         * The flag is on, but the user did not match any targets or rules, so it returned the value that appears on the dashboard under "Default rule."
-         */
-        FALLTHROUGH = 'FALLTHROUGH',
-
-        /**
-         * The user key was specifically targeted for this flag in the "Target individual users" section.
-         */
-        TARGET_MATCH = 'TARGET_MATCH',
-
-        /**
-         * The user who encountered the flag matched one of the flag's rules.
-         */
-        RULE_MATCH = 'RULE_MATCH',
-
-        /**
-         * The flag had at least one prerequisite flag that either was off or did not return the desired variation. 
-         * 
-         * Because of this, the flag returned its "off" value.
-         */
-        PREREQUISITE_FAILED = 'PREREQUISITE_FAILED',
-
-        /**
-         * The flag could not be evaluated, so the default value was returned.
-         */
-        ERROR = 'ERROR',
+    export interface LDEvaluationReasonKind extends String {
     }
 
     /**
      * Describes what state of connection to LaunchDarkly the SDK is in.
+     * 
+     * This extends String for backwards compatibility. In a future major release, references to this type
+     * may be replaced with String references.
      */
-    export enum LDConnectionMode {
-        /**
-         * The SDK is either connected to the flag stream, or is actively attempting to acquire a connection.
-         */
-        STREAMING = 'STREAMING',
-
-        /**
-         * The SDK was configured with streaming disabled, and is in foreground polling mode.
-         */
-        POLLING = 'POLLING',
-
-        /**
-         * (Android specific enum value) The SDK has detected the application is in the background and has transitioned to 
-         * battery conscious background polling.
-         */
-        BACKGROUND_POLLING = 'BACKGROUND_POLLING',
-
-        /**
-         * (Android specific enum value) The SDK was configured with background polling disabled. The SDK has detected 
-         * the application is in the background and is not attempting to update the flag cache.
-         */
-        BACKGROUND_DISABLED = 'BACKGROUND_DISABLED',
-
-        /**
-         * The SDK has detected that the mobile device does not have an active network connection so has ceased flag update 
-         * attempts until the network status changes.
-         */
-        OFFLINE = 'OFFLINE',
-
-        /**
-         * (Android specific enum value) The SDK has been explicitly set offline, either in the initial configuration, 
-         * by setOffline(), or as a result of failed authentication to LaunchDarkly. 
-         * The SDK will stay offline unless setOnline() is called.
-         */
-        SET_OFFLINE = 'SET_OFFLINE',
-
-        /**
-         * (Android specific enum value) The shutdown state indicates the SDK has been permanently shutdown as a result of 
-         * a call to close().
-         */
-        SHUTDOWN = 'SHUTDOWN',
-
-        /**
-         * (iOS specific enum value) The SDK is attempting to connect to LaunchDarkly by streaming.
-         */
-        ESTABLISHING_STREAMING_CONNECTION = 'ESTABLISHING_STREAMING_CONNECTION',
+    export interface LDConnectionMode extends String {
     }
 
     /**
      * Describes why a connection request to LaunchDarkly failed.
+     * 
+     * This extends String for backwards compatibility. In a future major release, references to this type
+     * may be replaced with String references.
      */
-    export enum LDFailureReason {
-        /**
-         * This indicates when no error has been recorded.
-         */
-        NONE = 'NONE',
-
-        /**
-         * This indicates when there is an internal error in the stream request.
-         */
-        UKNOWN_ERROR ='UNKNOWN_ERROR',
-
-        /**
-         * (iOS specific enum value) This indicates when an incorrect mobile key is provided.
-         */
-        UNAUTHORIZED = 'UNAUTHORIZED',
-
-        /**
-         * (iOS specific enum value) This indicates when an error with an HTTP error code is present.
-         */
-        HTTP_ERROR = 'HTTP_ERROR',
-
-        /**
-         * (Android specific enum value) This indicates the LDFailure is an instance of LDInvalidResponseCodeFailure. 
-         * See Android documentation for more details.
-         */
-        UNEXPECTED_RESPONSE_CODE = 'UNEXPECTED_RESPONSE_CODE',
-
-        /**
-         * (Android specific enum value) An event was received through the stream was had an unknown event name. 
-         * This could indicate a newer SDK is available if new event types have become available through the 
-         * flag stream since the SDKs release.
-         */
-        UNEXPECTED_STREAM_ELEMENT_TYPE = 'UNEXPECTED_STREAM_ELEMENT_TYPE',
-
-        /**
-         * (Android specific enum value) A network request for polling, or the EventSource stream reported a failure.
-         */
-        NETWORK_FAILURE = 'NETWORK_FAILURE',
-
-        /**
-         * (Android specific enum value) A response body received either through polling or streaming was unable to be parsed.
-         */
-        INVALID_RESPONSE_BODY = 'INVALID_RESPONSE_BODY',
+    export interface LDFailureReason extends String {
     }
   
     /**
      * The flag is off and therefore returned its configured off value.
      */
     export type LDEvaluationReasonOff = {
-        kind: LDEvaluationReasonKind.OFF;
+        kind: 'OFF';
     };
   
     /**
@@ -428,21 +283,21 @@ declare module 'launchdarkly-react-native-client-sdk' {
      * on the dashboard under "Default rule."
      */
     export type LDEvaluationReasonFallthrough = {
-        kind: LDEvaluationReasonKind.FALLTHROUGH;
+        kind: 'FALLTHROUGH';
     };
   
     /**
      * The user key was specifically targeted for this flag in the "Target individual users" section.
      */
     export type LDEvaluationReasonTargetMatch = {
-        kind: LDEvaluationReasonKind.TARGET_MATCH;
+        kind: 'TARGET_MATCH';
     };
   
     /**
      * The user who encountered the flag matched one of the flag's rules.
      */
     export type LDEvaluationReasonRuleMatch = {
-        kind: LDEvaluationReasonKind.RULE_MATCH;
+        kind: 'RULE_MATCH';
 
         /**
          * The positional index of the matched rule (0 for the first rule).
@@ -460,7 +315,7 @@ declare module 'launchdarkly-react-native-client-sdk' {
      * Because of this, the flag returned its "off" value.
      */
     export type LDEvaluationReasonPrerequisiteFailed = {
-        kind: LDEvaluationReasonKind.PREREQUISITE_FAILED;
+        kind: 'PREREQUISITE_FAILED';
 
         /**
          * The key of the prerequisite flag that failed.
@@ -472,10 +327,19 @@ declare module 'launchdarkly-react-native-client-sdk' {
      * The flag could not be evaluated, so the default value was returned.
      */
     export type LDEvaluationReasonError = {
-        kind: LDEvaluationReasonKind.ERROR;
+        kind: 'ERROR';
 
         /**
          * The kind of error which occurred.
+         * 
+         * Kinds of errors include:
+         *
+         * - `'CLIENT_NOT_READY'`: The client is not able to establish a connection to LaunchDarkly yet. If there is a persistent feature store, the store does not yet contain flag data.
+         * - `'FLAG_NOT_FOUND'`: The flag key did not match any known flag.
+         * - `'USER_NOT_SPECIFIED'`: The user object or user key was not provided.
+         * - `'MALFORMED_FLAG'`: There was an internal inconsistency in the flag data. For example, a rule specified a nonexistent variation. This is an unusual condition that might require assistance from LaunchDarkly's Support team.
+         * - `'WRONG_TYPE'`: The application code requested the flag value with a different data type than it actually is. For example, the code asked for a boolean when the flag type is actually a string.
+         * - `'EXCEPTION'`: An unexpected error stopped flag evaluation. This could happen if you are using a persistent feature store and the database stops working. When this happens, the SDK always prints the specific error to the log.
          */
         errorKind: LDEvaluationReasonErrorKind;
     };
@@ -854,7 +718,18 @@ declare module 'launchdarkly-react-native-client-sdk' {
 
         /**
          * Returns the current state of the connection to LaunchDarkly.
+         * 
+         * States include:
          *
+         * - `'STREAMING'`: The SDK is either connected to the flag stream, or is actively attempting to acquire a connection.
+         * - `'POLLING'`: The SDK was configured with streaming disabled, and is in foreground polling mode.
+         * - `'BACKGROUND_POLLING'`: (Android specific enum value) The SDK has detected the application is in the background and has transitioned to battery conscious background polling.
+         * - `'BACKGROUND_DISABLED'`: (Android specific enum value) The SDK was configured with background polling disabled. The SDK has detected the application is in the background and is not attempting to update the flag cache.
+         * - `'OFFLINE'`: The SDK has detected that the mobile device does not have an active network connection so has ceased flag update attempts until the network status changes.
+         * - `'SET_OFFLINE'`: (Android specific enum value) The SDK has been explicitly set offline, either in the initial configuration, by setOffline(), or as a result of failed authentication to LaunchDarkly. The SDK will stay offline unless setOnline() is called.
+         * - `'SHUTDOWN'`: (Android specific enum value) The shutdown state indicates the SDK has been permanently shutdown as a result of a call to close().
+         * - `'ESTABLISHING_STREAMING_CONNECTION'`: (iOS specific enum value) The SDK is attempting to connect to LaunchDarkly by streaming.
+         * 
          * @returns 
          *   A promise containing a LDConnectionMode enum value representing the status of the connection to LaunchDarkly.
          */
@@ -882,7 +757,18 @@ declare module 'launchdarkly-react-native-client-sdk' {
 
         /**
          * Returns the most recent connection failure reason or null.
+         * 
+         * Reasons include:
          *
+         * - `'NONE'`: This indicates when no error has been recorded.
+         * - `'UNKNOWN_ERROR'`: This indicates when there is an internal error in the stream request.
+         * - `'UNAUTHORIZED'`: (iOS specific enum value) This indicates when an incorrect mobile key is provided.
+         * - `'HTTP_ERROR'`: (iOS specific enum value) This indicates when an error with an HTTP error code is present.
+         * - `'UNEXPECTED_RESPONSE_CODE'`: (Android specific enum value) This indicates the LDFailure is an instance of LDInvalidResponseCodeFailure. See Android documentation for more details.
+         * - `'UNEXPECTED_STREAM_ELEMENT_TYPE'`: (Android specific enum value) An event was received through the stream was had an unknown event name. This could indicate a newer SDK is available if new event types have become available through the flag stream since the SDKs release.
+         * - `'NETWORK_FAILURE'`: (Android specific enum value) A network request for polling, or the EventSource stream reported a failure.
+         * - `'INVALID_RESPONSE_BODY'`: (Android specific enum value) A response body received either through polling or streaming was unable to be parsed.
+         * 
          * @returns 
          *   A promise containing a LDFailureReason enum value representing the reason for the most recently failed 
          *   connection to LaunchDarkly, or null if a failed connection has yet to occur.
