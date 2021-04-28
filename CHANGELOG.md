@@ -2,6 +2,10 @@
 
 All notable changes to the LaunchDarkly React Native SDK will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [4.1.2] - 2021-04-28
+### Fixed:
+- The `LDEvaluationReasonErrorKind`, `LDEvaluationReasonKind`, `LDConnectionMode`, and `LDFailureReason` enum TypeScript types were undefined when evaluated at runtime due to being defined in an ambient context. This was also fixed in SDK version 4.0.3 with React Native 0.63 compatibility.
+
 ## [4.0.3] - 2021-04-28
 ### Fixed:
 - The `LDEvaluationReasonErrorKind`, `LDEvaluationReasonKind`, `LDConnectionMode`, and `LDFailureReason` enum TypeScript types were undefined when evaluated at runtime due to being defined in an ambient context.
