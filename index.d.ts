@@ -162,6 +162,11 @@ declare module 'launchdarkly-react-native-client-sdk' {
         diagnosticRecordingIntervalMillis?: number;
 
         /**
+         * The mapping of environment names as keys to mobile keys for each environment as values.
+         */
+        secondaryMobileKeys?: Record<string, string>;
+
+        /**
          * Whether to treat all user attributes as private for event reporting for all users.
          * The SDK will not include private attribute values in analytics events, but private attribute names will be sent. 
          * The default is false.
@@ -434,10 +439,12 @@ declare module 'launchdarkly-react-native-client-sdk' {
          *   The unique key of the feature flag.
          * @param defaultValue
          *   The default value of the flag, to be used if the value is not available from LaunchDarkly.
+         * @param environment
+         *   Optional environment name to obtain the result from the corresponding secondary environment
          * @returns
          *   A promise containing the flag's value.
          */
-        boolVariation(flagKey: string, defaultValue: boolean): Promise<boolean>;
+        boolVariation(flagKey: string, defaultValue: boolean, environment?: string): Promise<boolean>;
 
         /**
          * Determines the variation of an integer feature flag for the current user.
@@ -446,10 +453,12 @@ declare module 'launchdarkly-react-native-client-sdk' {
          *   The unique key of the feature flag.
          * @param defaultValue
          *   The default value of the flag, to be used if the value is not available from LaunchDarkly.
+         * @param environment
+         *   Optional environment name to obtain the result from the corresponding secondary environment
          * @returns
          *   A promise containing the flag's value.
          */
-        intVariation(flagKey: string, defaultValue: number): Promise<number>;
+        intVariation(flagKey: string, defaultValue: number, environment?: string): Promise<number>;
 
         /**
          * Determines the variation of a floating-point feature flag for the current user.
@@ -458,10 +467,12 @@ declare module 'launchdarkly-react-native-client-sdk' {
          *   The unique key of the feature flag.
          * @param defaultValue
          *   The default value of the flag, to be used if the value is not available from LaunchDarkly.
+         * @param environment
+         *   Optional environment name to obtain the result from the corresponding secondary environment
          * @returns
          *   A promise containing the flag's value.
          */
-        floatVariation(flagKey: string, defaultValue: number): Promise<number>;
+        floatVariation(flagKey: string, defaultValue: number, environment?: string): Promise<number>;
 
         /**
          * Determines the variation of a string feature flag for the current user.
@@ -470,10 +481,12 @@ declare module 'launchdarkly-react-native-client-sdk' {
          *   The unique key of the feature flag.
          * @param defaultValue
          *   The default value of the flag, to be used if the value is not available from LaunchDarkly.
+         * @param environment
+         *   Optional environment name to obtain the result from the corresponding secondary environment
          * @returns
          *   A promise containing the flag's value.
          */
-        stringVariation(flagKey: string, defaultValue: string): Promise<string>;
+        stringVariation(flagKey: string, defaultValue: string, environment?: string): Promise<string>;
 
         /**
          * Determines the variation of a JSON feature flag for the current user.
@@ -482,12 +495,15 @@ declare module 'launchdarkly-react-native-client-sdk' {
          *   The unique key of the feature flag.
          * @param defaultValue
          *   The default value of the flag, to be used if the value is not available from LaunchDarkly.
+         * @param environment
+         *   Optional environment name to obtain the result from the corresponding secondary environment
          * @returns
          *   A promise containing the flag's value.
          */
         jsonVariation(
             flagKey: string,
             defaultValue: Record<string, any>,
+            environment?: string
         ): Promise<Record<string, any>>;
         
         /**
@@ -503,12 +519,15 @@ declare module 'launchdarkly-react-native-client-sdk' {
          *   The unique key of the feature flag.
          * @param defaultValue
          *   The default value of the flag, to be used if the value is not available from LaunchDarkly.
+         * @param environment
+         *   Optional environment name to obtain the result from the corresponding secondary environment
          * @returns
          *   A promise containing an [[LDEvaluationDetail]] object containing the value and explanation.
          */
         boolVariationDetail(
             flagKey: string,
             defaultValue: boolean,
+            environment?: string
         ): Promise<LDEvaluationDetail<boolean>>;
 
         /**
@@ -524,12 +543,15 @@ declare module 'launchdarkly-react-native-client-sdk' {
          *   The unique key of the feature flag.
          * @param defaultValue
          *   The default value of the flag, to be used if the value is not available from LaunchDarkly.
+         * @param environment
+         *   Optional environment name to obtain the result from the corresponding secondary environment
          * @returns
          *   A promise containing an [[LDEvaluationDetail]] object containing the value and explanation.
          */
         intVariationDetail(
             flagKey: string,
             defaultValue: number,
+            environment?: string
         ): Promise<LDEvaluationDetail<number>>;
 
         /**
@@ -545,12 +567,15 @@ declare module 'launchdarkly-react-native-client-sdk' {
          *   The unique key of the feature flag.
          * @param defaultValue
          *   The default value of the flag, to be used if the value is not available from LaunchDarkly.
+         * @param environment
+         *   Optional environment name to obtain the result from the corresponding secondary environment
          * @returns
          *   A promise containing an [[LDEvaluationDetail]] object containing the value and explanation.
          */
         floatVariationDetail(
             flagKey: string,
             defaultValue: number,
+            environment?: string
         ): Promise<LDEvaluationDetail<number>>;
 
         /**
@@ -566,12 +591,15 @@ declare module 'launchdarkly-react-native-client-sdk' {
          *   The unique key of the feature flag.
          * @param defaultValue
          *   The default value of the flag, to be used if the value is not available from LaunchDarkly.
+         * @param environment
+         *   Optional environment name to obtain the result from the corresponding secondary environment
          * @returns
          *   A promise containing an [[LDEvaluationDetail]] object containing the value and explanation.
          */
         stringVariationDetail(
             flagKey: string,
             defaultValue: string,
+            environment?: string
         ): Promise<LDEvaluationDetail<string>>;
 
         /**
@@ -587,24 +615,29 @@ declare module 'launchdarkly-react-native-client-sdk' {
          *   The unique key of the feature flag.
          * @param defaultValue
          *   The default value of the flag, to be used if the value is not available from LaunchDarkly.
+         * @param environment
+         *   Optional environment name to obtain the result from the corresponding secondary environment
          * @returns
          *   A promise containing an [[LDEvaluationDetail]] object containing the value and explanation.
          */
         jsonVariationDetail(
             flagKey: string,
             defaultValue: Record<string, any>,
+            environment?: string
         ): Promise<LDEvaluationDetail<Record<string, any>>>;
         
         /**
          * Returns a map of all available flags to the current user's values.
          *
+         * @param environment
+         *   Optional environment name to obtain the result from the corresponding secondary environment
          * @returns
          *   A promise containing an object in which each key is a feature flag key and each value is the flag value.
          *   The promise will be rejected if the SDK has not yet completed initialization.
          *   Note that there is no way to specify a default value for each flag as there is with the
          *   `*Variation` methods, so any flag that cannot be evaluated will have a null value.
          */
-        allFlags(): Promise<LDFlagSet>;
+        allFlags(environment?: string): Promise<LDFlagSet>;
         
         /**
          * Track events to use in goals or A/B tests.
@@ -615,8 +648,10 @@ declare module 'launchdarkly-react-native-client-sdk' {
          *   Optional additional information to associate with the event.
          * @param metricValue
          *   Optional numeric value to attach to the tracked event
+         * @param environment
+         *   Optional string to execute the function in a different environment than the default.
          */
-        track(eventName: string, data?: any, metricValue?: number): void;
+        track(eventName: string, data?: any, metricValue?: number, environment?: string): void;
         
         /**
          * Checks whether the client has been put into offline mode. This is true only if [[setOffline]]
@@ -659,10 +694,12 @@ declare module 'launchdarkly-react-native-client-sdk' {
          * 
          * This function only works when running in Android. On iOS, this function will return a rejected promise.
          *
+         * @param environment
+         *   Optional environment name to obtain the result from the corresponding secondary environment
          * @returns 
          *   A promise contianing true if the client is initialized or offline
          */
-        isInitialized(): Promise<boolean>;
+        isInitialized(environment?: string): Promise<boolean>;
         
         /**
          * Flushes all pending analytics events.
@@ -697,10 +734,13 @@ declare module 'launchdarkly-react-native-client-sdk' {
          *   The flag key to attach the callback to
          * @param callback 
          *   The callback to attach to the flag key
+         * @param environment
+         *   Optional string to execute the function in a different environment than the default.
          */
         registerFeatureFlagListener(
             flagKey: string,
             callback: (flagKey: string) => void,
+            environment?: string
         ): void;
 
         /**
@@ -710,10 +750,13 @@ declare module 'launchdarkly-react-native-client-sdk' {
          *   The flag key to remove the callback from
          * @param callback 
          *   The callback to remove from the flag key
+         * @param environment
+         *   Optional string to execute the function in a different environment than the default.
          */
         unregisterFeatureFlagListener(
             flagKey: string,
             callback: (flagKey: string) => void,
+            environment?: string
         ): void;
 
         /**
@@ -730,30 +773,36 @@ declare module 'launchdarkly-react-native-client-sdk' {
          * - `'SHUTDOWN'`: (Android specific enum value) The shutdown state indicates the SDK has been permanently shutdown as a result of a call to close().
          * - `'ESTABLISHING_STREAMING_CONNECTION'`: (iOS specific enum value) The SDK is attempting to connect to LaunchDarkly by streaming.
          * 
+         * @param environment
+         *   Optional string to execute the function in a different environment than the default.
          * @returns 
          *   A promise containing a LDConnectionMode enum value representing the status of the connection to LaunchDarkly.
          */
-        getConnectionMode(): Promise<LDConnectionMode>;
+        getConnectionMode(environment?: string): Promise<LDConnectionMode>;
 
         /**
          * Returns the most recent successful flag cache update in millis from the epoch
          * or null if flags have never been retrieved.
          *
+         * @param environment
+         *   Optional string to execute the function in a different environment than the default.
          * @returns 
          *   A promise containing a number representing the status of the connection to LaunchDarkly, 
          *   or null if a successful connection has yet to be established.
          */
-        getLastSuccessfulConnection(): Promise<number | null>;
+        getLastSuccessfulConnection(environment?: string): Promise<number | null>;
 
         /**
          * Most recent unsuccessful flag cache update attempt in millis from the epoch
          * or null if flag update has never been attempted.
          *
+         * @param environment
+         *   Optional string to execute the function in a different environment than the default.
          * @returns 
          *   A promise containing a number representing the status of the connection to LaunchDarkly, 
          *   or null if a failed connection has yet to occur.
          */
-        getLastFailedConnection(): Promise<number | null>;
+        getLastFailedConnection(environment?: string): Promise<number | null>;
 
         /**
          * Returns the most recent connection failure reason or null.
@@ -769,11 +818,13 @@ declare module 'launchdarkly-react-native-client-sdk' {
          * - `'NETWORK_FAILURE'`: (Android specific enum value) A network request for polling, or the EventSource stream reported a failure.
          * - `'INVALID_RESPONSE_BODY'`: (Android specific enum value) A response body received either through polling or streaming was unable to be parsed.
          * 
+         * @param environment
+         *   Optional string to execute the function in a different environment than the default.
          * @returns 
          *   A promise containing a LDFailureReason enum value representing the reason for the most recently failed 
          *   connection to LaunchDarkly, or null if a failed connection has yet to occur.
          */
-        getLastFailure(): Promise<LDFailureReason | null>;
+        getLastFailure(environment?: string): Promise<LDFailureReason | null>;
         
         /**
          * Registers a callback to be called on connection status updates.
@@ -782,19 +833,24 @@ declare module 'launchdarkly-react-native-client-sdk' {
          *   The listener to be called on a connection status update
          * @param callback
          *   The callback to attach to the connection status update
+         * @param environment
+         *   Optional string to execute the function in a different environment than the default.
          */
         registerCurrentConnectionModeListener(
             listenerId: string,
             callback: (connectionMode: string) => void,
+            environment?: string
         ): void;
 
         /**
          * Unregisters a callback so that it will no longer be called on connection status updates.
          * 
          * @param listenerId 
-         *   The listener to remoce the callback from
+         *   The listener to remove the callback from
+         * @param environment
+         *   Optional string to execute the function in a different environment than the default.
          */
-        unregisterCurrentConnectionModeListener(listenerId: string): void;
+        unregisterCurrentConnectionModeListener(listenerId: string, environment?: string): void;
         
         /**
          * Registers a callback to be called when a flag update is processed by the SDK.
@@ -803,10 +859,13 @@ declare module 'launchdarkly-react-native-client-sdk' {
          *   The listener to be called when a flag update is processed
          * @param callback
          *   The callback to attach to the flag update
+         * @param environment
+         *   Optional string to execute the function in a different environment than the default.
          */
         registerAllFlagsListener(
             listenerId: string,
             callback: (updatedFlags: string[]) => void,
+            environment?: string
         ): void;
 
         /**
@@ -814,8 +873,10 @@ declare module 'launchdarkly-react-native-client-sdk' {
          * 
          * @param listenerId 
          *   The listener to be removed
+         * @param environment
+         *   Optional string to execute the function in a different environment than the default.
          */
-        unregisterAllFlagsListener(listenerId: string): void;
+        unregisterAllFlagsListener(listenerId: string, environment?: string): void;
     }
   }
   
