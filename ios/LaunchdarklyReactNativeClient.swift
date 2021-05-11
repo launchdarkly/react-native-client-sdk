@@ -152,6 +152,10 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
     private func userBuild(userDict: NSDictionary) -> LDUser? {
         var user = LDUser()
         user.key = userDict["key"] as! String
+
+        if userDict["secondary"] != nil {
+            user.secondary = userDict["secondary"] as? String
+        }
         
         if userDict["name"] != nil {
             user.name = userDict["name"] as? String
