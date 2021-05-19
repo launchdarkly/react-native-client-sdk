@@ -11,14 +11,13 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
     private let CONNECTION_MODE_PREFIX = "LaunchDarkly-Connection-Mode-"
     private let ERROR_INIT = "E_INITIALIZE"
     private let ERROR_IDENTIFY = "E_IDENTIFY"
-    private let DEFAULT_ENVIRONMENT = "default"
     
     override func supportedEvents() -> [String]! {
         return [FLAG_PREFIX, ALL_FLAGS_PREFIX, CONNECTION_MODE_PREFIX]
     }
     
     override func constantsToExport() -> [AnyHashable: Any] {
-        return ["FLAG_PREFIX": FLAG_PREFIX, "ALL_FLAGS_PREFIX": ALL_FLAGS_PREFIX, "CONNECTION_MODE_PREFIX": CONNECTION_MODE_PREFIX, "DEFAULT_ENVIRONMENT": DEFAULT_ENVIRONMENT]
+        return ["FLAG_PREFIX": FLAG_PREFIX, "ALL_FLAGS_PREFIX": ALL_FLAGS_PREFIX, "CONNECTION_MODE_PREFIX": CONNECTION_MODE_PREFIX]
     }
     
     override static func requiresMainQueueSetup() -> Bool {

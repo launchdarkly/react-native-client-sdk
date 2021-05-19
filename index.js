@@ -18,10 +18,6 @@ export default class LDClient {
     return String(version);
   }
 
-  _getEnvironment(environment) {
-    return environment !== undefined ? environment : LaunchdarklyReactNativeClient.DEFAULT_ENVIRONMENT;
-  }
-
   configure(config, user, timeout) {
     if (this.isInitialized() == true) {
       Promise.reject('LaunchDarkly SDK already initialized');
@@ -42,7 +38,7 @@ export default class LDClient {
   }
 
   boolVariation(flagKey, defaultValue, environment) {
-    const env = this._getEnvironment(environment);
+    const env = environment !== undefined ? environment : "default";
     if (defaultValue == undefined) {
       return LaunchdarklyReactNativeClient.boolVariation(flagKey, env);
     } else {
@@ -51,7 +47,7 @@ export default class LDClient {
   }
 
   intVariation(flagKey, defaultValue, environment) {
-    const env = this._getEnvironment(environment);
+    const env = environment !== undefined ? environment : "default";
     if (defaultValue == undefined) {
       return LaunchdarklyReactNativeClient.intVariation(flagKey, env);
     } else {
@@ -60,7 +56,7 @@ export default class LDClient {
   }
 
   floatVariation(flagKey, defaultValue, environment) {
-    const env = this._getEnvironment(environment);
+    const env = environment !== undefined ? environment : "default";
     if (defaultValue == undefined) {
       return LaunchdarklyReactNativeClient.floatVariation(flagKey, env);
     } else {
@@ -69,7 +65,7 @@ export default class LDClient {
   }
 
   stringVariation(flagKey, defaultValue, environment) {
-    const env = this._getEnvironment(environment);
+    const env = environment !== undefined ? environment : "default";
     if (defaultValue == undefined) {
       return LaunchdarklyReactNativeClient.stringVariation(flagKey, env);
     } else {
@@ -78,7 +74,7 @@ export default class LDClient {
   }
 
   jsonVariation(flagKey, defaultValue, environment) {
-    const env = this._getEnvironment(environment);
+    const env = environment !== undefined ? environment : "default";
     if (defaultValue == undefined) {
       return LaunchdarklyReactNativeClient.jsonVariationNone(flagKey, env);
     } else if (typeof defaultValue === 'number') {
@@ -96,7 +92,7 @@ export default class LDClient {
   }
 
   boolVariationDetail(flagKey, defaultValue, environment) {
-    const env = this._getEnvironment(environment);
+    const env = environment !== undefined ? environment : "default";
     if (defaultValue == undefined) {
       return LaunchdarklyReactNativeClient.boolVariationDetail(flagKey, env);
     } else {
@@ -105,7 +101,7 @@ export default class LDClient {
   }
 
   intVariationDetail(flagKey, defaultValue, environment) {
-    const env = this._getEnvironment(environment);
+    const env = environment !== undefined ? environment : "default";
     if (defaultValue == undefined) {
       return LaunchdarklyReactNativeClient.intVariationDetail(flagKey, env);
     } else {
@@ -114,7 +110,7 @@ export default class LDClient {
   }
 
   floatVariationDetail(flagKey, defaultValue, environment) {
-    const env = this._getEnvironment(environment);
+    const env = environment !== undefined ? environment : "default";
     if (defaultValue == undefined) {
       return LaunchdarklyReactNativeClient.floatVariationDetail(flagKey, env);
     } else {
@@ -123,7 +119,7 @@ export default class LDClient {
   }
 
   stringVariationDetail(flagKey, defaultValue, environment) {
-    const env = this._getEnvironment(environment);
+    const env = environment !== undefined ? environment : "default";
     if (defaultValue == undefined) {
       return LaunchdarklyReactNativeClient.stringVariationDetail(flagKey, env);
     } else {
@@ -132,7 +128,7 @@ export default class LDClient {
   }
 
   jsonVariationDetail(flagKey, defaultValue, environment) {
-    const env = this._getEnvironment(environment);
+    const env = environment !== undefined ? environment : "default";
     if (defaultValue == undefined) {
       return LaunchdarklyReactNativeClient.jsonVariationDetailNone(flagKey, env);
     } else if (typeof defaultValue === 'number') {
@@ -150,12 +146,12 @@ export default class LDClient {
   }
 
   allFlags(environment) {
-    const env = this._getEnvironment(environment);
+    const env = environment !== undefined ? environment : "default";
     return LaunchdarklyReactNativeClient.allFlags(env);
   }
 
   track(eventName, data, metricValue, environment) {
-    const env = this._getEnvironment(environment);
+    const env = environment !== undefined ? environment : "default";
     if (metricValue) {
       if (data === null || typeof data === 'undefined') {
         LaunchdarklyReactNativeClient.trackMetricValue(eventName, metricValue, env);
@@ -202,7 +198,7 @@ export default class LDClient {
   }
 
   isInitialized(environment) {
-    const env = this._getEnvironment(environment);
+    const env = environment !== undefined ? environment : "default";
     return LaunchdarklyReactNativeClient.isInitialized(env);
   }
 
@@ -262,7 +258,7 @@ export default class LDClient {
     if (typeof callback !== "function") {
       return;
     }
-    const env = this._getEnvironment(environment);
+    const env = environment !== undefined ? environment : "default";
     const multiFlagKey = this._envConcat(env, flagKey);
 
     if (this.flagListeners.hasOwnProperty(multiFlagKey)) {
@@ -275,7 +271,7 @@ export default class LDClient {
   }
 
   unregisterFeatureFlagListener(flagKey, callback, environment) {
-    const env = this._getEnvironment(environment);
+    const env = environment !== undefined ? environment : "default";
     const multiFlagKey = this._envConcat(env, flagKey);
     if (!this.flagListeners.hasOwnProperty(multiFlagKey)) {
       return;
@@ -294,7 +290,7 @@ export default class LDClient {
     if (typeof callback !== "function") {
       return;
     }
-    const env = this._getEnvironment(environment);
+    const env = environment !== undefined ? environment : "default";
     const multiListenerId = this._envConcat(env, flagKey);
 
     this.connectionModeListeners[multiListenerId] = callback;
@@ -302,7 +298,7 @@ export default class LDClient {
   }
 
   unregisterCurrentConnectionModeListener(listenerId, environment) {
-    const env = this._getEnvironment(environment);
+    const env = environment !== undefined ? environment : "default";
     const multiListenerId = this._envConcat(env, flagKey);
     if (!this.connectionModeListeners.hasOwnProperty(multiListenerId)) {
       return;
@@ -316,7 +312,7 @@ export default class LDClient {
     if (typeof callback !== "function") {
       return;
     }
-    const env = this._getEnvironment(environment);
+    const env = environment !== undefined ? environment : "default";
     const multiListenerId = this._envConcat(env, flagKey);
     
     this.allFlagsListeners[multiListenerId] = callback;
@@ -324,7 +320,7 @@ export default class LDClient {
   }
 
   unregisterAllFlagsListener(listenerId, environment) {
-    const env = this._getEnvironment(environment);
+    const env = environment !== undefined ? environment : "default";
     const multiListenerId = this._envConcat(env, flagKey);
     if (!this.allFlagsListeners.hasOwnProperty(multiListenerId)) {
       return;
@@ -335,22 +331,22 @@ export default class LDClient {
   }
 
   getConnectionMode(environment) {
-    const env = this._getEnvironment(environment);
+    const env = environment !== undefined ? environment : "default";
     return LaunchdarklyReactNativeClient.getConnectionMode(env);
   }
 
   getLastSuccessfulConnection(environment) {
-    const env = this._getEnvironment(environment);
+    const env = environment !== undefined ? environment : "default";
     return LaunchdarklyReactNativeClient.getLastSuccessfulConnection(env);
   }
 
   getLastFailedConnection(environment) {
-    const env = this._getEnvironment(environment);
+    const env = environment !== undefined ? environment : "default";
     return LaunchdarklyReactNativeClient.getLastFailedConnection(env);
   }
 
   getLastFailure(environment) {
-    const env = this._getEnvironment(environment);
+    const env = environment !== undefined ? environment : "default";
     return LaunchdarklyReactNativeClient.getLastFailure(env);
   }
 }

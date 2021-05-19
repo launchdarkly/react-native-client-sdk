@@ -169,8 +169,6 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
     private static final String ALL_FLAGS_PREFIX = "LaunchDarkly-All-Flags-";
     private static final String CONNECTION_MODE_PREFIX = "LaunchDarkly-Connection-Mode-";
 
-    private static final String DEFAULT_ENVIRONMENT = "default";
-
     /**
      * Called automatically by the React Native bridging layer to associate constants with the
      * object used to call into native modules.
@@ -183,7 +181,6 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
         constants.put("FLAG_PREFIX", FLAG_PREFIX);
         constants.put("ALL_FLAGS_PREFIX", ALL_FLAGS_PREFIX);
         constants.put("CONNECTION_MODE_PREFIX", CONNECTION_MODE_PREFIX);
-        constants.put("DEFAULT_ENVIRONMENT", DEFAULT_ENVIRONMENT);
         return constants;
     }
 
