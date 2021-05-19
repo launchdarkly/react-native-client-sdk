@@ -41,6 +41,7 @@ async function tests() {
         offline: true,
         debugMode: true,
         evaluationReasons: true,
+        secondaryMobileKeys: {'test' : 'fake_key'},
         maxCachedUsers: 6,
         diagnosticOptOut: true,
         diagnosticRecordingIntervalMillis: 100000,
@@ -49,6 +50,7 @@ async function tests() {
     const userWithKeyOnly: LDUser = { key: 'user' };
     const user: LDUser = {
         key: 'user',
+        secondary: 'user.secondary',
         name: 'name',
         firstName: 'first',
         lastName: 'last',
@@ -64,7 +66,7 @@ async function tests() {
     const timeoutClient: LDClient = new LDClient();
 
     const configure: null = await client.configure(configWithAllOptions, user);
-    const configureWithTimeout: null = await timeoutClient.configure(configWithAllOptions, user, 10);
+    const configureWithTimeout: null = await timeoutClient.configure(configWithAllOptions, userWithKeyOnly, 10);
     const identify: null = await client.identify(user);
 
     const boolFlagValue: boolean = await client.boolVariation('key', false);
@@ -78,6 +80,12 @@ async function tests() {
     const floatDetail: LDEvaluationDetail<number> = await client.floatVariationDetail('key', 2.3);
     const stringDetail: LDEvaluationDetail<string> = await client.stringVariationDetail('key', 'default');
     const jsonDetail: LDEvaluationDetail<Record<string, any>> = await client.jsonVariationDetail('key', jsonObj);
+
+    const boolDetailMulti: LDEvaluationDetail<boolean> = await client.boolVariationDetail('key', false, 'test');
+    const intDetailMulti: LDEvaluationDetail<number> = await client.intVariationDetail('key', 2, 'test');
+    const floatDetailMulti: LDEvaluationDetail<number> = await client.floatVariationDetail('key', 2.3, 'test');
+    const stringDetailMulti: LDEvaluationDetail<string> = await client.stringVariationDetail('key', 'default', 'test');
+    const jsonDetailMulti: LDEvaluationDetail<Record<string, any>> = await client.jsonVariationDetail('key', jsonObj, 'test');
 
     const detailIndex: number | undefined = boolDetail.variationIndex;
     const detailReason: LDEvaluationReason = boolDetail.reason;
