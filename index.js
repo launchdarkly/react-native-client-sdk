@@ -19,22 +19,27 @@ export default class LDClient {
   }
 
   configure(config, user, timeout) {
-    if (this.isInitialized() == true) {
-      Promise.reject('LaunchDarkly SDK already initialized');
-    }
-    const configWithOverriddenDefaults = Object.assign({
-      backgroundPollingIntervalMillis: 3600000, // the iOS SDK defaults this to 900000
-      disableBackgroundUpdating: false,         // the iOS SDK defaults this to true
-      pollUri: 'https://clientsdk.launchdarkly.com',
-      wrapperName: 'react-native-client-sdk',
-      wrapperVersion: this.getVersion()
-    }, config);
-    
-    if (timeout == undefined) {
-      return LaunchdarklyReactNativeClient.configure(configWithOverriddenDefaults, this._addUserOverrides(user));
-    } else {
-      return LaunchdarklyReactNativeClient.configureWithTimeout(configWithOverriddenDefaults, this._addUserOverrides(user), timeout);
-    }
+    return LaunchdarklyReactNativeClient.isInitialized("default")
+      .then(
+        ignored => {
+          throw new Error('LaunchDarkly SDK already initialized');
+        },
+        () => {
+          const configWithOverriddenDefaults = Object.assign({
+            backgroundPollingIntervalMillis: 3600000, // the iOS SDK defaults this to 900000
+            disableBackgroundUpdating: false,         // the iOS SDK defaults this to true
+            pollUri: 'https://clientsdk.launchdarkly.com',
+            wrapperName: 'react-native-client-sdk',
+            wrapperVersion: this.getVersion()
+          }, config);
+
+          if (timeout == undefined) {
+            return LaunchdarklyReactNativeClient.configure(configWithOverriddenDefaults, this._addUserOverrides(user));
+          } else {
+            return LaunchdarklyReactNativeClient.configureWithTimeout(configWithOverriddenDefaults, this._addUserOverrides(user), timeout);
+          }
+        }
+      );
   }
 
   boolVariation(flagKey, defaultValue, environment) {

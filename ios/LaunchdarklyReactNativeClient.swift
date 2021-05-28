@@ -11,6 +11,7 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
     private let CONNECTION_MODE_PREFIX = "LaunchDarkly-Connection-Mode-"
     private let ERROR_INIT = "E_INITIALIZE"
     private let ERROR_IDENTIFY = "E_IDENTIFY"
+    private let ERROR_UNKNOWN = "E_UNKNOWN"
     
     override func supportedEvents() -> [String]! {
         return [FLAG_PREFIX, ALL_FLAGS_PREFIX, CONNECTION_MODE_PREFIX]
@@ -605,9 +606,11 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
 
     @objc func isInitialized(_ environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
         if LDClient.get() == nil {
-            resolve(false)
+            reject(ERROR_UNKNOWN, "SDK has not been configured", nil)
+        } else if let client = LDClient.get(environment: environment) {
+            resolve(client.isInitialized)
         } else {
-            resolve(LDClient.get(environment: environment)!.isInitialized)
+            reject(ERROR_UNKNOWN, "SDK not configured with requested environment", nil)
         }
     }
 }
