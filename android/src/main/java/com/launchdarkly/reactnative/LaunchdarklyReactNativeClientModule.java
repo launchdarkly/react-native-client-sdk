@@ -196,16 +196,11 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
 
     private void internalConfigure(ReadableMap config, ReadableMap user, final Integer timeout, final Promise promise) {
         try {
-            if (LDClient.get() != null) {
-                promise.reject(ERROR_INIT, "Client was already initialized");
-                return;
-            }
-        } catch (LaunchDarklyException e) {
-            //This exception indicates that the SDK has not been initialized yet
-        } catch (Exception e) {
-            Timber.w(e);
-            promise.reject(ERROR_INIT, e);
+            LDClient.get();
+            promise.reject(ERROR_INIT, "Client was already initialized");
             return;
+        } catch (LaunchDarklyException e) {
+            // This exception indicates that the SDK has not been initialized yet
         }
 
         final LDConfig.Builder ldConfigBuilder = configBuild(config);
@@ -236,7 +231,11 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
                     if (timeout != null) {
                         LDClient.init(application, ldConfigBuilder.build(), userBuilder.build(), timeout);
                     } else {
-                        LDClient.init(application, ldConfigBuilder.build(), userBuilder.build());
+                        try {
+                            LDClient.init(application, ldConfigBuilder.build(), userBuilder.build()).get();
+                        } catch (ExecutionException | InterruptedException e) {
+                            Timber.e(e, "Exception during Client initialization");
+                        }
                     }
                     promise.resolve(null);
                 }
@@ -605,13 +604,9 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
     @ReactMethod
     public void allFlags(String environment, Promise promise) {
         try {
-            if (!LDClient.get().isInitialized()) {
-                promise.reject(ERROR_INIT, "Client is not yet initialized");
-                return;
-            }
-        } catch (Exception e) {
-            Timber.w(e);
-            promise.reject(ERROR_INIT, "Client is not yet initialized");
+            LDClient.get();
+        } catch (LaunchDarklyException e) {
+            promise.reject(ERROR_INIT, "SDK has been not configured");
             return;
         }
         
@@ -661,7 +656,11 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
                 }
             }
             promise.resolve(response);
+        } catch (LaunchDarklyException e) {
+            // Since we confirmed the SDK has been configured, this exception should only be thrown if the env doesn't exist
+            promise.reject(ERROR_UNKNOWN, "SDK not configured with requested environment");
         } catch (Exception e) {
+            promise.reject(ERROR_UNKNOWN, "Unknown exception in allFlags");
             Timber.w(e);
         }
     }
