@@ -450,34 +450,34 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
     }
 
     @objc func setOffline(_ resolve: @escaping RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-        LDClient.get()!.setOnline(false) {
+        LDClient.get()?.setOnline(false) {
             return resolve(true)
         }
     }
     
     @objc func isOffline(_ resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-        resolve(LDClient.get()!.isOnline)
+        resolve(LDClient.get()?.isOnline)
     }
     
     @objc func setOnline(_ resolve: @escaping RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-        LDClient.get()!.setOnline(true) {
+        LDClient.get()?.setOnline(true) {
             return resolve(true)
         }
     }
     
     @objc func flush() -> Void {
-        LDClient.get()!.flush()
+        LDClient.get()?.flush()
     }
     
     @objc func close(_ resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-        LDClient.get()!.close()
+        LDClient.get()?.close()
         resolve(true)
     }
     
     @objc func identify(_ options: NSDictionary, resolve: @escaping RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
         let user = userBuild(userDict: options)
         if let usr = user {
-            LDClient.get()!.identify(user: usr) {
+            LDClient.get()?.identify(user: usr) {
                 resolve(nil)
             }
         } else {
