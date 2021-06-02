@@ -2,6 +2,10 @@
 
 All notable changes to the LaunchDarkly React Native SDK will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [4.0.4] - 2021-06-02
+### Fixed:
+- iOS: Fixed an issue where an exception was thrown when calling `LDClient.configure` with an optional `timeout` ([#80](https://github.com/launchdarkly/react-native-client-sdk/issues/80)).
+
 ## [4.2.1] - 2021-06-01
 ### Fixed:
 - iOS: Fixed an issue where an exception was thrown when calling `LDClient.configure` with an optional `timeout` ([#80](https://github.com/launchdarkly/react-native-client-sdk/issues/80)).
@@ -10,14 +14,12 @@ All notable changes to the LaunchDarkly React Native SDK will be documented in t
 - Android: Fixed an issue where the promise for `LDClient.configure` could be resolved before the client had finished initializing when not providing the optional `timeout` parameter.
 - Android: Fixed an issue where `LDClient.allFlags` would reject the promise when the client was configured but not yet initialized, rather than resolving with any cached flags.
 
-
 ## [4.2.0] - 2021-05-19
 ### Added:
 - `LDUser` now has an optional `secondary` attribute to match other LaunchDarkly SDKs. For more on the behavior of this attribute see [the documentation on targeting users](https://docs.launchdarkly.com/home/managing-flags/targeting-users).
 - Support for multiple LaunchDarkly projects or environments. Each set of feature flags associated with a mobile key is called an environment. ([#10](https://github.com/launchdarkly/react-native-client-sdk/issues/10))
   - `secondaryMobileKeys` is now a config option which allows a mapping of names to the SDK keys for each additional environment. `mobileKey` is still required, and represents the primary environment.
   - Many methods including variations, track, and listeners now support an optional `environment` parameter to evaluate the method against the given `environment`.
-
 
 ## [4.1.2] - 2021-04-28
 ### Fixed:
