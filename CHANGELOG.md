@@ -2,6 +2,10 @@
 
 All notable changes to the LaunchDarkly React Native SDK will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [4.0.4] - 2021-06-02
+### Fixed:
+- iOS: Fixed an issue where an exception was thrown when calling `LDClient.configure` with an optional `timeout` ([#80](https://github.com/launchdarkly/react-native-client-sdk/issues/80)).
+
 ## [4.0.3] - 2021-04-28
 ### Fixed:
 - The `LDEvaluationReasonErrorKind`, `LDEvaluationReasonKind`, `LDConnectionMode`, and `LDFailureReason` enum TypeScript types were undefined when evaluated at runtime due to being defined in an ambient context.

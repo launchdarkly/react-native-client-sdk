@@ -5,7 +5,7 @@
 
 RCT_EXTERN_METHOD(configure:(NSDictionary *)config user:(NSDictionary *)user resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 
-RCT_EXTERN_METHOD(configureWithTimeout:(NSDictionary *)config userConfig:(NSDictionary *)userConfig timeout:(NSInteger *)timeout resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(configureWithTimeout:(NSDictionary *)config user:(NSDictionary *)user timeout:(NSInteger *)timeout resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 
 RCT_EXTERN_METHOD(boolVariationDefaultValue:(NSString *)flagKey defaultValue:(BOOL *)defaultValue resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 
