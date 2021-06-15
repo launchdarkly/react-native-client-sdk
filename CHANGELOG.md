@@ -2,6 +2,11 @@
 
 All notable changes to the LaunchDarkly React Native SDK will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [4.2.2] - 2021-06-15
+### Fixed:
+- Correct usages of undeclared variables when registering or un-registering connection mode or all flags listeners. ([#82](https://github.com/launchdarkly/react-native-client-sdk/issues/82))
+
+
 ## [4.0.4] - 2021-06-02
 ### Fixed:
 - iOS: Fixed an issue where an exception was thrown when calling `LDClient.configure` with an optional `timeout` ([#80](https://github.com/launchdarkly/react-native-client-sdk/issues/80)).
