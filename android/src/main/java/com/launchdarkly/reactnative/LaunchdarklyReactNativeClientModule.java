@@ -18,34 +18,31 @@ import com.facebook.react.bridge.WritableNativeArray;
 import com.facebook.react.bridge.WritableNativeMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonNull;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonParseException;
-import com.launchdarkly.android.FeatureFlagChangeListener;
-import com.launchdarkly.android.LDClient;
-import com.launchdarkly.android.LDConfig;
-import com.launchdarkly.android.LDCountryCode;
-import com.launchdarkly.android.LDUser;
-import com.launchdarkly.android.ConnectionInformation;
-import com.launchdarkly.android.LDStatusListener;
-import com.launchdarkly.android.LDAllFlagsListener;
-import com.launchdarkly.android.EvaluationDetail;
-import com.launchdarkly.android.EvaluationReason;
-import com.launchdarkly.android.LDFailure;
-import com.launchdarkly.android.LaunchDarklyException;
+import com.launchdarkly.sdk.ArrayBuilder;
+import com.launchdarkly.sdk.EvaluationDetail;
+import com.launchdarkly.sdk.EvaluationReason;
+import com.launchdarkly.sdk.LDUser;
+import com.launchdarkly.sdk.LDValue;
+import com.launchdarkly.sdk.ObjectBuilder;
+import com.launchdarkly.sdk.UserAttribute;
+import com.launchdarkly.sdk.android.ConnectionInformation;
+import com.launchdarkly.sdk.android.FeatureFlagChangeListener;
+import com.launchdarkly.sdk.android.LDAllFlagsListener;
+import com.launchdarkly.sdk.android.LDClient;
+import com.launchdarkly.sdk.android.LDConfig;
+import com.launchdarkly.sdk.android.LDFailure;
+import com.launchdarkly.sdk.android.LDStatusListener;
+import com.launchdarkly.sdk.android.LaunchDarklyException;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import timber.log.Timber;
@@ -53,31 +50,35 @@ import timber.log.Timber;
 public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaModule {
 
     enum ConfigMapping {
-        CONFIG_MOBILE_KEY("mobileKey", ConfigEntryType.String, "setMobileKey"),
-        CONFIG_BASE_URI("pollUri", ConfigEntryType.Uri, "setPollUri"),
-        CONFIG_EVENTS_URI("eventsUri", ConfigEntryType.UriMobile, "setEventsUri"),
-        CONFIG_STREAM_URI("streamUri", ConfigEntryType.Uri, "setStreamUri"),
-        CONFIG_EVENTS_CAPACITY("eventsCapacity", ConfigEntryType.Integer, "setEventsCapacity"),
-        CONFIG_EVENTS_FLUSH_INTERVAL("eventsFlushIntervalMillis", ConfigEntryType.Integer, "setEventsFlushIntervalMillis"),
-        CONFIG_CONNECTION_TIMEOUT("connectionTimeoutMillis", ConfigEntryType.Integer, "setConnectionTimeoutMillis"),
-        CONFIG_POLLING_INTERVAL("pollingIntervalMillis", ConfigEntryType.Integer, "setPollingIntervalMillis"),
-        CONFIG_BACKGROUND_POLLING_INTERVAL("backgroundPollingIntervalMillis", ConfigEntryType.Integer, "setBackgroundPollingIntervalMillis"),
-        CONFIG_USE_REPORT("useReport", ConfigEntryType.Boolean, "setUseReport"),
-        CONFIG_STREAM("stream", ConfigEntryType.Boolean, "setStream"),
-        CONFIG_DISABLE_BACKGROUND_UPDATING("disableBackgroundUpdating", ConfigEntryType.Boolean, "setDisableBackgroundUpdating"),
-        CONFIG_OFFLINE("offline", ConfigEntryType.Boolean, "setOffline"),
-        CONFIG_PRIVATE_ATTRIBUTES("privateAttributeNames", ConfigEntryType.StringSet, "setPrivateAttributeNames"),
-        CONFIG_EVALUATION_REASONS("evaluationReasons", ConfigEntryType.Boolean, "setEvaluationReasons"),
-        CONFIG_WRAPPER_NAME("wrapperName", ConfigEntryType.String, "setWrapperName"),
-        CONFIG_WRAPPER_VERSION("wrapperVersion", ConfigEntryType.String, "setWrapperVersion"),
-        CONFIG_MAX_CACHED_USERS("maxCachedUsers", ConfigEntryType.Integer, "setMaxCachedUsers"),
-        CONFIG_DIAGNOSTIC_OPT_OUT("diagnosticOptOut", ConfigEntryType.Boolean, "setDiagnosticOptOut"),
-        CONFIG_DIAGNOSTIC_RECORDING_INTERVAL("diagnosticRecordingIntervalMillis", ConfigEntryType.Integer, "setDiagnosticRecordingIntervalMillis"),
-        CONFIG_SECONDARY_MOBILE_KEYS("secondaryMobileKeys", ConfigEntryType.Map, "setSecondaryMobileKeys");
+        CONFIG_MOBILE_KEY("mobileKey", ConfigEntryType.String),
+        CONFIG_BASE_URI("pollUri", ConfigEntryType.Uri),
+        CONFIG_EVENTS_URI("eventsUri", ConfigEntryType.Uri),
+        CONFIG_STREAM_URI("streamUri", ConfigEntryType.Uri),
+        CONFIG_EVENTS_CAPACITY("eventsCapacity", ConfigEntryType.Integer),
+        CONFIG_EVENTS_FLUSH_INTERVAL("eventsFlushIntervalMillis", ConfigEntryType.Integer),
+        CONFIG_CONNECTION_TIMEOUT("connectionTimeoutMillis", ConfigEntryType.Integer),
+        CONFIG_POLLING_INTERVAL("pollingIntervalMillis", ConfigEntryType.Integer),
+        CONFIG_BACKGROUND_POLLING_INTERVAL("backgroundPollingIntervalMillis", ConfigEntryType.Integer),
+        CONFIG_USE_REPORT("useReport", ConfigEntryType.Boolean),
+        CONFIG_STREAM("stream", ConfigEntryType.Boolean),
+        CONFIG_DISABLE_BACKGROUND_UPDATING("disableBackgroundUpdating", ConfigEntryType.Boolean),
+        CONFIG_OFFLINE("offline", ConfigEntryType.Boolean),
+        CONFIG_PRIVATE_ATTRIBUTES("privateAttributeNames", ConfigEntryType.UserAttributes, "privateAttributes"),
+        CONFIG_EVALUATION_REASONS("evaluationReasons", ConfigEntryType.Boolean),
+        CONFIG_WRAPPER_NAME("wrapperName", ConfigEntryType.String),
+        CONFIG_WRAPPER_VERSION("wrapperVersion", ConfigEntryType.String),
+        CONFIG_MAX_CACHED_USERS("maxCachedUsers", ConfigEntryType.Integer),
+        CONFIG_DIAGNOSTIC_OPT_OUT("diagnosticOptOut", ConfigEntryType.Boolean),
+        CONFIG_DIAGNOSTIC_RECORDING_INTERVAL("diagnosticRecordingIntervalMillis", ConfigEntryType.Integer),
+        CONFIG_SECONDARY_MOBILE_KEYS("secondaryMobileKeys", ConfigEntryType.Map);
 
         final String key;
         final ConfigEntryType type;
         private final Method setter;
+
+        ConfigMapping(String key, ConfigEntryType type) {
+            this(key, type, key);
+        }
 
         ConfigMapping(String key, ConfigEntryType type, String setterName) {
             this.key = key;
@@ -89,9 +90,7 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
             if (map.hasKey(key) && map.getType(key).equals(type.getReadableType())) {
                 try {
                     setter.invoke(builder, type.getFromMap(map, key));
-                } catch (IllegalAccessException e) {
-                    Timber.w(e);
-                } catch (InvocationTargetException e) {
+                } catch (IllegalAccessException | InvocationTargetException e) {
                     Timber.w(e);
                 }
             }
@@ -107,7 +106,7 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
         USER_NAME("name", ConfigEntryType.String, "name", "privateName"),
         USER_SECONDARY("secondary", ConfigEntryType.String, "secondary", "privateSecondary"),
         USER_AVATAR("avatar", ConfigEntryType.String, "avatar", "privateAvatar"),
-        USER_COUNTRY("country", ConfigEntryType.Country, "country", "privateCountry");
+        USER_COUNTRY("country", ConfigEntryType.String, "country", "privateCountry");
 
         final String key;
         final ConfigEntryType type;
@@ -129,20 +128,19 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
                     } else {
                         setter.invoke(builder, type.getFromMap(map, key));
                     }
-                } catch (IllegalAccessException e) {
-                    Timber.w(e);
-                } catch (InvocationTargetException e) {
+                } catch (IllegalAccessException | InvocationTargetException e) {
                     Timber.w(e);
                 }
             }
         }
     }
 
-    private Map<String, FeatureFlagChangeListener> listeners = new HashMap<>();
-    private Map<String, LDStatusListener> connectionModeListeners = new HashMap<>();
-    private Map<String, LDAllFlagsListener> allFlagsListeners = new HashMap<>();
+    private final Map<String, FeatureFlagChangeListener> listeners = new HashMap<>();
+    private final Map<String, LDStatusListener> connectionModeListeners = new HashMap<>();
+    private final Map<String, LDAllFlagsListener> allFlagsListeners = new HashMap<>();
 
-    private static Gson gson = new Gson();
+    private static final Gson gson = new Gson();
+    private static boolean debugLoggingStarted = false;
 
     public LaunchdarklyReactNativeClientModule(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -156,7 +154,7 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
      */
     @SuppressWarnings("SameReturnValue")
     @Override
-    public String getName() {
+    public @NotNull String getName() {
         return "LaunchdarklyReactNativeClient";
     }
 
@@ -195,6 +193,14 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
     }
 
     private void internalConfigure(ReadableMap config, ReadableMap user, final Integer timeout, final Promise promise) {
+        if (!debugLoggingStarted
+                && config.hasKey("debugMode")
+                && config.getType("debugMode").equals(ReadableType.Boolean)
+                && config.getBoolean("debugMode")) {
+            Timber.plant(new Timber.DebugTree());
+            LaunchdarklyReactNativeClientModule.debugLoggingStarted = true;
+        }
+
         try {
             LDClient.get();
             promise.reject(ERROR_INIT, "Client was already initialized");
@@ -283,76 +289,12 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
         }
 
         if (options.hasKey("custom") && options.getType("custom") == ReadableType.Map) {
-            ReadableMap custom = options.getMap("custom");
-            ReadableMapKeySetIterator iterator = custom.keySetIterator();
-            while (iterator.hasNextKey()) {
-                String customKey = iterator.nextKey();
-                switch (custom.getType(customKey)) {
-                    case Boolean:
-                        if (privateAttrs.contains(customKey)) {
-                            userBuilder.privateCustom(customKey, custom.getBoolean(customKey));
-                        } else {
-                            userBuilder.custom(customKey, custom.getBoolean(customKey));
-                        }
-                        break;
-                    case Number:
-                        if (privateAttrs.contains(customKey)) {
-                            userBuilder.privateCustom(customKey, custom.getDouble(customKey));
-                        } else {
-                            userBuilder.custom(customKey, custom.getDouble(customKey));
-                        }
-                        break;
-                    case String:
-                        if (privateAttrs.contains(customKey)) {
-                            userBuilder.privateCustom(customKey, custom.getString(customKey));
-                        } else {
-                            userBuilder.custom(customKey, custom.getString(customKey));
-                        }
-                        break;
-                    case Array:
-                        ReadableArray array = custom.getArray(customKey);
-                        ArrayList<String> strArray = null;
-                        ArrayList<Number> numArray = null;
-                        for (int i = 0; i < array.size(); i++) {
-                            if (strArray != null) {
-                                if (array.getType(i) == ReadableType.String) {
-                                    strArray.add(array.getString(i));
-                                }
-                            } else if (numArray != null) {
-                                if (array.getType(i) == ReadableType.Number) {
-                                    numArray.add(array.getDouble(i));
-                                }
-                            } else if (array.getType(i) == ReadableType.String) {
-                                strArray = new ArrayList<>();
-                                strArray.add(array.getString(i));
-                            } else if (array.getType(i) == ReadableType.Number) {
-                                numArray = new ArrayList<>();
-                                numArray.add(array.getDouble(i));
-                            }
-                        }
-                        if (strArray != null) {
-                            if (privateAttrs.contains(customKey)) {
-                                userBuilder.privateCustomString(customKey, strArray);
-                            } else {
-                                userBuilder.customString(customKey, strArray);
-                            }
-                        } else if (numArray != null) {
-                            if (privateAttrs.contains(customKey)) {
-                                userBuilder.privateCustomNumber(customKey, numArray);
-                            } else {
-                                userBuilder.customNumber(customKey, numArray);
-                            }
-                        } else {
-                            if (privateAttrs.contains(customKey)) {
-                                userBuilder.privateCustomString(customKey, new ArrayList<String>());
-                            } else {
-                                userBuilder.customString(customKey, new ArrayList<String>());
-                            }
-                        }
-                        break;
-                    case Null:
-                    case Map:
-                        break;
+            LDValue custom = toLDValue(options.getMap("custom"));
+            for (String customKey : custom.keys()) {
+                if (privateAttrs.contains(customKey)) {
+                    userBuilder.privateCustom(customKey, custom.get(customKey));
+                } else {
+                    userBuilder.custom(customKey, custom.get(customKey));
                 }
             }
         }
@@ -418,32 +360,32 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
 
     @ReactMethod
     public void jsonVariationNone(String flagKey, String environment, Promise promise) {
-        jsonVariationBase(flagKey, null, environment, promise);
+        jsonVariationBase(flagKey, LDValue.ofNull(), environment, promise);
     }
 
     @ReactMethod
-    public void jsonVariationNumber(String flagKey, Double defaultValue, String environment, Promise promise) {
-        jsonVariationBase(flagKey, new JsonPrimitive(defaultValue), environment, promise);
+    public void jsonVariationNumber(String flagKey, double defaultValue, String environment, Promise promise) {
+        jsonVariationBase(flagKey, LDValue.of(defaultValue), environment, promise);
     }
 
     @ReactMethod
-    public void jsonVariationBool(String flagKey, Boolean defaultValue, String environment, Promise promise) {
-        jsonVariationBase(flagKey, new JsonPrimitive(defaultValue), environment, promise);
+    public void jsonVariationBool(String flagKey, boolean defaultValue, String environment, Promise promise) {
+        jsonVariationBase(flagKey, LDValue.of(defaultValue), environment, promise);
     }
 
     @ReactMethod
     public void jsonVariationString(String flagKey, String defaultValue, String environment, Promise promise) {
-        jsonVariationBase(flagKey, new JsonPrimitive(defaultValue), environment, promise);
+        jsonVariationBase(flagKey, LDValue.of(defaultValue), environment, promise);
     }
 
     @ReactMethod
     public void jsonVariationArray(String flagKey, ReadableArray defaultValue, String environment, Promise promise) {
-        jsonVariationBase(flagKey, toJsonArray(defaultValue), environment, promise);
+        jsonVariationBase(flagKey, toLDValue(defaultValue), environment, promise);
     }
 
     @ReactMethod
     public void jsonVariationObject(String flagKey, ReadableMap defaultValue, String environment, Promise promise) {
-        jsonVariationBase(flagKey, toJsonObject(defaultValue), environment, promise);
+        jsonVariationBase(flagKey, toLDValue(defaultValue), environment, promise);
     }
 
     @ReactMethod
@@ -458,11 +400,15 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
             detailResult = LDClient.getForMobileKey(environment).boolVariationDetail(flagKey, defaultValue);
         } catch (Exception e) {
             Timber.w(e);
-            detailResult = new EvaluationDetail<Boolean>(EvaluationReason.error(EvaluationReason.ErrorKind.EXCEPTION), null, defaultValue);
+            detailResult = EvaluationDetail.fromValue(defaultValue, EvaluationDetail.NO_VARIATION, EvaluationReason.error(EvaluationReason.ErrorKind.EXCEPTION));
         }
-        JsonObject jsonObject = gson.toJsonTree(detailResult).getAsJsonObject();
-        WritableMap detailMap = fromJsonObject(jsonObject);
-        promise.resolve(detailMap);
+        WritableMap result = detailToMap(detailResult);
+        if (detailResult.getValue() == null) {
+            result.putNull("value");
+        } else {
+            result.putBoolean("value", detailResult.getValue());
+        }
+        promise.resolve(result);
     }
 
     @ReactMethod
@@ -477,11 +423,15 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
             detailResult = LDClient.getForMobileKey(environment).intVariationDetail(flagKey, defaultValue);
         } catch (Exception e) {
             Timber.w(e);
-            detailResult = new EvaluationDetail<Integer>(EvaluationReason.error(EvaluationReason.ErrorKind.EXCEPTION), null, defaultValue);
+            detailResult = EvaluationDetail.fromValue(defaultValue, EvaluationDetail.NO_VARIATION, EvaluationReason.error(EvaluationReason.ErrorKind.EXCEPTION));
         }
-        JsonObject jsonObject = gson.toJsonTree(detailResult).getAsJsonObject();
-        WritableMap detailMap = fromJsonObject(jsonObject);
-        promise.resolve(detailMap);
+        WritableMap result = detailToMap(detailResult);
+        if (detailResult.getValue() == null) {
+            result.putNull("value");
+        } else {
+            result.putInt("value", detailResult.getValue());
+        }
+        promise.resolve(result);
     }
 
     @ReactMethod
@@ -497,11 +447,15 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
             detailResult = LDClient.getForMobileKey(environment).doubleVariationDetail(flagKey, doubleValue);
         } catch (Exception e) {
             Timber.w(e);
-            detailResult = new EvaluationDetail<Double>(EvaluationReason.error(EvaluationReason.ErrorKind.EXCEPTION), null, doubleValue);
+            detailResult = EvaluationDetail.fromValue(doubleValue, EvaluationDetail.NO_VARIATION, EvaluationReason.error(EvaluationReason.ErrorKind.EXCEPTION));
         }
-        JsonObject jsonObject = gson.toJsonTree(detailResult).getAsJsonObject();
-        WritableMap detailMap = fromJsonObject(jsonObject);
-        promise.resolve(detailMap);
+        WritableMap result = detailToMap(detailResult);
+        if (detailResult.getValue() == null) {
+            result.putNull("value");
+        } else {
+            result.putDouble("value", detailResult.getValue());
+        }
+        promise.resolve(result);
     }
 
     @ReactMethod
@@ -516,89 +470,112 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
             detailResult = LDClient.getForMobileKey(environment).stringVariationDetail(flagKey, defaultValue);
         } catch (Exception e) {
             Timber.w(e);
-            detailResult = new EvaluationDetail<String>(EvaluationReason.error(EvaluationReason.ErrorKind.EXCEPTION), null, defaultValue);
+            detailResult = EvaluationDetail.fromValue(defaultValue, EvaluationDetail.NO_VARIATION, EvaluationReason.error(EvaluationReason.ErrorKind.EXCEPTION));
         }
-        JsonObject jsonObject = gson.toJsonTree(detailResult).getAsJsonObject();
-        WritableMap detailMap = fromJsonObject(jsonObject);
-        promise.resolve(detailMap);
+        WritableMap result = detailToMap(detailResult);
+        if (detailResult.getValue() == null) {
+            result.putNull("value");
+        } else {
+            result.putString("value", detailResult.getValue());
+        }
+        promise.resolve(result);
     }
 
     @ReactMethod
     public void jsonVariationDetailNone(String flagKey, String environment, Promise promise) {
-        jsonVariationDetailBase(flagKey, null, environment, promise);
+        jsonVariationDetailBase(flagKey, LDValue.ofNull(), environment, promise);
     }
 
     @ReactMethod
-    public void jsonVariationDetailNumber(String flagKey, Double defaultValue, String environment, Promise promise) {
-        jsonVariationDetailBase(flagKey, new JsonPrimitive(defaultValue), environment, promise);
+    public void jsonVariationDetailNumber(String flagKey, double defaultValue, String environment, Promise promise) {
+        jsonVariationDetailBase(flagKey, LDValue.of(defaultValue), environment, promise);
     }
 
     @ReactMethod
-    public void jsonVariationDetailBool(String flagKey, Boolean defaultValue, String environment, Promise promise) {
-        jsonVariationDetailBase(flagKey, new JsonPrimitive(defaultValue), environment, promise);
+    public void jsonVariationDetailBool(String flagKey, boolean defaultValue, String environment, Promise promise) {
+        jsonVariationDetailBase(flagKey, LDValue.of(defaultValue), environment, promise);
     }
 
     @ReactMethod
     public void jsonVariationDetailString(String flagKey, String defaultValue, String environment, Promise promise) {
-        jsonVariationDetailBase(flagKey, new JsonPrimitive(defaultValue), environment, promise);
+        jsonVariationDetailBase(flagKey, LDValue.of(defaultValue), environment, promise);
     }
 
     @ReactMethod
     public void jsonVariationDetailArray(String flagKey, ReadableArray defaultValue, String environment, Promise promise) {
-        jsonVariationDetailBase(flagKey, toJsonArray(defaultValue), environment, promise);
+        jsonVariationDetailBase(flagKey, toLDValue(defaultValue), environment, promise);
     }
 
     @ReactMethod
     public void jsonVariationDetailObject(String flagKey, ReadableMap defaultValue, String environment, Promise promise) {
-        jsonVariationDetailBase(flagKey, toJsonObject(defaultValue), environment, promise);
+        jsonVariationDetailBase(flagKey, toLDValue(defaultValue), environment, promise);
     }
 
-    private void jsonVariationBase(String flagKey, JsonElement defaultValue, String environment, Promise promise) {
-        JsonElement jsonElement;
-        try { 
-            jsonElement = LDClient.getForMobileKey(environment).jsonVariation(flagKey, defaultValue);
-            resolveJsonElement(promise, jsonElement);
+    private void jsonVariationBase(String flagKey, LDValue defaultValue, String environment, Promise promise) {
+        try {
+            LDValue value = LDClient.getForMobileKey(environment).jsonValueVariation(flagKey, defaultValue);
+            resolveValue(promise, value);
         } catch (Exception e) {
-            resolveJsonElement(promise, defaultValue);
+            resolveValue(promise, defaultValue);
         }
     }
 
-    private void jsonVariationDetailBase(String flagKey, JsonElement defaultValue, String environment, Promise promise) {
-        EvaluationDetail<JsonElement> jsonElementDetail;
+    private void jsonVariationDetailBase(String flagKey, LDValue defaultValue, String environment, Promise promise) {
+        EvaluationDetail<LDValue> detailResult;
         try {
-            jsonElementDetail = LDClient.getForMobileKey(environment).jsonVariationDetail(flagKey, defaultValue);
+            detailResult = LDClient.getForMobileKey(environment).jsonValueVariationDetail(flagKey, defaultValue);
         } catch (Exception e) {
             Timber.w(e);
-            jsonElementDetail = new EvaluationDetail<JsonElement>(EvaluationReason.error(EvaluationReason.ErrorKind.EXCEPTION), null, defaultValue);
+            detailResult = EvaluationDetail.fromValue(defaultValue, EvaluationDetail.NO_VARIATION, EvaluationReason.error(EvaluationReason.ErrorKind.EXCEPTION));
         }
-        resolveJsonElementDetail(promise, jsonElementDetail);
+        resolveEvaluationDetailValue(promise, detailResult);
     }
 
-    private void resolveJsonElement(Promise promise, JsonElement jsonElement) {
-        if (jsonElement == null || jsonElement.isJsonNull()) {
-            promise.resolve(null);
-        } else if (jsonElement.isJsonArray()) {
-            promise.resolve(fromJsonArray(jsonElement.getAsJsonArray()));
-        } else if (jsonElement.isJsonObject()) {
-            promise.resolve(fromJsonObject(jsonElement.getAsJsonObject()));
-        } else {
-            JsonPrimitive prim = jsonElement.getAsJsonPrimitive();
-            if (prim.isBoolean()) {
-                promise.resolve(prim.getAsBoolean());
-            } else if (prim.isString()) {
-                promise.resolve(prim.getAsString());
-            } else {
-                promise.resolve(prim.getAsNumber().doubleValue());
-            }
+    private void resolveValue(Promise promise, LDValue value) {
+        switch (value.getType()) {
+            case NULL: promise.resolve(null); break;
+            case BOOLEAN: promise.resolve(value.booleanValue()); break;
+            case NUMBER: promise.resolve(value.doubleValue()); break;
+            case STRING: promise.resolve(value.stringValue()); break;
+            case ARRAY: promise.resolve(ldValueToArray(value)); break;
+            case OBJECT: promise.resolve(ldValueToMap(value)); break;
         }
     }
 
-    private void resolveJsonElementDetail(Promise promise, EvaluationDetail<JsonElement> jsonElementDetail) {
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.add("value", jsonElementDetail.getValue());
-        jsonObject.addProperty("variationIndex", jsonElementDetail.getVariationIndex());
-        jsonObject.add("reason", gson.toJsonTree(jsonElementDetail.getReason()));
-        resolveJsonElement(promise, jsonObject);
+    private void resolveEvaluationDetailValue(Promise promise, EvaluationDetail<LDValue> detailValue) {
+        WritableMap result = detailToMap(detailValue);
+        switch (detailValue.getValue().getType()) {
+            case NULL: result.putNull("value"); break;
+            case BOOLEAN: result.putBoolean("value", detailValue.getValue().booleanValue()); break;
+            case NUMBER: result.putDouble("value", detailValue.getValue().doubleValue()); break;
+            case STRING: result.putString("value", detailValue.getValue().stringValue()); break;
+            case ARRAY: result.putArray("value", ldValueToArray(detailValue.getValue())); break;
+            case OBJECT: result.putMap("value", ldValueToMap(detailValue.getValue())); break;
+        }
+        promise.resolve(result);
+    }
+
+    private WritableMap detailToMap(EvaluationDetail<?> detail) {
+        EvaluationReason reason = detail.getReason();
+        WritableMap result = new WritableNativeMap();
+        if (!detail.isDefaultValue()) {
+            result.putInt("variationIndex", detail.getVariationIndex());
+        }
+        WritableMap reasonMap = new WritableNativeMap();
+        reasonMap.putString("kind", detail.getReason().getKind().name());
+        switch (reason.getKind()) {
+            case RULE_MATCH:
+                reasonMap.putInt("ruleIndex", reason.getRuleIndex());
+                if (reason.getRuleId() != null) {
+                    reasonMap.putString("ruleId", reason.getRuleId());
+                }
+                break;
+            case PREREQUISITE_FAILED: reasonMap.putString("prerequisiteKey", reason.getPrerequisiteKey()); break;
+            case ERROR: reasonMap.putString("errorKind", reason.getErrorKind().name()); break;
+            default: break;
+        }
+        result.putMap("reason", reasonMap);
+        return result;
     }
 
     @ReactMethod
@@ -611,48 +588,17 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
         }
         
         try {
-            Map<String, ?> flags = LDClient.getForMobileKey(environment).allFlags();
+            Map<String, LDValue> flags = LDClient.getForMobileKey(environment).allFlags();
 
             WritableMap response = new WritableNativeMap();
-            for (Map.Entry<String, ?> entry : flags.entrySet()) {
-                if (entry.getValue() == null) {
-                    response.putNull(entry.getKey());
-                } else if (entry.getValue() instanceof String) {
-                    try {
-                        JsonElement parsedJson = new JsonParser().parse((String) entry.getValue());
-                        if (parsedJson.isJsonObject()) {
-                            response.putMap(entry.getKey(), fromJsonObject((JsonObject) parsedJson.getAsJsonObject()));
-                        } else if (parsedJson.isJsonArray()) {
-                            response.putArray(entry.getKey(), fromJsonArray((JsonArray) parsedJson.getAsJsonArray()));
-                        } else {
-                            response.putString(entry.getKey(),(String) entry.getValue());
-                        }
-                    } catch (JsonParseException e) {
-                        response.putString(entry.getKey(),(String) entry.getValue());
-                    }
-                } else if (entry.getValue() instanceof Boolean) {
-                    response.putBoolean(entry.getKey(), (Boolean) entry.getValue());
-                } else if (entry.getValue() instanceof Double) {
-                    response.putDouble(entry.getKey(), (Double) entry.getValue());
-                } else if (entry.getValue() instanceof Float) {
-                    response.putDouble(entry.getKey(), (Float) entry.getValue());
-                } else if (entry.getValue() instanceof Integer) {
-                    response.putInt(entry.getKey(), (Integer) entry.getValue());
-                } else if (entry.getValue() instanceof JsonNull) {
-                    response.putNull(entry.getKey());
-                } else if (entry.getValue() instanceof JsonArray) {
-                    response.putArray(entry.getKey(), fromJsonArray((JsonArray) entry.getValue()));
-                } else if (entry.getValue() instanceof JsonObject) {
-                    response.putMap(entry.getKey(), fromJsonObject((JsonObject) entry.getValue()));
-                } else if (entry.getValue() instanceof JsonPrimitive) {
-                    JsonPrimitive primitive = (JsonPrimitive) entry.getValue();
-                    if (primitive.isString()) {
-                        response.putString(entry.getKey(), primitive.getAsString());
-                    } else if (primitive.isBoolean()) {
-                        response.putBoolean(entry.getKey(), primitive.getAsBoolean());
-                    } else if (primitive.isNumber()) {
-                        response.putDouble(entry.getKey(), primitive.getAsDouble());
-                    }
+            for (Map.Entry<String, LDValue> entry : flags.entrySet()) {
+                switch (entry.getValue().getType()) {
+                    case NULL: response.putNull(entry.getKey()); break;
+                    case BOOLEAN: response.putBoolean(entry.getKey(), entry.getValue().booleanValue()); break;
+                    case NUMBER: response.putDouble(entry.getKey(), entry.getValue().doubleValue()); break;
+                    case STRING: response.putString(entry.getKey(), entry.getValue().stringValue()); break;
+                    case ARRAY: response.putArray(entry.getKey(), ldValueToArray(entry.getValue())); break;
+                    case OBJECT: response.putMap(entry.getKey(), ldValueToMap(entry.getValue())); break;
                 }
             }
             promise.resolve(response);
@@ -666,108 +612,73 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
     }
 
     @ReactMethod
-    public void trackNumber(String eventName, Double data, String environment) {
-        try {
-            LDClient.getForMobileKey(environment).track(eventName, new JsonPrimitive(data));
-        } catch (Exception e) {
-            Timber.w(e);
-        }
+    public void trackNumber(String eventName, double data, String environment) {
+        trackSafe(environment, eventName, LDValue.of(data), null);
     }
 
     @ReactMethod
-    public void trackBool(String eventName, Boolean data, String environment) {
-        try {
-            LDClient.getForMobileKey(environment).track(eventName, new JsonPrimitive(data));
-        } catch (Exception e) {
-            Timber.w(e);
-        }
+    public void trackBool(String eventName, boolean data, String environment) {
+        trackSafe(environment, eventName, LDValue.of(data), null);
     }
 
     @ReactMethod
     public void trackString(String eventName, String data, String environment) {
-        try {
-            LDClient.getForMobileKey(environment).track(eventName, new JsonPrimitive(data));
-        } catch (Exception e) {
-            Timber.w(e);
-        }
+        trackSafe(environment, eventName, LDValue.of(data), null);
     }
 
     @ReactMethod
     public void trackArray(String eventName, ReadableArray data, String environment) {
-        try {
-            LDClient.getForMobileKey(environment).track(eventName, toJsonArray(data));
-        } catch (Exception e) {
-            Timber.w(e);
-        }
+        trackSafe(environment, eventName, toLDValue(data), null);
     }
 
     @ReactMethod
     public void trackObject(String eventName, ReadableMap data, String environment) {
-        try {
-            LDClient.getForMobileKey(environment).track(eventName, toJsonObject(data));
-        } catch (Exception e) {
-            Timber.w(e);
-        }
+        trackSafe(environment, eventName, toLDValue(data), null);
     }
 
     @ReactMethod
     public void track(String eventName, String environment) {
-        try {
-            LDClient.getForMobileKey(environment).track(eventName);
-        } catch (Exception e) {
-            Timber.w(e);
-        }
+        trackSafe(environment, eventName, LDValue.ofNull(), null);
     }
 
     @ReactMethod
-    public void trackNumberMetricValue(String eventName, Double data, Double metricValue, String environment) {
-        try {
-            LDClient.getForMobileKey(environment).track(eventName, new JsonPrimitive(data), metricValue);
-        } catch (Exception e) {
-            Timber.w(e);
-        }
+    public void trackNumberMetricValue(String eventName, double data, double metricValue, String environment) {
+        trackSafe(environment, eventName, LDValue.of(data), metricValue);
     }
 
     @ReactMethod
-    public void trackBoolMetricValue(String eventName, Boolean data, Double metricValue, String environment) {
-        try {
-            LDClient.getForMobileKey(environment).track(eventName, new JsonPrimitive(data), metricValue);
-        } catch (Exception e) {
-            Timber.w(e);
-        }
+    public void trackBoolMetricValue(String eventName, boolean data, double metricValue, String environment) {
+        trackSafe(environment, eventName, LDValue.of(data), metricValue);
     }
 
     @ReactMethod
-    public void trackStringMetricValue(String eventName, String data, Double metricValue, String environment) {
-        try {
-            LDClient.getForMobileKey(environment).track(eventName, new JsonPrimitive(data), metricValue);
-        } catch (Exception e) {
-            Timber.w(e);
-        }
+    public void trackStringMetricValue(String eventName, String data, double metricValue, String environment) {
+        trackSafe(environment, eventName, LDValue.of(data), metricValue);
     }
 
     @ReactMethod
-    public void trackArrayMetricValue(String eventName, ReadableArray data, Double metricValue, String environment) {
-        try {
-            LDClient.getForMobileKey(environment).track(eventName, toJsonArray(data), metricValue);
-        } catch (Exception e) {
-            Timber.w(e);
-        }
+    public void trackArrayMetricValue(String eventName, ReadableArray data, double metricValue, String environment) {
+        trackSafe(environment, eventName, toLDValue(data), metricValue);
     }
 
     @ReactMethod
-    public void trackObjectMetricValue(String eventName, ReadableMap data, Double metricValue, String environment) {
-        try {
-            LDClient.getForMobileKey(environment).track(eventName, toJsonObject(data), metricValue);
-        } catch (Exception e) {
-            Timber.w(e);
-        }
+    public void trackObjectMetricValue(String eventName, ReadableMap data, double metricValue, String environment) {
+        trackSafe(environment, eventName, toLDValue(data), metricValue);
     }
 
     @ReactMethod
-    public void trackMetricValue(String eventName, Double metricValue, String environment) {
+    public void trackMetricValue(String eventName, double metricValue, String environment) {
+        trackSafe(environment, eventName, LDValue.ofNull(), metricValue);
+    }
+
+    private void trackSafe(String environment, String eventName, LDValue value, Double metricValue) {
         try {
-            LDClient.getForMobileKey(environment).track(eventName, new JsonPrimitive(""), metricValue);
+            LDClient instance = LDClient.getForMobileKey(environment);
+            if (metricValue != null) {
+                instance.trackMetric(eventName, value, metricValue);
+            } else {
+                instance.trackData(eventName, value);
+            }
         } catch (Exception e) {
             Timber.w(e);
         }
@@ -1014,124 +925,70 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
         }
     }
 
-    private static JsonObject toJsonObject(ReadableMap readableMap) {
-        if (readableMap == null)
-            return null;
-
-        JsonObject jsonObject = new JsonObject();
-
-        ReadableMapKeySetIterator keySet = readableMap.keySetIterator();
-
-        while (keySet.hasNextKey()) {
-            String key = keySet.nextKey();
-            ReadableType type = readableMap.getType(key);
-
-            switch (type) {
-                case Null:
-                    jsonObject.add(key, null);
-                    break;
-                case Boolean:
-                    jsonObject.addProperty(key, readableMap.getBoolean(key));
-                    break;
-                case Number:
-                    jsonObject.addProperty(key, readableMap.getDouble(key));
-                    break;
-                case String:
-                    jsonObject.addProperty(key, readableMap.getString(key));
-                    break;
-                case Map:
-                    jsonObject.add(key, toJsonObject(readableMap.getMap(key)));
-                    break;
-                case Array:
-                    jsonObject.add(key, toJsonArray(readableMap.getArray(key)));
-                    break;
-            }
+    private static LDValue toLDValue(ReadableArray readableArray) {
+        if (readableArray == null) {
+            return LDValue.ofNull();
         }
-
-        return jsonObject;
-    }
-
-    private static JsonArray toJsonArray(ReadableArray readableArray) {
-        if (readableArray == null)
-            return null;
-
-        JsonArray jsonArray = new JsonArray();
-
+        ArrayBuilder array = LDValue.buildArray();
         for (int i = 0; i < readableArray.size(); i++) {
-            ReadableType type = readableArray.getType(i);
-
-            switch (type) {
-                case Null:
-                    jsonArray.add((Boolean) null);
-                    break;
-                case Boolean:
-                    jsonArray.add(readableArray.getBoolean(i));
-                    break;
-                case Number:
-                    jsonArray.add(readableArray.getDouble(i));
-                    break;
-                case String:
-                    jsonArray.add(readableArray.getString(i));
-                    break;
-                case Map:
-                    jsonArray.add(toJsonObject(readableArray.getMap(i)));
-                    break;
-                case Array:
-                    jsonArray.add(toJsonArray(readableArray.getArray(i)));
-                    break;
+            switch (readableArray.getType(i)) {
+                case Null: array.add(LDValue.ofNull()); break;
+                case Boolean: array.add(readableArray.getBoolean(i)); break;
+                case Number: array.add(readableArray.getDouble(i)); break;
+                case String: array.add(readableArray.getString(i)); break;
+                case Array: array.add(toLDValue(readableArray.getArray(i))); break;
+                case Map: array.add(toLDValue(readableArray.getMap(i))); break;
             }
         }
-
-        return jsonArray;
+        return array.build();
     }
 
-    private static WritableArray fromJsonArray(JsonArray jsonArray) {
-        if (jsonArray == null)
-            return null;
+    private static LDValue toLDValue(ReadableMap readableMap) {
+        if (readableMap == null) {
+            return LDValue.ofNull();
+        }
+        ObjectBuilder object = LDValue.buildObject();
+        ReadableMapKeySetIterator iter = readableMap.keySetIterator();
+        while (iter.hasNextKey()) {
+            String key = iter.nextKey();
+            switch (readableMap.getType(key)) {
+                case Null: object.put(key, LDValue.ofNull()); break;
+                case Boolean: object.put(key, readableMap.getBoolean(key)); break;
+                case Number: object.put(key, readableMap.getDouble(key)); break;
+                case String: object.put(key, readableMap.getString(key)); break;
+                case Array: object.put(key, toLDValue(readableMap.getArray(key))); break;
+                case Map: object.put(key, toLDValue(readableMap.getMap(key))); break;
+            }
+        }
+        return object.build();
+    }
 
+    private static WritableArray ldValueToArray(LDValue value) {
         WritableArray result = new WritableNativeArray();
-        for (JsonElement element : jsonArray) {
-            if (element == null || element.isJsonNull()) {
-                result.pushNull();
-            } else if (element.isJsonObject()) {
-                result.pushMap(fromJsonObject(element.getAsJsonObject()));
-            } else if (element.isJsonArray()) {
-                result.pushArray(fromJsonArray(element.getAsJsonArray()));
-            } else if (element.isJsonPrimitive()) {
-                JsonPrimitive primitive = element.getAsJsonPrimitive();
-                if (primitive.isBoolean()) {
-                    result.pushBoolean(primitive.getAsBoolean());
-                } else if (primitive.isString()) {
-                    result.pushString(primitive.getAsString());
-                } else if (primitive.isNumber()) {
-                    result.pushDouble(primitive.getAsDouble());
-                }
+        for (LDValue val : value.values()) {
+            switch (val.getType()) {
+                case NULL: result.pushNull(); break;
+                case BOOLEAN: result.pushBoolean(val.booleanValue()); break;
+                case NUMBER: result.pushDouble(val.doubleValue()); break;
+                case STRING: result.pushString(val.stringValue()); break;
+                case ARRAY: result.pushArray(ldValueToArray(val)); break;
+                case OBJECT: result.pushMap(ldValueToMap(val)); break;
             }
         }
         return result;
     }
 
-    private static WritableMap fromJsonObject(JsonObject jsonObject) {
-        if (jsonObject == null)
-            return null;
-
+    private static WritableMap ldValueToMap(LDValue value) {
         WritableMap result = new WritableNativeMap();
-        for (Map.Entry<String, JsonElement> entry : jsonObject.entrySet()) {
-            if (entry.getValue() == null || entry.getValue().isJsonNull()) {
-                result.putNull(entry.getKey());
-            } else if (entry.getValue().isJsonObject()) {
-                result.putMap(entry.getKey(), fromJsonObject(entry.getValue().getAsJsonObject()));
-            } else if (entry.getValue().isJsonArray()) {
-                result.putArray(entry.getKey(), fromJsonArray(entry.getValue().getAsJsonArray()));
-            } else if (entry.getValue().isJsonPrimitive()) {
-                JsonPrimitive primitive = entry.getValue().getAsJsonPrimitive();
-                if (primitive.isBoolean()) {
-                    result.putBoolean(entry.getKey(), primitive.getAsBoolean());
-                } else if (primitive.isString()) {
-                    result.putString(entry.getKey(), primitive.getAsString());
-                } else if (primitive.isNumber()) {
-                    result.putDouble(entry.getKey(), primitive.getAsDouble());
-                }
+        for (String key : value.keys()) {
+            LDValue val = value.get(key);
+            switch (val.getType()) {
+                case NULL: result.putNull(key); break;
+                case BOOLEAN: result.putBoolean(key, val.booleanValue()); break;
+                case NUMBER: result.putDouble(key, val.doubleValue()); break;
+                case STRING: result.putString(key, val.stringValue()); break;
+                case ARRAY: result.putArray(key, ldValueToArray(val)); break;
+                case OBJECT: result.putMap(key, ldValueToMap(val)); break;
             }
         }
         return result;
@@ -1152,16 +1009,6 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
                 return android.net.Uri.parse(map.getString(key));
             }
         },
-        UriMobile(ReadableType.String) {
-            public Uri getFromMap(ReadableMap map, String key) {
-                return android.net.Uri.parse(map.getString(key) + "/mobile");
-            }
-        },
-        Country(ReadableType.String) {
-            public LDCountryCode getFromMap(ReadableMap map, String key) {
-                return LDCountryCode.valueOf(map.getString(key));
-            }
-        },
         Integer(ReadableType.Number) {
             public Integer getFromMap(ReadableMap map, String key) {
                 return map.getInt(key);
@@ -1177,16 +1024,16 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
                 return map.getMap(key).toHashMap();
             }
         },
-        StringSet(ReadableType.Array) {
-            public Set<String> getFromMap(ReadableMap map, String key) {
+        UserAttributes(ReadableType.Array) {
+            public UserAttribute[] getFromMap(ReadableMap map, String key) {
                 ReadableArray array = map.getArray(key);
-                Set<String> returnSet = new HashSet<>();
+                Set<UserAttribute> userAttributes = new HashSet<>();
                 for (int i = 0; i < array.size(); i++) {
                     if (array.getType(i).equals(ReadableType.String)) {
-                        returnSet.add(array.getString(i));
+                        userAttributes.add(UserAttribute.forName(array.getString(i)));
                     }
                 }
-                return returnSet;
+                return userAttributes.toArray(new UserAttribute[0]);
             }
         };
 
