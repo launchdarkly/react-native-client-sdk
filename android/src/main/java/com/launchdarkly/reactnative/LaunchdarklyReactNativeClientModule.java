@@ -902,11 +902,13 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
 
     @ReactMethod
     public void registerFeatureFlagListener(final String flagKey, final String environment) {
-        FeatureFlagChangeListener listener = new FeatureFlagChangeListener() {
+        final String multiListenerId = envConcat(environment, flagKey);
+        final FeatureFlagChangeListener listener = new FeatureFlagChangeListener() {
             @Override
             public void onFeatureFlagChange(String flagKey) {
                 WritableMap result = Arguments.createMap();
-                result.putString("flagKey", envConcat(environment, flagKey));
+                result.putString("flagKey", flagKey);
+                result.putString("listenerId", multiListenerId);
 
                 getReactApplicationContext()
                         .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
@@ -924,10 +926,11 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
 
     @ReactMethod
     public void unregisterFeatureFlagListener(String flagKey, String environment) {
+        String multiListenerId = envConcat(environment, flagKey);
         try {
-            if (listeners.containsKey(flagKey)) {
-                LDClient.getForMobileKey(environment).unregisterFeatureFlagListener(flagKey, listeners.get(flagKey));
-                listeners.remove(flagKey);
+            if (listeners.containsKey(multiListenerId)) {
+                LDClient.getForMobileKey(environment).unregisterFeatureFlagListener(flagKey, listeners.get(multiListenerId));
+                listeners.remove(multiListenerId);
             }
         } catch (Exception e) {
             Timber.w(e);
@@ -936,12 +939,13 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
 
     @ReactMethod
     public void registerCurrentConnectionModeListener(final String listenerId, final String environment) {
+        final String multiListenerId = envConcat(environment, listenerId);
         LDStatusListener listener = new LDStatusListener() {
             @Override
             public void onConnectionModeChanged(ConnectionInformation connectionInfo) {
                 WritableMap result = Arguments.createMap();
                 result.putString("connectionMode", gson.toJson(connectionInfo));
-                result.putString("listenerId", envConcat(environment, listenerId));
+                result.putString("listenerId", multiListenerId);
 
                 getReactApplicationContext()
                         .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
@@ -954,7 +958,7 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
 
         try {
             LDClient.getForMobileKey(environment).registerStatusListener(listener);
-            connectionModeListeners.put(listenerId, listener);
+            connectionModeListeners.put(multiListenerId, listener);
         } catch (Exception e) {
             Timber.w(e);
         }
@@ -963,9 +967,10 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
     @ReactMethod
     public void unregisterCurrentConnectionModeListener(String listenerId, String environment) {
         try {
-            if (connectionModeListeners.containsKey(listenerId)) {
-                LDClient.getForMobileKey(environment).unregisterStatusListener(connectionModeListeners.get(listenerId));
-                connectionModeListeners.remove(listenerId);
+            String multiListenerId = envConcat(environment, listenerId);
+            if (connectionModeListeners.containsKey(multiListenerId)) {
+                LDClient.getForMobileKey(environment).unregisterStatusListener(connectionModeListeners.get(multiListenerId));
+                connectionModeListeners.remove(multiListenerId);
             }
         } catch (Exception e) {
             Timber.w(e);
@@ -974,12 +979,13 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
 
     @ReactMethod
     public void registerAllFlagsListener(final String listenerId, final String environment) {
+        final String multiListenerId = envConcat(environment, listenerId);
         LDAllFlagsListener listener = new LDAllFlagsListener() {
             @Override
             public void onChange(List<String> flagKeys) {
                 WritableMap result = Arguments.createMap();
                 result.putString("flagKeys", gson.toJson(flagKeys));
-                result.putString("listenerId", envConcat(environment, listenerId));
+                result.putString("listenerId", multiListenerId);
 
                 getReactApplicationContext()
                         .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
@@ -989,7 +995,7 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
 
         try {
             LDClient.getForMobileKey(environment).registerAllFlagsListener(listener);
-            allFlagsListeners.put(listenerId, listener);
+            allFlagsListeners.put(multiListenerId, listener);
         } catch (Exception e) {
             Timber.w(e);
         }
@@ -998,9 +1004,10 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
     @ReactMethod
     public void unregisterAllFlagsListener(String listenerId, String environment) {
         try {
-            if (allFlagsListeners.containsKey(listenerId)) {
-                LDClient.getForMobileKey(environment).unregisterAllFlagsListener(allFlagsListeners.get(listenerId));
-                allFlagsListeners.remove(listenerId);
+            String multiListenerId = envConcat(environment, listenerId);
+            if (allFlagsListeners.containsKey(multiListenerId)) {
+                LDClient.getForMobileKey(environment).unregisterAllFlagsListener(allFlagsListeners.get(multiListenerId));
+                allFlagsListeners.remove(multiListenerId);
             }
         } catch (Exception e) {
             Timber.w(e);

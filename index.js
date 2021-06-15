@@ -227,8 +227,9 @@ export default class LDClient {
 
   _flagUpdateListener(changedFlag) {
     const flagKey = changedFlag.flagKey;
-    if (this.flagListeners.hasOwnProperty(flagKey)) {
-      let listeners = this.flagListeners[flagKey];
+    const listenerId = changedFlag.listenerId;
+    if (this.flagListeners.hasOwnProperty(listenerId)) {
+      let listeners = this.flagListeners[listenerId];
       for (const listener of listeners) {
         listener(flagKey);
       }
@@ -238,20 +239,16 @@ export default class LDClient {
   _allFlagsUpdateListener(changedFlags) {
     const flagKeys = changedFlags.flagKeys;
     const listenerId = changedFlags.listenerId;
-    for (const [key, value] of Object.entries(this.allFlagsListeners)) {
-      if (key == listenerId) {
-        key(flagKeys);
-      }
+    if (this.allFlagsListeners.hasOwnProperty(listenerId)) {
+      this.allFlagsListeners[listenerId](flagKeys);
     }
   }
 
   _connectionModeUpdateListener(connectionStatus) {
     const connectionMode = connectionStatus.connectionMode;
     const listenerId = connectionStatus.listenerId;
-    for (const [key, value] of Object.entries(this.connectionModeListeners)) {
-      if (key == listenerId) {
-        key(connectionMode);
-      }
+    if (this.connectionModeListeners.hasOwnProperty(listenerId)) {
+      this.connectionModeListeners[listenerId](connectionMode);
     }
   }
 
@@ -296,7 +293,7 @@ export default class LDClient {
       return;
     }
     const env = environment !== undefined ? environment : "default";
-    const multiListenerId = this._envConcat(env, flagKey);
+    const multiListenerId = this._envConcat(env, listenerId);
 
     this.connectionModeListeners[multiListenerId] = callback;
     LaunchdarklyReactNativeClient.registerCurrentConnectionModeListener(listenerId, env);
@@ -304,7 +301,7 @@ export default class LDClient {
 
   unregisterCurrentConnectionModeListener(listenerId, environment) {
     const env = environment !== undefined ? environment : "default";
-    const multiListenerId = this._envConcat(env, flagKey);
+    const multiListenerId = this._envConcat(env, listenerId);
     if (!this.connectionModeListeners.hasOwnProperty(multiListenerId)) {
       return;
     }
@@ -318,7 +315,7 @@ export default class LDClient {
       return;
     }
     const env = environment !== undefined ? environment : "default";
-    const multiListenerId = this._envConcat(env, flagKey);
+    const multiListenerId = this._envConcat(env, listenerId);
     
     this.allFlagsListeners[multiListenerId] = callback;
     LaunchdarklyReactNativeClient.registerAllFlagsListener(listenerId, env);
@@ -326,7 +323,7 @@ export default class LDClient {
 
   unregisterAllFlagsListener(listenerId, environment) {
     const env = environment !== undefined ? environment : "default";
-    const multiListenerId = this._envConcat(env, flagKey);
+    const multiListenerId = this._envConcat(env, listenerId);
     if (!this.allFlagsListeners.hasOwnProperty(multiListenerId)) {
       return;
     }

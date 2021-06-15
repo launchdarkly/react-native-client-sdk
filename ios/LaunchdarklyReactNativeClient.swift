@@ -541,27 +541,22 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
     }
 
     @objc func registerFeatureFlagListener(_ flagKey: String, environment: String) -> Void {
-        let flagChangeOwner = flagKey as LDObserverOwner
-        if listenerKeys[flagKey] == nil {
-            listenerKeys[flagKey] = flagChangeOwner
-        } else {
-            return
-        }
-        LDClient.get(environment: environment)!.observe(keys: [flagKey], owner: flagChangeOwner, handler: { (changedFlags) in
-            if changedFlags[flagKey] != nil && self.bridge != nil {
-                self.sendEvent(withName: self.FLAG_PREFIX, body: ["flagKey": self.envConcat(environment: environment, identifier: flagKey)])
+        let multiListenerId = envConcat(environment: environment, identifier: flagKey)
+        let flagChangeOwner = multiListenerId as LDObserverOwner
+        listenerKeys[multiListenerId] = flagChangeOwner
+        LDClient.get(environment: environment)!.observe(key: flagKey, owner: flagChangeOwner, handler: { changedFlag in
+            if self.bridge != nil {
+                self.sendEvent(withName: self.FLAG_PREFIX, body: ["flagKey": changedFlag.key, "listenerId": multiListenerId])
             }
         })
     }
     
     private func unregisterListener(_ key: String, _ environment: String) -> Void {
-        let owner = key as LDObserverOwner
-        if listenerKeys[key] != nil {
-            listenerKeys.removeValue(forKey: key)
-        } else {
-            return
+        let multiListenerId = envConcat(environment: environment, identifier: key)
+        let owner = multiListenerId as LDObserverOwner
+        if listenerKeys.removeValue(forKey: multiListenerId) != nil {
+            LDClient.get(environment: environment)!.stopObserving(owner: owner)
         }
-        LDClient.get(environment: environment)!.stopObserving(owner: owner)
     }
     
     @objc func unregisterFeatureFlagListener(_ flagKey: String, environment: String) -> Void {
@@ -569,15 +564,11 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
     }
     
     @objc func registerCurrentConnectionModeListener(_ listenerId: String, environment: String) -> Void {
-        let currentConnectionModeOwner = listenerId as LDObserverOwner
-        if listenerKeys[listenerId] == nil {
-            listenerKeys.removeValue(forKey: listenerId)
-        } else {
-            return
-        }
-        LDClient.get(environment: environment)!.observeCurrentConnectionMode(owner: currentConnectionModeOwner, handler: { (connectionMode) in
+        let multiListenerId = envConcat(environment: environment, identifier: listenerId)
+        let currentConnectionModeOwner = multiListenerId as LDObserverOwner
+        LDClient.get(environment: environment)!.observeCurrentConnectionMode(owner: currentConnectionModeOwner, handler: { connectionMode in
             if self.bridge != nil {
-                self.sendEvent(withName: self.CONNECTION_MODE_PREFIX, body: ["connectionMode": connectionMode, "listenerId": self.envConcat(environment: environment, identifier: listenerId)])
+                self.sendEvent(withName: self.CONNECTION_MODE_PREFIX, body: ["connectionMode": connectionMode, "listenerId": multiListenerId])
             }
         })
     }
@@ -587,15 +578,11 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
     }
     
     @objc func registerAllFlagsListener(_ listenerId: String, environment: String) -> Void {
-        let flagChangeOwner = listenerId as LDObserverOwner
-        if listenerKeys[listenerId] == nil {
-            listenerKeys[listenerId] = flagChangeOwner
-        } else {
-            return
-        }
-        LDClient.get(environment: environment)!.observeAll(owner: flagChangeOwner, handler: { (changedFlags) in
+        let multiListenerId = envConcat(environment: environment, identifier: listenerId)
+        let flagChangeOwner = multiListenerId as LDObserverOwner
+        LDClient.get(environment: environment)!.observeAll(owner: flagChangeOwner, handler: { changedFlags in
             if self.bridge != nil {
-                self.sendEvent(withName: self.ALL_FLAGS_PREFIX, body: ["flagKeys": changedFlags.keys.description, "listenerId": self.envConcat(environment: environment, identifier: listenerId)])
+                self.sendEvent(withName: self.ALL_FLAGS_PREFIX, body: ["flagKeys": Array(changedFlags.keys), "listenerId": multiListenerId])
             }
         })
     }
