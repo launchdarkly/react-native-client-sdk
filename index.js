@@ -34,9 +34,9 @@ export default class LDClient {
           }, config);
 
           if (timeout == undefined) {
-            return LaunchdarklyReactNativeClient.configure(configWithOverriddenDefaults, this._addUserOverrides(user));
+            return LaunchdarklyReactNativeClient.configure(configWithOverriddenDefaults, user);
           } else {
-            return LaunchdarklyReactNativeClient.configureWithTimeout(configWithOverriddenDefaults, this._addUserOverrides(user), timeout);
+            return LaunchdarklyReactNativeClient.configureWithTimeout(configWithOverriddenDefaults, user, timeout);
           }
         }
       );
@@ -216,13 +216,12 @@ export default class LDClient {
   }
 
   identify(user) {
-    return LaunchdarklyReactNativeClient.identify(this._addUserOverrides(user));
+    return LaunchdarklyReactNativeClient.identify(user);
   }
 
-  _addUserOverrides(user) {
-    return Object.assign({
-      anonymous: false   // the iOS SDK defaults this to true
-    }, user);
+  alias(user, previousUser, environment) {
+    const env = environment !== undefined ? environment : "default";
+    LaunchdarklyReactNativeClient.alias(env, user, previousUser);
   }
 
   _flagUpdateListener(changedFlag) {

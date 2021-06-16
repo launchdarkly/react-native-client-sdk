@@ -143,15 +143,21 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
         if config["allUserAttributesPrivate"] != nil {
             ldConfig.allUserAttributesPrivate = config["allUserAttributesPrivate"] as! Bool
         }
-        
-        ldConfig.autoAliasingOptOut = true
+
+        if config["autoAliasingOptOut"] != nil {
+            ldConfig.autoAliasingOptOut = config["autoAliasingOptOut"] as! Bool
+        }
         
         return ldConfig
     }
     
     private func userBuild(userDict: NSDictionary) -> LDUser? {
-        var user = LDUser()
-        user.key = userDict["key"] as! String
+        guard let userKey = userDict["key"] as? String
+        else {
+            return nil
+        }
+
+        var user = LDUser(key: userKey)
 
         if userDict["secondary"] != nil {
             user.secondary = userDict["secondary"] as? String
@@ -483,6 +489,17 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
         } else {
             reject(ERROR_IDENTIFY, "User could not be built using supplied configuration", nil)
         }
+    }
+
+    @objc func alias(_ environment: String, user: NSDictionary, previousUser: NSDictionary) -> Void {
+        let builtUser = userBuild(userDict: user)
+        let builtPreviousUser = userBuild(userDict: previousUser)
+        guard let user = builtUser,
+              let previousUser = builtPreviousUser
+        else {
+            return
+        }
+        LDClient.get(environment: environment)!.alias(context: user, previousContext: previousUser)
     }
     
     @objc func allFlags(_ environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {

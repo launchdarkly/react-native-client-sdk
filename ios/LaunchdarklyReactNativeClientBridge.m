@@ -99,6 +99,8 @@ RCT_EXTERN_METHOD(close:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseReject
 
 RCT_EXTERN_METHOD(identify:(NSDictionary *)options resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 
+RCT_EXTERN_METHOD(alias:(NSString *)environment user:(NSDictionary *)user previousUser:(NSDictionary *)previousUser)
+
 RCT_EXTERN_METHOD(allFlags:(NSString *)environment resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 
 RCT_EXTERN_METHOD(registerFeatureFlagListener:(NSString *)flagKey environment:(NSString *)environment)

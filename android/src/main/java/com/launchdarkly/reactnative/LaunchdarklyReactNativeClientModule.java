@@ -70,7 +70,8 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
         CONFIG_MAX_CACHED_USERS("maxCachedUsers", ConfigEntryType.Integer),
         CONFIG_DIAGNOSTIC_OPT_OUT("diagnosticOptOut", ConfigEntryType.Boolean),
         CONFIG_DIAGNOSTIC_RECORDING_INTERVAL("diagnosticRecordingIntervalMillis", ConfigEntryType.Integer),
-        CONFIG_SECONDARY_MOBILE_KEYS("secondaryMobileKeys", ConfigEntryType.Map);
+        CONFIG_SECONDARY_MOBILE_KEYS("secondaryMobileKeys", ConfigEntryType.Map),
+        CONFIG_AUTO_ALIASING_OPT_OUT("autoAliasingOptOut", ConfigEntryType.Boolean);
 
         final String key;
         final ConfigEntryType type;
@@ -769,6 +770,20 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
             }
         });
         background.start();
+    }
+
+    @ReactMethod
+    public void alias(String environment, ReadableMap user, ReadableMap previousUser) {
+        LDUser.Builder userBuilder = userBuild(user);
+        LDUser.Builder previousUserBuilder = userBuild(previousUser);
+        if (userBuilder == null || previousUserBuilder == null) {
+            return;
+        }
+        try {
+            LDClient.getForMobileKey(environment).alias(userBuilder.build(), previousUserBuilder.build());
+        } catch (LaunchDarklyException e) {
+            Timber.w("LaunchDarkly alias called with invalid environment");
+        }
     }
 
     @ReactMethod
