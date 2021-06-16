@@ -1,7 +1,9 @@
 LaunchDarkly Client-Side SDK for React Native
 ===========================
 
-[![CircleCI](https://circleci.com/gh/launchdarkly/react-native-client-sdk.svg?style=svg)](https://circleci.com/gh/launchdarkly/react-native-client-sdk)
+[![NPM](https://img.shields.io/npm/v/launchdarkly-react-native-client-sdk.svg)](https://www.npmjs.com/package/launchdarkly-react-native-client-sdk)
+[![CircleCI](https://circleci.com/gh/launchdarkly/react-native-client-sdk.svg?style=shield)](https://circleci.com/gh/launchdarkly/react-native-client-sdk)
+[![Documentation](https://img.shields.io/static/v1?label=GitHub+Pages&message=API+reference&color=00add8)](https://launchdarkly.github.io/react-native-client-sdk)
 
 LaunchDarkly overview
 -------------------------
@@ -23,12 +25,12 @@ This SDK is currently compatible with React Native 0.64.x and Xcode 12 and is te
 Getting started
 ---------------
 
-Refer to the [SDK documentation](https://docs.launchdarkly.com/sdk/client-side/react-native#getting-started) for instructions on getting started with using the SDK.
+Refer to the [SDK documentation](https://docs.launchdarkly.com/sdk/client-side/react/react-native#getting-started) for instructions on getting started with using the SDK.
 
 Learn more
 -----------
 
-Check out our [documentation](https://docs.launchdarkly.com) for in-depth instructions on configuring and using LaunchDarkly. You can also head straight to the [complete reference guide for this SDK](https://docs.launchdarkly.com/sdk/client-side/react-native).
+Check out our [documentation](https://docs.launchdarkly.com) for in-depth instructions on configuring and using LaunchDarkly. You can also head straight to the [complete reference guide for this SDK](https://docs.launchdarkly.com/sdk/client-side/react/react-native).
 
 Testing
 -------

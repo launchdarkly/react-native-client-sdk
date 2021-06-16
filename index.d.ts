@@ -640,7 +640,6 @@ declare module 'launchdarkly-react-native-client-sdk' {
          *   Optional environment name to obtain the result from the corresponding secondary environment
          * @returns
          *   A promise containing an object in which each key is a feature flag key and each value is the flag value.
-         *   The promise will be rejected if the SDK has not yet completed initialization.
          *   Note that there is no way to specify a default value for each flag as there is with the
          *   `*Variation` methods, so any flag that cannot be evaluated will have a null value.
          */
