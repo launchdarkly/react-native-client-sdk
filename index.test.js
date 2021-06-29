@@ -1,6 +1,8 @@
 import { NativeModules, NativeEventEmitter } from 'react-native';
 import LDClient from './index.js';
 
+const defValErr = new Error('Missing or invalid defaultValue for variation call');
+
 var client;
 var addListenerMock;
 let nativeMock = NativeModules.LaunchdarklyReactNativeClient;
@@ -43,124 +45,128 @@ test('constructor', () => {
   expect(addListenerMock.calls[2][0]).toBe(nativeMock.CONNECTION_MODE_PREFIX);
 });
 
-test('boolVariation', () => {
-  client.boolVariation('key1');
-  client.boolVariation('key2', undefined, 'env1');
-  client.boolVariation('key3', true);
-  client.boolVariation('key4', false, 'env2');
+describe('boolVariation', () => {
+  test('validates defaultValue', async () => {
+    expect.assertions(11);
 
-  expect(nativeMock.boolVariation).toHaveBeenCalledTimes(2);
-  expect(nativeMock.boolVariation).toHaveBeenNthCalledWith(1, 'key1', 'default');
-  expect(nativeMock.boolVariation).toHaveBeenNthCalledWith(2, 'key2', 'env1');
+    await expect(client.boolVariation('flagKey')).rejects.toEqual(defValErr);
+    await expect(client.boolVariation('flagKey', null)).rejects.toEqual(defValErr);
+    await expect(client.boolVariation('flagKey', 5)).rejects.toEqual(defValErr);
+    await expect(client.boolVariationDetail('flagKey')).rejects.toEqual(defValErr);
+    await expect(client.boolVariationDetail('flagKey', null)).rejects.toEqual(defValErr);
+    await expect(client.boolVariationDetail('flagKey', 5)).rejects.toEqual(defValErr);
 
-  expect(nativeMock.boolVariationDefaultValue).toHaveBeenCalledTimes(2);
-  expect(nativeMock.boolVariationDefaultValue).toHaveBeenNthCalledWith(1, 'key3', true, 'default');
-  expect(nativeMock.boolVariationDefaultValue).toHaveBeenNthCalledWith(2, 'key4', false, 'env2');
+    expect(nativeMock.boolVariation).toHaveBeenCalledTimes(0);
+    expect(nativeMock.boolVariationDetail).toHaveBeenCalledTimes(0);
+  });
+
+  test('calls native', async () => {
+    nativeMock.boolVariation.mockImplementation((k, def, env) => Promise.resolve(!def));
+
+    await expect(client.boolVariation('key1', true)).resolves.toEqual(false);
+    await expect(client.boolVariation('key2', false, 'alt')).resolves.toEqual(true);
+    await expect(client.boolVariation('key3', false, 5)).resolves.toEqual(true);
+
+    expect(nativeMock.boolVariation).toHaveBeenCalledTimes(3);
+    expect(nativeMock.boolVariation).toHaveBeenNthCalledWith(1, 'key1', true, 'default');
+    expect(nativeMock.boolVariation).toHaveBeenNthCalledWith(2, 'key2', false, 'alt');
+    expect(nativeMock.boolVariation).toHaveBeenNthCalledWith(3, 'key3', false, 'default');
+  });
+
+  test('detailed calls native', async () => {
+    nativeMock.boolVariationDetail.mockImplementation((k, def, env) => Promise.resolve(!def));
+
+    await expect(client.boolVariationDetail('key1', true)).resolves.toEqual(false);
+    await expect(client.boolVariationDetail('key2', false, 'alt')).resolves.toEqual(true);
+    await expect(client.boolVariationDetail('key3', false, 5)).resolves.toEqual(true);
+
+    expect(nativeMock.boolVariationDetail).toHaveBeenCalledTimes(3);
+    expect(nativeMock.boolVariationDetail).toHaveBeenNthCalledWith(1, 'key1', true, 'default');
+    expect(nativeMock.boolVariationDetail).toHaveBeenNthCalledWith(2, 'key2', false, 'alt');
+    expect(nativeMock.boolVariationDetail).toHaveBeenNthCalledWith(3, 'key3', false, 'default');
+  });
 });
 
-test('intVariation', () => {
-  client.intVariation('key1');
-  client.intVariation('key2', undefined, 'env1');
-  client.intVariation('key3', 0);
-  client.intVariation('key4', 5, 'env2');
+describe('numberVariation', () => {
+  test('validates defaultValue', async () => {
+    expect.assertions(13);
 
-  expect(nativeMock.intVariation).toHaveBeenCalledTimes(2);
-  expect(nativeMock.intVariation).toHaveBeenNthCalledWith(1, 'key1', 'default');
-  expect(nativeMock.intVariation).toHaveBeenNthCalledWith(2, 'key2', 'env1');
+    await expect(client.numberVariation('flagKey')).rejects.toEqual(defValErr);
+    await expect(client.numberVariation('flagKey', null)).rejects.toEqual(defValErr);
+    await expect(client.numberVariation('flagKey', false)).rejects.toEqual(defValErr);
+    await expect(client.numberVariation('flagKey', NaN)).rejects.toEqual(defValErr);
+    await expect(client.numberVariationDetail('flagKey')).rejects.toEqual(defValErr);
+    await expect(client.numberVariationDetail('flagKey', null)).rejects.toEqual(defValErr);
+    await expect(client.numberVariationDetail('flagKey', false)).rejects.toEqual(defValErr);
+    await expect(client.numberVariationDetail('flagKey', NaN)).rejects.toEqual(defValErr);
 
-  expect(nativeMock.intVariationDefaultValue).toHaveBeenCalledTimes(2);
-  expect(nativeMock.intVariationDefaultValue).toHaveBeenNthCalledWith(1, 'key3', 0, 'default');
-  expect(nativeMock.intVariationDefaultValue).toHaveBeenNthCalledWith(2, 'key4', 5, 'env2');
+    expect(nativeMock.numberVariation).toHaveBeenCalledTimes(0);
+    expect(nativeMock.numberVariationDetail).toHaveBeenCalledTimes(0);
+  });
+
+  test('calls native', async () => {
+    nativeMock.numberVariation.mockImplementation((k, def, env) => Promise.resolve(def + 1.5));
+
+    await expect(client.numberVariation('key1', 0)).resolves.toEqual(1.5);
+    await expect(client.numberVariation('key2', 5, 'alt')).resolves.toEqual(6.5);
+    await expect(client.numberVariation('key3', 2.5, 5)).resolves.toEqual(4);
+
+    expect(nativeMock.numberVariation).toHaveBeenCalledTimes(3);
+    expect(nativeMock.numberVariation).toHaveBeenNthCalledWith(1, 'key1', 0, 'default');
+    expect(nativeMock.numberVariation).toHaveBeenNthCalledWith(2, 'key2', 5, 'alt');
+    expect(nativeMock.numberVariation).toHaveBeenNthCalledWith(3, 'key3', 2.5, 'default');
+  });
+
+  test('detailed calls native', async () => {
+    nativeMock.numberVariationDetail.mockImplementation((k, def, env) => Promise.resolve(def + 1.5));
+
+    await expect(client.numberVariationDetail('key1', 0)).resolves.toEqual(1.5);
+    await expect(client.numberVariationDetail('key2', 5, 'alt')).resolves.toEqual(6.5);
+    await expect(client.numberVariationDetail('key3', 2.5, 5)).resolves.toEqual(4);
+
+    expect(nativeMock.numberVariationDetail).toHaveBeenCalledTimes(3);
+    expect(nativeMock.numberVariationDetail).toHaveBeenNthCalledWith(1, 'key1', 0, 'default');
+    expect(nativeMock.numberVariationDetail).toHaveBeenNthCalledWith(2, 'key2', 5, 'alt');
+    expect(nativeMock.numberVariationDetail).toHaveBeenNthCalledWith(3, 'key3', 2.5, 'default');
+  });
 });
 
-test('floatVariation', () => {
-  client.floatVariation('key1');
-  client.floatVariation('key2', undefined, 'env1');
-  client.floatVariation('key3', 1.5);
-  client.floatVariation('key4', 5.5, 'env2');
+describe('stringVariation', () => {
+  test('validates defaultValue', async () => {
+    expect.assertions(7);
 
-  expect(nativeMock.floatVariation).toHaveBeenCalledTimes(2);
-  expect(nativeMock.floatVariation).toHaveBeenNthCalledWith(1, 'key1', 'default');
-  expect(nativeMock.floatVariation).toHaveBeenNthCalledWith(2, 'key2', 'env1');
+    await expect(client.stringVariation('flagKey', false)).rejects.toEqual(defValErr);
+    await expect(client.stringVariationDetail('flagKey', false)).rejects.toEqual(defValErr);
 
-  expect(nativeMock.floatVariationDefaultValue).toHaveBeenCalledTimes(2);
-  expect(nativeMock.floatVariationDefaultValue).toHaveBeenNthCalledWith(1, 'key3', 1.5, 'default');
-  expect(nativeMock.floatVariationDefaultValue).toHaveBeenNthCalledWith(2, 'key4', 5.5, 'env2');
-});
+    expect(nativeMock.stringVariation).toHaveBeenCalledTimes(0);
+    expect(nativeMock.stringVariationDetail).toHaveBeenCalledTimes(0);
+  });
 
-test('stringVariation', () => {
-  client.stringVariation('key1');
-  client.stringVariation('key2', undefined, 'env1');
-  client.stringVariation('key3', '');
-  client.stringVariation('key4', 'abc', 'env2');
+  test('calls native', async () => {
+    nativeMock.stringVariation.mockImplementation((k, def, env) => Promise.resolve('foo'.concat(def)));
 
-  expect(nativeMock.stringVariation).toHaveBeenCalledTimes(2);
-  expect(nativeMock.stringVariation).toHaveBeenNthCalledWith(1, 'key1', 'default');
-  expect(nativeMock.stringVariation).toHaveBeenNthCalledWith(2, 'key2', 'env1');
+    await expect(client.stringVariation('key1', '1')).resolves.toEqual('foo1');
+    await expect(client.stringVariation('key2', null, 'alt')).resolves.toEqual('foonull');
+    await expect(client.stringVariation('key3', undefined, 5)).resolves.toEqual('foonull');
 
-  expect(nativeMock.stringVariationDefaultValue).toHaveBeenCalledTimes(2);
-  expect(nativeMock.stringVariationDefaultValue).toHaveBeenNthCalledWith(1, 'key3', '', 'default');
-  expect(nativeMock.stringVariationDefaultValue).toHaveBeenNthCalledWith(2, 'key4', 'abc', 'env2');
-});
+    expect(nativeMock.stringVariation).toHaveBeenCalledTimes(3);
+    expect(nativeMock.stringVariation).toHaveBeenNthCalledWith(1, 'key1', '1', 'default');
+    expect(nativeMock.stringVariation).toHaveBeenNthCalledWith(2, 'key2', null, 'alt');
+    expect(nativeMock.stringVariation).toHaveBeenNthCalledWith(3, 'key3', null, 'default');
+  });
 
-test('boolVariationDetail', () => {
-  client.boolVariationDetail('key1');
-  client.boolVariationDetail('key2', undefined, 'env1');
-  client.boolVariationDetail('key3', true);
-  client.boolVariationDetail('key4', false, 'env2');
+  test('detailed calls native', async () => {
+    nativeMock.stringVariationDetail.mockImplementation((k, def, env) => Promise.resolve('foo'.concat(def)));
 
-  expect(nativeMock.boolVariationDetail).toHaveBeenCalledTimes(2);
-  expect(nativeMock.boolVariationDetail).toHaveBeenNthCalledWith(1, 'key1', 'default');
-  expect(nativeMock.boolVariationDetail).toHaveBeenNthCalledWith(2, 'key2', 'env1');
+    await expect(client.stringVariationDetail('key1', '1')).resolves.toEqual('foo1');
+    await expect(client.stringVariationDetail('key2', null, 'alt')).resolves.toEqual('foonull');
+    await expect(client.stringVariationDetail('key3', undefined, 5)).resolves.toEqual('foonull');
 
-  expect(nativeMock.boolVariationDetailDefaultValue).toHaveBeenCalledTimes(2);
-  expect(nativeMock.boolVariationDetailDefaultValue).toHaveBeenNthCalledWith(1, 'key3', true, 'default');
-  expect(nativeMock.boolVariationDetailDefaultValue).toHaveBeenNthCalledWith(2, 'key4', false, 'env2');
-});
-
-test('intVariationDetail', () => {
-  client.intVariationDetail('key1');
-  client.intVariationDetail('key2', undefined, 'env1');
-  client.intVariationDetail('key3', 0);
-  client.intVariationDetail('key4', 5, 'env2');
-
-  expect(nativeMock.intVariationDetail).toHaveBeenCalledTimes(2);
-  expect(nativeMock.intVariationDetail).toHaveBeenNthCalledWith(1, 'key1', 'default');
-  expect(nativeMock.intVariationDetail).toHaveBeenNthCalledWith(2, 'key2', 'env1');
-
-  expect(nativeMock.intVariationDetailDefaultValue).toHaveBeenCalledTimes(2);
-  expect(nativeMock.intVariationDetailDefaultValue).toHaveBeenNthCalledWith(1, 'key3', 0, 'default');
-  expect(nativeMock.intVariationDetailDefaultValue).toHaveBeenNthCalledWith(2, 'key4', 5, 'env2');
-});
-
-test('floatVariationDetail', () => {
-  client.floatVariationDetail('key1');
-  client.floatVariationDetail('key2', undefined, 'env1');
-  client.floatVariationDetail('key3', 1.5);
-  client.floatVariationDetail('key4', 5.5, 'env2');
-
-  expect(nativeMock.floatVariationDetail).toHaveBeenCalledTimes(2);
-  expect(nativeMock.floatVariationDetail).toHaveBeenNthCalledWith(1, 'key1', 'default');
-  expect(nativeMock.floatVariationDetail).toHaveBeenNthCalledWith(2, 'key2', 'env1');
-
-  expect(nativeMock.floatVariationDetailDefaultValue).toHaveBeenCalledTimes(2);
-  expect(nativeMock.floatVariationDetailDefaultValue).toHaveBeenNthCalledWith(1, 'key3', 1.5, 'default');
-  expect(nativeMock.floatVariationDetailDefaultValue).toHaveBeenNthCalledWith(2, 'key4', 5.5, 'env2');
-});
-
-test('stringVariationDetail', () => {
-  client.stringVariationDetail('key1');
-  client.stringVariationDetail('key2', undefined, 'env1');
-  client.stringVariationDetail('key3', '');
-  client.stringVariationDetail('key4', 'abc', 'env2');
-
-  expect(nativeMock.stringVariationDetail).toHaveBeenCalledTimes(2);
-  expect(nativeMock.stringVariationDetail).toHaveBeenNthCalledWith(1, 'key1', 'default');
-  expect(nativeMock.stringVariationDetail).toHaveBeenNthCalledWith(2, 'key2', 'env1');
-
-  expect(nativeMock.stringVariationDetailDefaultValue).toHaveBeenCalledTimes(2);
-  expect(nativeMock.stringVariationDetailDefaultValue).toHaveBeenNthCalledWith(1, 'key3', '', 'default');
-  expect(nativeMock.stringVariationDetailDefaultValue).toHaveBeenNthCalledWith(2, 'key4', 'abc', 'env2');
+    expect(nativeMock.stringVariationDetail).toHaveBeenCalledTimes(3);
+    expect(nativeMock.stringVariationDetail).toHaveBeenNthCalledWith(1, 'key1', '1', 'default');
+    expect(nativeMock.stringVariationDetail).toHaveBeenNthCalledWith(2, 'key2', null, 'alt');
+    expect(nativeMock.stringVariationDetail).toHaveBeenNthCalledWith(3, 'key3', null, 'default');
+  });
 });
 
 test('allFlags', () => {

@@ -206,42 +206,18 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
         return user
     }
     
-    @objc func boolVariationDefaultValue(_ flagKey: String, defaultValue: ObjCBool, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+    @objc func boolVariation(_ flagKey: String, defaultValue: ObjCBool, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
         resolve(LDClient.get(environment: environment)!.variation(forKey: flagKey, defaultValue: defaultValue.boolValue) as Bool)
     }
     
-    @objc func intVariationDefaultValue(_ flagKey: String, defaultValue: Int, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-        resolve(LDClient.get(environment: environment)!.variation(forKey: flagKey, defaultValue: defaultValue) as Int)
-    }
-    
-    @objc func floatVariationDefaultValue(_ flagKey: String, defaultValue: CGFloat, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+    @objc func numberVariation(_ flagKey: String, defaultValue: Double, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
         resolve(LDClient.get(environment: environment)!.variation(forKey: flagKey, defaultValue: Double(defaultValue)) as Double)
     }
     
-    @objc func stringVariationDefaultValue(_ flagKey: String, defaultValue: String, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+    @objc func stringVariation(_ flagKey: String, defaultValue: String, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
         resolve(LDClient.get(environment: environment)!.variation(forKey: flagKey, defaultValue: defaultValue) as String)
     }
     
-     @objc func boolVariation(_ flagKey: String, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-        let boolFlagValue: Bool? = LDClient.get(environment: environment)!.variation(forKey: flagKey)
-        resolve(boolFlagValue)
-    }
-    
-    @objc func intVariation(_ flagKey: String, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-        let intFlagValue: Int? = LDClient.get(environment: environment)!.variation(forKey: flagKey)
-        resolve(intFlagValue)
-    }
-    
-    @objc func floatVariation(_ flagKey: String, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-        let floatFlagValue: Double? = LDClient.get(environment: environment)!.variation(forKey: flagKey)
-        resolve(floatFlagValue)
-    }
-    
-    @objc func stringVariation(_ flagKey: String, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-        let stringFlagValue: String? = LDClient.get(environment: environment)!.variation(forKey: flagKey)
-        resolve(stringFlagValue)
-    }
-
     @objc func jsonVariationNone(_ flagKey: String, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
         let jsonFlagValue: Dictionary<String, Any>? = LDClient.get(environment: environment)!.variation(forKey: flagKey)
         resolve(jsonFlagValue)
@@ -267,7 +243,7 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
         resolve(LDClient.get(environment: environment)!.variation(forKey: flagKey, defaultValue: defaultValue.swiftDictionary) as NSDictionary)
     }
     
-    @objc func boolVariationDetailDefaultValue(_ flagKey: String, defaultValue: ObjCBool, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+    @objc func boolVariationDetail(_ flagKey: String, defaultValue: ObjCBool, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
         let detail = LDClient.get(environment: environment)!.variationDetail(forKey: flagKey, defaultValue: defaultValue.boolValue)
         let jsonObject: NSDictionary = [
             "value": (detail.value as Any),
@@ -277,7 +253,7 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
         resolve(jsonObject)
     }
     
-    @objc func intVariationDetailDefaultValue(_ flagKey: String, defaultValue: Int, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+    @objc func numberVariationDetail(_ flagKey: String, defaultValue: Double, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
         let detail = LDClient.get(environment: environment)!.variationDetail(forKey: flagKey, defaultValue: defaultValue)
         let jsonObject: NSDictionary = [
             "value": (detail.value as Any),
@@ -287,58 +263,8 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
         resolve(jsonObject)
     }
     
-    @objc func floatVariationDetailDefaultValue(_ flagKey: String, defaultValue: CGFloat, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-        let detail = LDClient.get(environment: environment)!.variationDetail(forKey: flagKey, defaultValue: Double(defaultValue))
-        let jsonObject: NSDictionary = [
-            "value": (detail.value as Any),
-            "variationIndex": (detail.variationIndex as Any),
-            "reason": (detail.reason as Any) 
-        ]
-        resolve(jsonObject)
-    }
-    
-    @objc func stringVariationDetailDefaultValue(_ flagKey: String, defaultValue: String, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+    @objc func stringVariationDetail(_ flagKey: String, defaultValue: String, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
         let detail = LDClient.get(environment: environment)!.variationDetail(forKey: flagKey, defaultValue: defaultValue)
-        let jsonObject: NSDictionary = [
-            "value": (detail.value as Any),
-            "variationIndex": (detail.variationIndex as Any),
-            "reason": (detail.reason as Any) 
-        ]
-        resolve(jsonObject)
-    }
-    
-    @objc func boolVariationDetail(_ flagKey: String, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-        let detail: LDEvaluationDetail<Bool?> = LDClient.get(environment: environment)!.variationDetail(forKey: flagKey)
-        let jsonObject: NSDictionary = [
-            "value": (detail.value as Any),
-            "variationIndex": (detail.variationIndex as Any),
-            "reason": (detail.reason as Any) 
-        ]
-        resolve(jsonObject)
-    }
-    
-    @objc func intVariationDetail(_ flagKey: String, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-        let detail: LDEvaluationDetail<Int?> = LDClient.get(environment: environment)!.variationDetail(forKey: flagKey)
-        let jsonObject: NSDictionary = [
-            "value": (detail.value as Any),
-            "variationIndex": (detail.variationIndex as Any),
-            "reason": (detail.reason as Any) 
-        ]
-        resolve(jsonObject)
-    }
-    
-    @objc func floatVariationDetail(_ flagKey: String, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-        let detail: LDEvaluationDetail<Double?> = LDClient.get(environment: environment)!.variationDetail(forKey: flagKey)
-        let jsonObject: NSDictionary = [
-            "value": (detail.value as Any),
-            "variationIndex": (detail.variationIndex as Any),
-            "reason": (detail.reason as Any) 
-        ]
-        resolve(jsonObject)
-    }
-    
-    @objc func stringVariationDetail(_ flagKey: String, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-        let detail: LDEvaluationDetail<String?> = LDClient.get(environment: environment)!.variationDetail(forKey: flagKey)
         let jsonObject: NSDictionary = [
             "value": (detail.value as Any),
             "variationIndex": (detail.variationIndex as Any),

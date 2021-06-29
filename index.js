@@ -42,40 +42,42 @@ export default class LDClient {
       );
   }
 
+  _validateDefault(defaultType, defaultValue, validator) {
+    if (typeof defaultValue !== defaultType ||
+        (typeof validator === 'function' && !validator(defaultValue))) {
+      return Promise.reject(new Error('Missing or invalid defaultValue for variation call'));
+    }
+    return Promise.resolve();
+  }
+
+  _validateInt(val) {
+    return !isNaN(val) && val > -0x80000001 && val < 0x80000000;
+  }
+
+  _normalizeEnv(environment) {
+    if (typeof environment !== 'string') {
+      return 'default';
+    }
+    return environment;
+  }
+
   boolVariation(flagKey, defaultValue, environment) {
-    const env = environment !== undefined ? environment : "default";
-    if (defaultValue == undefined) {
-      return LaunchdarklyReactNativeClient.boolVariation(flagKey, env);
-    } else {
-      return LaunchdarklyReactNativeClient.boolVariationDefaultValue(flagKey, defaultValue, env);
-    }
+    return this._validateDefault('boolean', defaultValue)
+      .then(() => LaunchdarklyReactNativeClient.boolVariation(flagKey, defaultValue, this._normalizeEnv(environment)));
   }
 
-  intVariation(flagKey, defaultValue, environment) {
-    const env = environment !== undefined ? environment : "default";
-    if (defaultValue == undefined) {
-      return LaunchdarklyReactNativeClient.intVariation(flagKey, env);
-    } else {
-      return LaunchdarklyReactNativeClient.intVariationDefaultValue(flagKey, defaultValue, env);
-    }
-  }
-
-  floatVariation(flagKey, defaultValue, environment) {
-    const env = environment !== undefined ? environment : "default";
-    if (defaultValue == undefined) {
-      return LaunchdarklyReactNativeClient.floatVariation(flagKey, env);
-    } else {
-      return LaunchdarklyReactNativeClient.floatVariationDefaultValue(flagKey, defaultValue, env);
-    }
+  numberVariation(flagKey, defaultValue, environment) {
+    return this._validateDefault('number', defaultValue, val => !isNaN(val))
+      .then(() => LaunchdarklyReactNativeClient.numberVariation(flagKey, defaultValue, this._normalizeEnv(environment)));
   }
 
   stringVariation(flagKey, defaultValue, environment) {
-    const env = environment !== undefined ? environment : "default";
-    if (defaultValue == undefined) {
-      return LaunchdarklyReactNativeClient.stringVariation(flagKey, env);
-    } else {
-      return LaunchdarklyReactNativeClient.stringVariationDefaultValue(flagKey, defaultValue, env);
+    if (defaultValue != null && typeof defaultValue !== 'string') {
+      return Promise.reject(new Error('Missing or invalid defaultValue for variation call'));
+    } else if (defaultValue === undefined) {
+      defaultValue = null;
     }
+    return LaunchdarklyReactNativeClient.stringVariation(flagKey, defaultValue, this._normalizeEnv(environment));
   }
 
   jsonVariation(flagKey, defaultValue, environment) {
@@ -97,39 +99,22 @@ export default class LDClient {
   }
 
   boolVariationDetail(flagKey, defaultValue, environment) {
-    const env = environment !== undefined ? environment : "default";
-    if (defaultValue == undefined) {
-      return LaunchdarklyReactNativeClient.boolVariationDetail(flagKey, env);
-    } else {
-      return LaunchdarklyReactNativeClient.boolVariationDetailDefaultValue(flagKey, defaultValue, env);
-    }
+    return this._validateDefault('boolean', defaultValue)
+      .then(() => LaunchdarklyReactNativeClient.boolVariationDetail(flagKey, defaultValue, this._normalizeEnv(environment)));
   }
 
-  intVariationDetail(flagKey, defaultValue, environment) {
-    const env = environment !== undefined ? environment : "default";
-    if (defaultValue == undefined) {
-      return LaunchdarklyReactNativeClient.intVariationDetail(flagKey, env);
-    } else {
-      return LaunchdarklyReactNativeClient.intVariationDetailDefaultValue(flagKey, defaultValue, env);
-    }
-  }
-
-  floatVariationDetail(flagKey, defaultValue, environment) {
-    const env = environment !== undefined ? environment : "default";
-    if (defaultValue == undefined) {
-      return LaunchdarklyReactNativeClient.floatVariationDetail(flagKey, env);
-    } else {
-      return LaunchdarklyReactNativeClient.floatVariationDetailDefaultValue(flagKey, defaultValue, env);
-    }
+  numberVariationDetail(flagKey, defaultValue, environment) {
+    return this._validateDefault('number', defaultValue, val => !isNaN(val))
+      .then(() => LaunchdarklyReactNativeClient.numberVariationDetail(flagKey, defaultValue, this._normalizeEnv(environment)));
   }
 
   stringVariationDetail(flagKey, defaultValue, environment) {
-    const env = environment !== undefined ? environment : "default";
-    if (defaultValue == undefined) {
-      return LaunchdarklyReactNativeClient.stringVariationDetail(flagKey, env);
-    } else {
-      return LaunchdarklyReactNativeClient.stringVariationDetailDefaultValue(flagKey, defaultValue, env);
+    if (defaultValue != null && typeof defaultValue !== 'string') {
+      return Promise.reject(new Error('Missing or invalid defaultValue for variation call'));
+    } else if (defaultValue === undefined) {
+      defaultValue = null;
     }
+    return LaunchdarklyReactNativeClient.stringVariationDetail(flagKey, defaultValue, this._normalizeEnv(environment));
   }
 
   jsonVariationDetail(flagKey, defaultValue, environment) {
@@ -157,7 +142,7 @@ export default class LDClient {
 
   track(eventName, data, metricValue, environment) {
     const env = environment !== undefined ? environment : "default";
-    if (metricValue) {
+    if (typeof metricValue === 'number') {
       if (data === null || typeof data === 'undefined') {
         LaunchdarklyReactNativeClient.trackMetricValue(eventName, metricValue, env);
       } else if (typeof data === 'number') {

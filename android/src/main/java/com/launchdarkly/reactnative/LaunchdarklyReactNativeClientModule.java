@@ -4,6 +4,7 @@ import android.app.Application;
 import android.net.Uri;
 
 import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.Dynamic;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -304,12 +305,7 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
     }
 
     @ReactMethod
-    public void boolVariation(String flagKey, String environment, Promise promise) {
-        boolVariationDefaultValue(flagKey, null, environment, promise);
-    }
-
-    @ReactMethod
-    public void boolVariationDefaultValue(String flagKey, Boolean defaultValue, String environment, Promise promise) {
+    public void boolVariation(String flagKey, boolean defaultValue, String environment, Promise promise) {
         try {
             promise.resolve(LDClient.getForMobileKey(environment).boolVariation(flagKey, defaultValue));
         } catch (Exception e) {
@@ -318,40 +314,16 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
     }
 
     @ReactMethod
-    public void intVariation(String flagKey, String environment, Promise promise) {
-        intVariationDefaultValue(flagKey, null, environment, promise);
-    }
-
-    @ReactMethod
-    public void intVariationDefaultValue(String flagKey, Integer defaultValue, String environment, Promise promise) {
+    public void floatVariation(String flagKey, double defaultValue, String environment, Promise promise) {
         try {
-            promise.resolve(LDClient.getForMobileKey(environment).intVariation(flagKey, defaultValue));
+            promise.resolve(LDClient.getForMobileKey(environment).doubleVariation(flagKey, defaultValue));
         } catch (Exception e) {
             promise.resolve(defaultValue);
         }
     }
 
     @ReactMethod
-    public void floatVariation(String flagKey, String environment, Promise promise) {
-        floatVariationDefaultValue(flagKey, null, environment, promise);
-    }
-
-    @ReactMethod
-    public void floatVariationDefaultValue(String flagKey, Float defaultValue, String environment, Promise promise) {
-        try {
-            promise.resolve(LDClient.getForMobileKey(environment).doubleVariation(flagKey, defaultValue.doubleValue()));
-        } catch (Exception e) {
-            promise.resolve(defaultValue);
-        }
-    }
-
-    @ReactMethod
-    public void stringVariation(String flagKey, String environment, Promise promise) {
-        stringVariationDefaultValue(flagKey, null, environment, promise);
-    }
-
-    @ReactMethod
-    public void stringVariationDefaultValue(String flagKey, String defaultValue, String environment, Promise promise) {
+    public void stringVariation(String flagKey, String defaultValue, String environment, Promise promise) {
         try {
             promise.resolve(LDClient.getForMobileKey(environment).stringVariation(flagKey, defaultValue));
         } catch (Exception e) {
@@ -390,12 +362,7 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
     }
 
     @ReactMethod
-    public void boolVariationDetail(String flagKey, String environment, Promise promise) {
-        boolVariationDetailDefaultValue(flagKey, null, environment, promise);
-    }
-
-    @ReactMethod
-    public void boolVariationDetailDefaultValue(String flagKey, Boolean defaultValue, String environment, Promise promise) {
+    public void boolVariationDetail(String flagKey, boolean defaultValue, String environment, Promise promise) {
         EvaluationDetail<Boolean> detailResult;
         try {
             detailResult = LDClient.getForMobileKey(environment).boolVariationDetail(flagKey, defaultValue);
@@ -413,42 +380,13 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
     }
 
     @ReactMethod
-    public void intVariationDetail(String flagKey, String environment, Promise promise) {
-        intVariationDetailDefaultValue(flagKey, null, environment, promise);
-    }
-
-    @ReactMethod
-    public void intVariationDetailDefaultValue(String flagKey, Integer defaultValue, String environment, Promise promise) {
-        EvaluationDetail<Integer> detailResult;
+    public void numberVariationDetail(String flagKey, double defaultValue, String environment, Promise promise) {
+        EvaluationDetail<Double> detailResult;
         try {
-            detailResult = LDClient.getForMobileKey(environment).intVariationDetail(flagKey, defaultValue);
+            detailResult = LDClient.getForMobileKey(environment).doubleVariationDetail(flagKey, defaultValue);
         } catch (Exception e) {
             Timber.w(e);
             detailResult = EvaluationDetail.fromValue(defaultValue, EvaluationDetail.NO_VARIATION, EvaluationReason.error(EvaluationReason.ErrorKind.EXCEPTION));
-        }
-        WritableMap result = detailToMap(detailResult);
-        if (detailResult.getValue() == null) {
-            result.putNull("value");
-        } else {
-            result.putInt("value", detailResult.getValue());
-        }
-        promise.resolve(result);
-    }
-
-    @ReactMethod
-    public void floatVariationDetail(String flagKey, String environment, Promise promise) {
-        floatVariationDetailDefaultValue(flagKey, null, environment, promise);
-    }
-
-    @ReactMethod
-    public void floatVariationDetailDefaultValue(String flagKey, Float defaultValue, String environment, Promise promise) {
-        EvaluationDetail<Double> detailResult;
-        Double doubleValue = defaultValue.doubleValue();
-        try {
-            detailResult = LDClient.getForMobileKey(environment).doubleVariationDetail(flagKey, doubleValue);
-        } catch (Exception e) {
-            Timber.w(e);
-            detailResult = EvaluationDetail.fromValue(doubleValue, EvaluationDetail.NO_VARIATION, EvaluationReason.error(EvaluationReason.ErrorKind.EXCEPTION));
         }
         WritableMap result = detailToMap(detailResult);
         if (detailResult.getValue() == null) {
@@ -460,12 +398,7 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
     }
 
     @ReactMethod
-    public void stringVariationDetail(String flagKey, String environment, Promise promise) {
-        stringVariationDetailDefaultValue(flagKey, null, environment, promise);
-    }
-
-    @ReactMethod
-    public void stringVariationDetailDefaultValue(String flagKey, String defaultValue, String environment, Promise promise) {
+    public void stringVariationDetail(String flagKey, String defaultValue, String environment, Promise promise) {
         EvaluationDetail<String> detailResult;
         try {
             detailResult = LDClient.getForMobileKey(environment).stringVariationDetail(flagKey, defaultValue);
@@ -939,6 +872,21 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
             Timber.w(e);
         }
     }
+
+    private static LDValue toLDValue(Dynamic data) {
+        if (data == null) {
+            return LDValue.ofNull();
+        }
+        switch (data.getType()) {
+            case Boolean: return LDValue.of(data.asBoolean());
+            case Number: return LDValue.of(data.asDouble());
+            case String: return LDValue.of(data.asString());
+            case Array: return toLDValue(data.asArray());
+            case Map: return toLDValue(data.asMap());
+            default: return LDValue.ofNull();
+        }
+    }
+
 
     private static LDValue toLDValue(ReadableArray readableArray) {
         if (readableArray == null) {

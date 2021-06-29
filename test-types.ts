@@ -70,27 +70,23 @@ async function tests() {
     const identify: null = await client.identify(user);
 
     const boolFlagValue: boolean = await client.boolVariation('key', false);
-    const intFlagValue: number = await client.intVariation('key', 2);
-    const floatFlagValue: number = await client.floatVariation('key', 2.3);
+    const floatFlagValue: number = await client.numberVariation('key', 2.3);
     const stringFlagValue: string = await client.stringVariation('key', 'default');
     const jsonFlagValue: Record<string, any> = await client.jsonVariation('key', jsonObj);
 
     const boolDetail: LDEvaluationDetail<boolean> = await client.boolVariationDetail('key', false);
-    const intDetail: LDEvaluationDetail<number> = await client.intVariationDetail('key', 2);
-    const floatDetail: LDEvaluationDetail<number> = await client.floatVariationDetail('key', 2.3);
+    const floatDetail: LDEvaluationDetail<number> = await client.numberVariationDetail('key', 2.3);
     const stringDetail: LDEvaluationDetail<string> = await client.stringVariationDetail('key', 'default');
     const jsonDetail: LDEvaluationDetail<Record<string, any>> = await client.jsonVariationDetail('key', jsonObj);
 
     const boolDetailMulti: LDEvaluationDetail<boolean> = await client.boolVariationDetail('key', false, 'test');
-    const intDetailMulti: LDEvaluationDetail<number> = await client.intVariationDetail('key', 2, 'test');
-    const floatDetailMulti: LDEvaluationDetail<number> = await client.floatVariationDetail('key', 2.3, 'test');
+    const floatDetailMulti: LDEvaluationDetail<number> = await client.numberVariationDetail('key', 2.3, 'test');
     const stringDetailMulti: LDEvaluationDetail<string> = await client.stringVariationDetail('key', 'default', 'test');
     const jsonDetailMulti: LDEvaluationDetail<Record<string, any>> = await client.jsonVariationDetail('key', jsonObj, 'test');
 
     const detailIndex: number | undefined = boolDetail.variationIndex;
     const detailReason: LDEvaluationReason = boolDetail.reason;
     const detailBoolValue: boolean = boolDetail.value;
-    const detailIntValue: number = intDetail.value;
     const detailFloatValue: number = floatDetail.value;
     const detailStringValue: string = stringDetail.value;
     const detailJsonValue: Record<string, any> = jsonDetail.value;
