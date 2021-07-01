@@ -50,10 +50,6 @@ export default class LDClient {
     return Promise.resolve();
   }
 
-  _validateInt(val) {
-    return !isNaN(val) && val > -0x80000001 && val < 0x80000000;
-  }
-
   _normalizeEnv(environment) {
     if (typeof environment !== 'string') {
       return 'default';

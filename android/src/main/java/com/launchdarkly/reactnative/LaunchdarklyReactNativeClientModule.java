@@ -3,6 +3,8 @@ package com.launchdarkly.reactnative;
 import android.app.Application;
 import android.net.Uri;
 
+import androidx.arch.core.util.Function;
+
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Dynamic;
 import com.facebook.react.bridge.Promise;
@@ -306,210 +308,149 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
 
     @ReactMethod
     public void boolVariation(String flagKey, boolean defaultValue, String environment, Promise promise) {
-        try {
-            promise.resolve(LDClient.getForMobileKey(environment).boolVariation(flagKey, defaultValue));
-        } catch (Exception e) {
-            promise.resolve(defaultValue);
-        }
+        variation(LDClient::boolVariation, LDValue::of, flagKey, defaultValue, environment, promise);
     }
 
     @ReactMethod
-    public void floatVariation(String flagKey, double defaultValue, String environment, Promise promise) {
-        try {
-            promise.resolve(LDClient.getForMobileKey(environment).doubleVariation(flagKey, defaultValue));
-        } catch (Exception e) {
-            promise.resolve(defaultValue);
-        }
+    public void numberVariation(String flagKey, double defaultValue, String environment, Promise promise) {
+        variation(LDClient::doubleVariation, LDValue::of, flagKey, defaultValue, environment, promise);
     }
 
     @ReactMethod
     public void stringVariation(String flagKey, String defaultValue, String environment, Promise promise) {
-        try {
-            promise.resolve(LDClient.getForMobileKey(environment).stringVariation(flagKey, defaultValue));
-        } catch (Exception e) {
-            promise.resolve(defaultValue);
-        }
+        variation(LDClient::stringVariation, LDValue::of, flagKey, defaultValue, environment, promise);
     }
 
     @ReactMethod
     public void jsonVariationNone(String flagKey, String environment, Promise promise) {
-        jsonVariationBase(flagKey, LDValue.ofNull(), environment, promise);
+        variation(LDClient::jsonValueVariation, id -> id, flagKey, LDValue.ofNull(), environment, promise);
     }
 
     @ReactMethod
     public void jsonVariationNumber(String flagKey, double defaultValue, String environment, Promise promise) {
-        jsonVariationBase(flagKey, LDValue.of(defaultValue), environment, promise);
+        variation(LDClient::jsonValueVariation, id -> id, flagKey, LDValue.of(defaultValue), environment, promise);
     }
 
     @ReactMethod
     public void jsonVariationBool(String flagKey, boolean defaultValue, String environment, Promise promise) {
-        jsonVariationBase(flagKey, LDValue.of(defaultValue), environment, promise);
+        variation(LDClient::jsonValueVariation, id -> id, flagKey, LDValue.of(defaultValue), environment, promise);
     }
 
     @ReactMethod
     public void jsonVariationString(String flagKey, String defaultValue, String environment, Promise promise) {
-        jsonVariationBase(flagKey, LDValue.of(defaultValue), environment, promise);
+        variation(LDClient::jsonValueVariation, id -> id, flagKey, LDValue.of(defaultValue), environment, promise);
     }
 
     @ReactMethod
     public void jsonVariationArray(String flagKey, ReadableArray defaultValue, String environment, Promise promise) {
-        jsonVariationBase(flagKey, toLDValue(defaultValue), environment, promise);
+        variation(LDClient::jsonValueVariation, id -> id, flagKey, toLDValue(defaultValue), environment, promise);
     }
 
     @ReactMethod
     public void jsonVariationObject(String flagKey, ReadableMap defaultValue, String environment, Promise promise) {
-        jsonVariationBase(flagKey, toLDValue(defaultValue), environment, promise);
+        variation(LDClient::jsonValueVariation, id -> id, flagKey, toLDValue(defaultValue), environment, promise);
+    }
+
+    interface EvalCall<T> {
+        T call(LDClient client, String flagKey, T defaultValue);
+    }
+
+    private <T> void variation(EvalCall<T> eval, Function<T, LDValue> transform,
+                               String flagKey, T defaultValue, String environment, Promise promise) {
+        try {
+            promise.resolve(ldValueToBridge(transform.apply(eval.call(LDClient.getForMobileKey(environment), flagKey, defaultValue))));
+        } catch (Exception e) {
+            promise.resolve(ldValueToBridge(transform.apply(defaultValue)));
+        }
     }
 
     @ReactMethod
     public void boolVariationDetail(String flagKey, boolean defaultValue, String environment, Promise promise) {
-        EvaluationDetail<Boolean> detailResult;
-        try {
-            detailResult = LDClient.getForMobileKey(environment).boolVariationDetail(flagKey, defaultValue);
-        } catch (Exception e) {
-            Timber.w(e);
-            detailResult = EvaluationDetail.fromValue(defaultValue, EvaluationDetail.NO_VARIATION, EvaluationReason.error(EvaluationReason.ErrorKind.EXCEPTION));
-        }
-        WritableMap result = detailToMap(detailResult);
-        if (detailResult.getValue() == null) {
-            result.putNull("value");
-        } else {
-            result.putBoolean("value", detailResult.getValue());
-        }
-        promise.resolve(result);
+        detailVariation(LDClient::boolVariationDetail, LDValue::of, flagKey, defaultValue, environment, promise);
     }
 
     @ReactMethod
     public void numberVariationDetail(String flagKey, double defaultValue, String environment, Promise promise) {
-        EvaluationDetail<Double> detailResult;
-        try {
-            detailResult = LDClient.getForMobileKey(environment).doubleVariationDetail(flagKey, defaultValue);
-        } catch (Exception e) {
-            Timber.w(e);
-            detailResult = EvaluationDetail.fromValue(defaultValue, EvaluationDetail.NO_VARIATION, EvaluationReason.error(EvaluationReason.ErrorKind.EXCEPTION));
-        }
-        WritableMap result = detailToMap(detailResult);
-        if (detailResult.getValue() == null) {
-            result.putNull("value");
-        } else {
-            result.putDouble("value", detailResult.getValue());
-        }
-        promise.resolve(result);
+        detailVariation(LDClient::doubleVariationDetail, LDValue::of, flagKey, defaultValue, environment, promise);
     }
 
     @ReactMethod
     public void stringVariationDetail(String flagKey, String defaultValue, String environment, Promise promise) {
-        EvaluationDetail<String> detailResult;
-        try {
-            detailResult = LDClient.getForMobileKey(environment).stringVariationDetail(flagKey, defaultValue);
-        } catch (Exception e) {
-            Timber.w(e);
-            detailResult = EvaluationDetail.fromValue(defaultValue, EvaluationDetail.NO_VARIATION, EvaluationReason.error(EvaluationReason.ErrorKind.EXCEPTION));
-        }
-        WritableMap result = detailToMap(detailResult);
-        if (detailResult.getValue() == null) {
-            result.putNull("value");
-        } else {
-            result.putString("value", detailResult.getValue());
-        }
-        promise.resolve(result);
+        detailVariation(LDClient::stringVariationDetail, LDValue::of, flagKey, defaultValue, environment, promise);
     }
 
     @ReactMethod
     public void jsonVariationDetailNone(String flagKey, String environment, Promise promise) {
-        jsonVariationDetailBase(flagKey, LDValue.ofNull(), environment, promise);
+        detailVariation(LDClient::jsonValueVariationDetail, id -> id, flagKey, LDValue.ofNull(), environment, promise);
     }
 
     @ReactMethod
     public void jsonVariationDetailNumber(String flagKey, double defaultValue, String environment, Promise promise) {
-        jsonVariationDetailBase(flagKey, LDValue.of(defaultValue), environment, promise);
+        detailVariation(LDClient::jsonValueVariationDetail, id -> id, flagKey, LDValue.of(defaultValue), environment, promise);
     }
 
     @ReactMethod
     public void jsonVariationDetailBool(String flagKey, boolean defaultValue, String environment, Promise promise) {
-        jsonVariationDetailBase(flagKey, LDValue.of(defaultValue), environment, promise);
+        detailVariation(LDClient::jsonValueVariationDetail, id -> id, flagKey, LDValue.of(defaultValue), environment, promise);
     }
 
     @ReactMethod
     public void jsonVariationDetailString(String flagKey, String defaultValue, String environment, Promise promise) {
-        jsonVariationDetailBase(flagKey, LDValue.of(defaultValue), environment, promise);
+        detailVariation(LDClient::jsonValueVariationDetail, id -> id, flagKey, LDValue.of(defaultValue), environment, promise);
     }
 
     @ReactMethod
     public void jsonVariationDetailArray(String flagKey, ReadableArray defaultValue, String environment, Promise promise) {
-        jsonVariationDetailBase(flagKey, toLDValue(defaultValue), environment, promise);
+        detailVariation(LDClient::jsonValueVariationDetail, id -> id, flagKey, toLDValue(defaultValue), environment, promise);
     }
 
     @ReactMethod
     public void jsonVariationDetailObject(String flagKey, ReadableMap defaultValue, String environment, Promise promise) {
-        jsonVariationDetailBase(flagKey, toLDValue(defaultValue), environment, promise);
+        detailVariation(LDClient::jsonValueVariationDetail, id -> id, flagKey, toLDValue(defaultValue), environment, promise);
     }
 
-    private void jsonVariationBase(String flagKey, LDValue defaultValue, String environment, Promise promise) {
+    interface EvalDetailCall<T> {
+        EvaluationDetail<T> call(LDClient client, String flagKey, T defaultValue);
+    }
+
+    private <T> void detailVariation(EvalDetailCall<T> eval, Function<T, LDValue> transform,
+                                     String flagKey, T defaultValue, String environment, Promise promise) {
         try {
-            LDValue value = LDClient.getForMobileKey(environment).jsonValueVariation(flagKey, defaultValue);
-            resolveValue(promise, value);
+            LDClient client = LDClient.getForMobileKey(environment);
+            EvaluationDetail<T> detail = eval.call(client, flagKey, defaultValue);
+            ObjectBuilder resultBuilder = objectBuilderFromDetail(detail);
+            resultBuilder.put("value", transform.apply(detail.getValue()));
+            promise.resolve(ldValueToBridge(resultBuilder.build()));
         } catch (Exception e) {
-            resolveValue(promise, defaultValue);
+            ObjectBuilder resultBuilder = LDValue.buildObject();
+            resultBuilder.put("kind", EvaluationReason.Kind.ERROR.name());
+            resultBuilder.put("errorKind", EvaluationReason.ErrorKind.EXCEPTION.name());
+            resultBuilder.put("value", transform.apply(defaultValue));
+            promise.resolve(ldValueToBridge(resultBuilder.build()));
         }
     }
 
-    private void jsonVariationDetailBase(String flagKey, LDValue defaultValue, String environment, Promise promise) {
-        EvaluationDetail<LDValue> detailResult;
-        try {
-            detailResult = LDClient.getForMobileKey(environment).jsonValueVariationDetail(flagKey, defaultValue);
-        } catch (Exception e) {
-            Timber.w(e);
-            detailResult = EvaluationDetail.fromValue(defaultValue, EvaluationDetail.NO_VARIATION, EvaluationReason.error(EvaluationReason.ErrorKind.EXCEPTION));
-        }
-        resolveEvaluationDetailValue(promise, detailResult);
-    }
-
-    private void resolveValue(Promise promise, LDValue value) {
-        switch (value.getType()) {
-            case NULL: promise.resolve(null); break;
-            case BOOLEAN: promise.resolve(value.booleanValue()); break;
-            case NUMBER: promise.resolve(value.doubleValue()); break;
-            case STRING: promise.resolve(value.stringValue()); break;
-            case ARRAY: promise.resolve(ldValueToArray(value)); break;
-            case OBJECT: promise.resolve(ldValueToMap(value)); break;
-        }
-    }
-
-    private void resolveEvaluationDetailValue(Promise promise, EvaluationDetail<LDValue> detailValue) {
-        WritableMap result = detailToMap(detailValue);
-        switch (detailValue.getValue().getType()) {
-            case NULL: result.putNull("value"); break;
-            case BOOLEAN: result.putBoolean("value", detailValue.getValue().booleanValue()); break;
-            case NUMBER: result.putDouble("value", detailValue.getValue().doubleValue()); break;
-            case STRING: result.putString("value", detailValue.getValue().stringValue()); break;
-            case ARRAY: result.putArray("value", ldValueToArray(detailValue.getValue())); break;
-            case OBJECT: result.putMap("value", ldValueToMap(detailValue.getValue())); break;
-        }
-        promise.resolve(result);
-    }
-
-    private WritableMap detailToMap(EvaluationDetail<?> detail) {
-        EvaluationReason reason = detail.getReason();
-        WritableMap result = new WritableNativeMap();
+    private ObjectBuilder objectBuilderFromDetail(EvaluationDetail<?> detail) {
+        ObjectBuilder resultMap = LDValue.buildObject();
         if (!detail.isDefaultValue()) {
-            result.putInt("variationIndex", detail.getVariationIndex());
+            resultMap.put("variationIndex", detail.getVariationIndex());
         }
-        WritableMap reasonMap = new WritableNativeMap();
-        reasonMap.putString("kind", detail.getReason().getKind().name());
+        EvaluationReason reason = detail.getReason();
+        ObjectBuilder reasonMap = LDValue.buildObject();
+        reasonMap.put("kind", reason.getKind().name());
         switch (reason.getKind()) {
             case RULE_MATCH:
-                reasonMap.putInt("ruleIndex", reason.getRuleIndex());
+                reasonMap.put("ruleIndex", reason.getRuleIndex());
                 if (reason.getRuleId() != null) {
-                    reasonMap.putString("ruleId", reason.getRuleId());
+                    reasonMap.put("ruleId", reason.getRuleId());
                 }
                 break;
-            case PREREQUISITE_FAILED: reasonMap.putString("prerequisiteKey", reason.getPrerequisiteKey()); break;
-            case ERROR: reasonMap.putString("errorKind", reason.getErrorKind().name()); break;
+            case PREREQUISITE_FAILED: reasonMap.put("prerequisiteKey", reason.getPrerequisiteKey()); break;
+            case ERROR: reasonMap.put("errorKind", reason.getErrorKind().name()); break;
             default: break;
         }
-        result.putMap("reason", reasonMap);
-        return result;
+        resultMap.put("reason", reasonMap.build());
+        return resultMap;
     }
 
     @ReactMethod
@@ -522,20 +463,11 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
         }
         
         try {
-            Map<String, LDValue> flags = LDClient.getForMobileKey(environment).allFlags();
-
-            WritableMap response = new WritableNativeMap();
-            for (Map.Entry<String, LDValue> entry : flags.entrySet()) {
-                switch (entry.getValue().getType()) {
-                    case NULL: response.putNull(entry.getKey()); break;
-                    case BOOLEAN: response.putBoolean(entry.getKey(), entry.getValue().booleanValue()); break;
-                    case NUMBER: response.putDouble(entry.getKey(), entry.getValue().doubleValue()); break;
-                    case STRING: response.putString(entry.getKey(), entry.getValue().stringValue()); break;
-                    case ARRAY: response.putArray(entry.getKey(), ldValueToArray(entry.getValue())); break;
-                    case OBJECT: response.putMap(entry.getKey(), ldValueToMap(entry.getValue())); break;
-                }
+            ObjectBuilder resultBuilder = LDValue.buildObject();
+            for (Map.Entry<String, LDValue> entry : LDClient.getForMobileKey(environment).allFlags().entrySet()) {
+                resultBuilder.put(entry.getKey(), entry.getValue());
             }
-            promise.resolve(response);
+            promise.resolve(ldValueToBridge(resultBuilder.build()));
         } catch (LaunchDarklyException e) {
             // Since we confirmed the SDK has been configured, this exception should only be thrown if the env doesn't exist
             promise.reject(ERROR_UNKNOWN, "SDK not configured with requested environment");
@@ -887,43 +819,33 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
         }
     }
 
-
     private static LDValue toLDValue(ReadableArray readableArray) {
-        if (readableArray == null) {
-            return LDValue.ofNull();
-        }
         ArrayBuilder array = LDValue.buildArray();
         for (int i = 0; i < readableArray.size(); i++) {
-            switch (readableArray.getType(i)) {
-                case Null: array.add(LDValue.ofNull()); break;
-                case Boolean: array.add(readableArray.getBoolean(i)); break;
-                case Number: array.add(readableArray.getDouble(i)); break;
-                case String: array.add(readableArray.getString(i)); break;
-                case Array: array.add(toLDValue(readableArray.getArray(i))); break;
-                case Map: array.add(toLDValue(readableArray.getMap(i))); break;
-            }
+            array.add(toLDValue(readableArray.getDynamic(i)));
         }
         return array.build();
     }
 
     private static LDValue toLDValue(ReadableMap readableMap) {
-        if (readableMap == null) {
-            return LDValue.ofNull();
-        }
         ObjectBuilder object = LDValue.buildObject();
         ReadableMapKeySetIterator iter = readableMap.keySetIterator();
         while (iter.hasNextKey()) {
             String key = iter.nextKey();
-            switch (readableMap.getType(key)) {
-                case Null: object.put(key, LDValue.ofNull()); break;
-                case Boolean: object.put(key, readableMap.getBoolean(key)); break;
-                case Number: object.put(key, readableMap.getDouble(key)); break;
-                case String: object.put(key, readableMap.getString(key)); break;
-                case Array: object.put(key, toLDValue(readableMap.getArray(key))); break;
-                case Map: object.put(key, toLDValue(readableMap.getMap(key))); break;
-            }
+            object.put(key, toLDValue(readableMap.getDynamic(key)));
         }
         return object.build();
+    }
+
+    private static Object ldValueToBridge(LDValue value) {
+        switch (value.getType()) {
+            case BOOLEAN: return value.booleanValue();
+            case NUMBER: return value.doubleValue();
+            case STRING: return value.stringValue();
+            case ARRAY: return ldValueToArray(value);
+            case OBJECT: return ldValueToMap(value);
+            default: return null;
+        }
     }
 
     private static WritableArray ldValueToArray(LDValue value) {
