@@ -1,4 +1,3 @@
-
 import Foundation
 import LaunchDarkly
 
@@ -54,155 +53,65 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
             }
         }
     }
+
+    private func id<T>(_ x: T) -> T { x }
+    private func millis(_ x: NSNumber) -> TimeInterval { TimeInterval(x.doubleValue / 1_000) }
+    private func url(_ x: String) -> URL { URL.init(string: x)! }
+    private func configField<T,V>(_ field: inout T, _ value: Any?, _ transform: ((V) -> T?)) {
+        if let val = value as? V, let res = transform(val) {
+            field = res
+        }
+    }
     
     private func configBuild(config: NSDictionary) -> LDConfig? {
-        let mobileKey = config["mobileKey"]
-        
-        if mobileKey == nil || !(mobileKey is String) {
-            return nil
-        }
-        
-        let safeKey = mobileKey as! String
-        var ldConfig = LDConfig(mobileKey: safeKey)
-        
-        if config["pollUri"] != nil  {
-            ldConfig.baseUrl = URL.init(string: config["pollUri"] as! String)!
-        }
-        
-        if config["eventsUri"] != nil  {
-            ldConfig.eventsUrl = URL.init(string: config["eventsUri"] as! String)!
-        }
-        
-        if config["streamUri"] != nil  {
-            ldConfig.streamUrl = URL.init(string: config["streamUri"] as! String)!
-        }
-        
-        if config["eventsCapacity"] != nil  {
-            ldConfig.eventCapacity = config["eventsCapacity"] as! Int
-        }
-        
-        if config["eventsFlushIntervalMillis"] != nil  {
-            ldConfig.eventFlushInterval = TimeInterval(config["eventsFlushIntervalMillis"] as! Float / 1000)
-        }
-        
-        if config["connectionTimeoutMillis"] != nil  {
-            ldConfig.connectionTimeout = TimeInterval(config["connectionTimeoutMillis"] as! Float / 1000)
-        }
-        
-        if config["pollingIntervalMillis"] != nil  {
-            ldConfig.flagPollingInterval = TimeInterval(config["pollingIntervalMillis"] as! Float / 1000)
-        }
-        
-        if config["backgroundPollingIntervalMillis"] != nil  {
-            ldConfig.backgroundFlagPollingInterval = TimeInterval(config["backgroundPollingIntervalMillis"] as! Float / 1000)
-        }
-        
-        if config["useReport"] != nil  {
-            ldConfig.useReport = config["useReport"] as! Bool
-        }
-        
-        if config["stream"] != nil  {
-            ldConfig.streamingMode = (config["stream"] as! Bool) ? LDStreamingMode.streaming : LDStreamingMode.polling
-        }
-        
-        if config["disableBackgroundUpdating"] != nil  {
-            ldConfig.enableBackgroundUpdates = !(config["disableBackgroundUpdating"] as! Bool)
-        }
-        
-        if config["offline"] != nil  {
-            ldConfig.startOnline = !(config["offline"] as! Bool)
-        }
-        
-        if config["debugMode"] != nil {
-            ldConfig.isDebugMode = config["debugMode"] as! Bool
+        guard let mobileKey = config["mobileKey"] as? String
+        else { return nil }
+
+        var ldConfig = LDConfig(mobileKey: mobileKey)
+        configField(&ldConfig.baseUrl, config["pollUri"], url)
+        configField(&ldConfig.eventsUrl, config["eventsUri"], url)
+        configField(&ldConfig.streamUrl, config["streamUri"], url)
+        configField(&ldConfig.eventCapacity, config["eventsCapacity"], { (x: NSNumber) in x.intValue })
+        configField(&ldConfig.eventFlushInterval, config["eventsFlushIntervalMillis"], millis)
+        configField(&ldConfig.connectionTimeout, config["connectionTimeoutMillis"], millis)
+        configField(&ldConfig.flagPollingInterval, config["pollingIntervalMillis"], millis)
+        configField(&ldConfig.backgroundFlagPollingInterval, config["backgroundPollingIntervalMillis"], millis)
+        configField(&ldConfig.useReport, config["useReport"], id)
+        configField(&ldConfig.streamingMode, config["stream"], { $0 ? .streaming : .polling })
+        configField(&ldConfig.enableBackgroundUpdates, config["disableBackgroundUpdating"], { !$0 })
+        configField(&ldConfig.startOnline, config["offline"], { !$0 })
+        configField(&ldConfig.isDebugMode, config["debugMode"], id)
+        configField(&ldConfig.evaluationReasons, config["evaluationReasons"], id)
+        configField(&ldConfig.wrapperName, config["wrapperName"], id)
+        configField(&ldConfig.wrapperVersion, config["wrapperVersion"], id)
+        configField(&ldConfig.maxCachedUsers, config["maxCachedUsers"], { (x: NSNumber) in x.intValue })
+        configField(&ldConfig.diagnosticOptOut, config["diagnosticOptOut"], id)
+        configField(&ldConfig.diagnosticRecordingInterval, config["diagnosticRecordingIntervalMillis"], millis)
+        configField(&ldConfig.allUserAttributesPrivate, config["allUserAttributesPrivate"], id)
+        configField(&ldConfig.autoAliasingOptOut, config["autoAliasingOptOut"], id)
+
+        if let val = config["secondaryMobileKeys"] as? [String: String] {
+            try! ldConfig.setSecondaryMobileKeys(val)
         }
 
-        if config["evaluationReasons"] != nil {
-            ldConfig.evaluationReasons = config["evaluationReasons"] as! Bool
-        }
-
-        ldConfig.wrapperName = config["wrapperName"] as? String
-        ldConfig.wrapperVersion = config["wrapperVersion"] as? String
-
-        if config["maxCachedUsers"] != nil {
-            ldConfig.maxCachedUsers = config["maxCachedUsers"] as! Int
-        }
-
-        if config["diagnosticOptOut"] != nil {
-            ldConfig.diagnosticOptOut = config["diagnosticOptOut"] as! Bool
-        }
-
-        if config["diagnosticRecordingIntervalMillis"] != nil {
-            ldConfig.diagnosticRecordingInterval = TimeInterval(config["diagnosticRecordingIntervalMillis"] as! Float / 1000)
-        }
-
-        if config["secondaryMobileKeys"] != nil {
-            try! ldConfig.setSecondaryMobileKeys(config["secondaryMobileKeys"] as! [String: String])
-        }
-
-        if config["allUserAttributesPrivate"] != nil {
-            ldConfig.allUserAttributesPrivate = config["allUserAttributesPrivate"] as! Bool
-        }
-
-        if config["autoAliasingOptOut"] != nil {
-            ldConfig.autoAliasingOptOut = config["autoAliasingOptOut"] as! Bool
-        }
-        
         return ldConfig
     }
     
     private func userBuild(userDict: NSDictionary) -> LDUser? {
         guard let userKey = userDict["key"] as? String
-        else {
-            return nil
-        }
+        else { return nil }
 
-        var user = LDUser(key: userKey)
-
-        if userDict["secondary"] != nil {
-            user.secondary = userDict["secondary"] as? String
-        }
-        
-        if userDict["name"] != nil {
-            user.name = userDict["name"] as? String
-        }
-        
-        if userDict["firstName"] != nil {
-            user.firstName = userDict["firstName"] as? String
-        }
-        
-        if userDict["lastName"] != nil {
-            user.lastName = userDict["lastName"] as? String
-        }
-        
-        if userDict["email"] != nil {
-            user.email = userDict["email"] as? String
-        }
-        
-        if userDict["anonymous"] != nil {
-            user.isAnonymous = userDict["anonymous"] as! Bool
-        }
-        
-        if userDict["country"] != nil {
-            user.country = userDict["country"] as? String
-        }
-
-        if userDict["ip"] != nil {
-            user.ipAddress = userDict["ip"] as? String
-        }
-
-        if userDict["avatar"] != nil {
-            user.avatar = userDict["avatar"] as? String
-        }
-        
-        if userDict["privateAttributeNames"] != nil  {
-            user.privateAttributes = userDict["privateAttributeNames"] as? [String]
-        }
-        
-        if let customAttributes = userDict["custom"] as! [String: Any]? {
-            user.custom = customAttributes
-        }
-        
+        var user = LDUser(key: userKey, isAnonymous: userDict["anonymous"] as? Bool)
+        user.secondary = userDict["secondary"] as? String
+        user.name = userDict["name"] as? String
+        user.firstName = userDict["firstName"] as? String
+        user.lastName = userDict["lastName"] as? String
+        user.email = userDict["email"] as? String
+        user.country = userDict["country"] as? String
+        user.ipAddress = userDict["ip"] as? String
+        user.avatar = userDict["avatar"] as? String
+        user.privateAttributes = userDict["privateAttributeNames"] as? [String]
+        user.custom = userDict["custom"] as? [String: Any]
         return user
     }
     
