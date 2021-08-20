@@ -2,6 +2,59 @@
 
 All notable changes to the LaunchDarkly React Native SDK will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [5.0.0] - 2021-08-20
+### Added:
+- The SDK now supports the ability to control the proportion of traffic allocation to an experiment. This works in conjunction with a new platform feature now available to early access customers.
+- Added `numberVariation` and `numberVariationDetail` to LDClient.
+- Added the `alias` method to LDClient. This can be used to associate two user objects for analytics purposes with an alias event.
+- Added the `autoAliasingOptOut` configuration option. This can be used to control the new automatic aliasing behavior of the `identify` method; by setting `autoAliasingOptOut` to true, `identify` will not automatically generate alias events.
+- Improved testing of JavaScript wrapper using mock native modules.
+
+### Changed (requirements/dependencies/build):
+- iOS: The underlying SDK version has been updated from 5.4.1 to 5.4.3. See the [release notes](https://github.com/launchdarkly/ios-client-sdk/releases) for details.
+- Android: The underlying SDK version has been updated from 2.14.1 to 3.1.0. See the [release notes](https://github.com/launchdarkly/android-client-sdk/releases) for details.
+- Android: Migrated from using the Android Support Libraries to using AndroidX from Jetpack.
+- Android: The minimum API version has been raised from API level 16 (Android 4.1 Jelly Bean) to API level 21 (Android 5.0 Lollipop).
+- Android: The SDK no longer has a dependency on Google Play Services. This dependency was only used on pre-21 Android API levels to improve TLS 1.2 compatibility, as the minimum Android version has been raised to 21, the dependency is no longer necessary.
+- Android: The SDK is now built with modern Gradle (6.7, Android plugin 4.1.3) and uses Java 8.
+
+### Changed (API/behavioral):
+- The `LDClient.identify` method will now automatically generate an alias event when switching from an anonymous to a known user. This event associates the two users for analytics purposes as they most likely represent a single person. This behavior can be disabled with the `autoAliasingOptOut` configuration option.
+- The `LDClient` `&lt;type&gt;Variation` and `&lt;type&gt;VariationDetail` methods (e.g. `boolVariation`) now validate that default values are the correct type. If the default value fails validation the `Promise` will be rejected.
+- The primitive variation methods, `LDClient.boolVariation`, `LDClient.boolVariationDetail`, `LDClient.numberVariation`, and `LDClient.numberVariationDetail`, now require a default value parameter (rather than being optional). If missing, the `Promise` will be rejected.
+- Android: `LDClient.allFlags` will no longer convert `String` flags into JSON `Array`s or `Object`s when the value can be parsed into JSON `Array`s or `Object`s. 
+- Android: For compatibility with older SDK behavior, the `LDClient.stringVariation` method could be used to retrieve JSON flags in a serialized representation. This compatibility behavior has been removed, and attempts to request a JSON valued flag using stringVariation will behave the same as other mismatched type variation calls.
+- Android: All log messages are now tagged `LaunchDarklySdk` for easier filtering. Thanks to @valeriyo for the suggestion ([#113](https://github.com/launchdarkly/android-client-sdk/issues/113)).
+- Android: The when the `country` user is set, the SDK will no longer attempt to look up the country from the provided `String` (attempting to match it as an ISO-3166-1 alpha-2, alpha-3 code; or a country name) and set the country to the resultant IOS-3166-1 alpha-2 only if successful. The SDK no longer gives this attribute special behavior, and sets the user&#39;s country attribute directly as the provided `String`.
+- Android: If the `debugMode` configuration option is set to `true`, the SDK will now enable detailed timber logging.
+- Android: Custom user attributes that are `Object`s will no longer be ignored.
+- Android: Elements of `Array` custom user attributes will no longer be ignored if they are not `String`s or `Number`s.
+- Android: `Array` custom user attributes with mixed types will no longer ignore non-`String` elements.
+
+### Fixed (Android):
+- Catch `SecurityException` when thrown on call to `getNetworkCapabilities` used to detect current network availability. ([#129](https://github.com/launchdarkly/android-client-sdk/issues/129))
+- Explicitly flag `PendingIntent`s as `FLAG_IMMUTABLE` on Android SDK versions that support doing so. Explicitly specifying mutability is required when targeting Android S&#43;. ([#133](https://github.com/launchdarkly/android-client-sdk/issues/133))
+- Increased the compile-time dependency on `jackson-databind` to 2.10.5.1, due to [CVE-2020-25649](https://nvd.nist.gov/vuln/detail/CVE-2020-25649).
+- Update the dependency on the shared [launchdarkly/java-sdk-common](https://github.com/launchdarkly/java-sdk-common) to 1.1.2 to prevent Jackson from showing up as a transitive dependency in tools that inspect module metadata.
+- The Android manifest has been updated to explicitly specify the `android:exported` attribute on declared `receiver` elements. This is to meet [new requirements](https://developer.android.com/about/versions/12/behavior-changes-12#exported) in the upcoming Android 12 release.
+- Fixed an issue where the SDK could log error level messages when attempting to send diagnostic events without an internet connection. The SDK will no longer attempt to send diagnostic events when an internet connection is known to be unavailable, and will not log an error level message if the connection fails. Thanks to @valeriyo for reporting ([#107](https://github.com/launchdarkly/android-client-sdk/issues/107)).
+- Fixed an issue where flags listeners would be informed of changes to unchanged flags whenever the SDK receives an entire flag set (on a new stream connection, a poll request, or any stream updates behind a relay proxy).
+- Fixed an issue where a `NullPointerException` is thrown if `LDClient.close()` is called multiple times.
+- Improved the proguard/R8 configuration to allow more optimization. Thanks to @valeriyo for requesting ([#106](https://github.com/launchdarkly/android-client-sdk/issues/106))
+- Fixed a potential issue where the SDK could cause additional throttling on requests to the backend service when previously throttled requests had been cancelled before completion.
+
+### Fixed (iOS):
+- Fixed an issue where `304 NOT_MODIFIED` responses to SDK polling mode requests would be considered error responses. This could cause the completion on a `identify` request to not complete, and gave erroneous connection information data and logging output. 
+- Fixed a crash when attempting to cache flag data containing variation JSON values containing a JSON `null` value nested within a JSON array.
+- Avoid crash when timeout/interval configuration options are set to sufficiently large values. This was caused when converting these values to an `Int` value of milliseconds. (Thanks, [@delannoyk](https://github.com/launchdarkly/ios-client-sdk/pull/246)!) 
+- Update `Quick` test dependency to 3.1.2 to avoid build warnings and adopt security fixes. ([#243](https://github.com/launchdarkly/ios-client-sdk/issues/243))
+- Use `AnyObject` over `class` in protocol inheritance to avoid compiler warnings. ([#247](https://github.com/launchdarkly/ios-client-sdk/issues/247))
+
+### Removed:
+- `LDClient.intVariation` and `LDClient.floatVariation`. Please use `LDClient.numberVariation` instead.
+- `LDClient.intVariationDetail` and `LDClient.floatVariationDetail`. Please use `LDClient.numberVariationDetail` instead.
+
+
 ## [4.2.2] - 2021-06-15
 ### Fixed:
 - Correct usages of undeclared variables when registering or un-registering connection mode or all flags listeners. ([#82](https://github.com/launchdarkly/react-native-client-sdk/issues/82))
