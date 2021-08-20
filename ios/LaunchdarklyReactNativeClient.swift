@@ -120,7 +120,7 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
     }
     
     @objc func numberVariation(_ flagKey: String, defaultValue: Double, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-        resolve(LDClient.get(environment: environment)!.variation(forKey: flagKey, defaultValue: Double(defaultValue)) as Double)
+        resolve(LDClient.get(environment: environment)!.variation(forKey: flagKey, defaultValue: defaultValue) as Double)
     }
     
     @objc func stringVariation(_ flagKey: String, defaultValue: String, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {

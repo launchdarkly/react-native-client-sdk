@@ -9,7 +9,7 @@ RCT_EXTERN_METHOD(configureWithTimeout:(NSDictionary *)config user:(NSDictionary
 
 RCT_EXTERN_METHOD(boolVariation:(NSString *)flagKey defaultValue:(BOOL *)defaultValue environment:(NSString *)environment resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 
-RCT_EXTERN_METHOD(numberVariation:(NSString *)flagKey defaultValue:(Double *)defaultValue environment:(NSString *)environment resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(numberVariation:(NSString *)flagKey defaultValue:(NSNumber *)defaultValue environment:(NSString *)environment resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 
 RCT_EXTERN_METHOD(stringVariation:(NSString *)flagKey defaultValue:(NSString *)defaultValue environment:(NSString *)environment resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 
@@ -27,7 +27,7 @@ RCT_EXTERN_METHOD(jsonVariationObject:(NSString *)flagKey defaultValue:(NSDictio
 
 RCT_EXTERN_METHOD(boolVariationDetail:(NSString *)flagKey defaultValue:(BOOL *)defaultValue environment:(NSString *)environment resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 
-RCT_EXTERN_METHOD(numberVariationDetail:(NSString *)flagKey defaultValue:(Double *)defaultValue environment:(NSString *)environment resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(numberVariationDetail:(NSString *)flagKey defaultValue:(NSNumber *)defaultValue environment:(NSString *)environment resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 
 RCT_EXTERN_METHOD(stringVariationDetail:(NSString *)flagKey defaultValue:(NSString *)defaultValue environment:(NSString *)environment resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 
