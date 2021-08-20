@@ -454,7 +454,7 @@ declare module 'launchdarkly-react-native-client-sdk' {
         boolVariation(flagKey: string, defaultValue: boolean, environment?: string): Promise<boolean>;
 
         /**
-         * Determines the variation of an integer feature flag for the current user.
+         * Determines the variation of a numeric feature flag for the current user.
          *
          * @param flagKey
          *   The unique key of the feature flag.
@@ -465,21 +465,7 @@ declare module 'launchdarkly-react-native-client-sdk' {
          * @returns
          *   A promise containing the flag's value.
          */
-        intVariation(flagKey: string, defaultValue: number, environment?: string): Promise<number>;
-
-        /**
-         * Determines the variation of a floating-point feature flag for the current user.
-         *
-         * @param flagKey
-         *   The unique key of the feature flag.
-         * @param defaultValue
-         *   The default value of the flag, to be used if the value is not available from LaunchDarkly.
-         * @param environment
-         *   Optional environment name to obtain the result from the corresponding secondary environment
-         * @returns
-         *   A promise containing the flag's value.
-         */
-        floatVariation(flagKey: string, defaultValue: number, environment?: string): Promise<number>;
+        numberVariation(flagKey: string, defaultValue: number, environment?: string): Promise<number>;
 
         /**
          * Determines the variation of a string feature flag for the current user.
@@ -538,7 +524,7 @@ declare module 'launchdarkly-react-native-client-sdk' {
         ): Promise<LDEvaluationDetail<boolean>>;
 
         /**
-         * Determines the variation of an integer feature flag for a user, along with information about how it was
+         * Determines the variation of a numeric feature flag for a user, along with information about how it was
          * calculated.
          *
          * Note that this will only work if you have set `evaluationReasons` to true in [[LDConfig]].
@@ -555,31 +541,7 @@ declare module 'launchdarkly-react-native-client-sdk' {
          * @returns
          *   A promise containing an [[LDEvaluationDetail]] object containing the value and explanation.
          */
-        intVariationDetail(
-            flagKey: string,
-            defaultValue: number,
-            environment?: string
-        ): Promise<LDEvaluationDetail<number>>;
-
-        /**
-         * Determines the variation of a floating-point feature flag for a user, along with information about how it was
-         * calculated.
-         *
-         * Note that this will only work if you have set `evaluationReasons` to true in [[LDConfig]].
-         * Otherwise, the `reason` property of the result will be null.
-         *
-         * For more information, see the [SDK reference guide](https://docs.launchdarkly.com/sdk/concepts/evaluation-reasons).
-         *
-         * @param flagKey
-         *   The unique key of the feature flag.
-         * @param defaultValue
-         *   The default value of the flag, to be used if the value is not available from LaunchDarkly.
-         * @param environment
-         *   Optional environment name to obtain the result from the corresponding secondary environment
-         * @returns
-         *   A promise containing an [[LDEvaluationDetail]] object containing the value and explanation.
-         */
-        floatVariationDetail(
+        numberVariationDetail(
             flagKey: string,
             defaultValue: number,
             environment?: string
@@ -640,7 +602,6 @@ declare module 'launchdarkly-react-native-client-sdk' {
          *   Optional environment name to obtain the result from the corresponding secondary environment
          * @returns
          *   A promise containing an object in which each key is a feature flag key and each value is the flag value.
-         *   The promise will be rejected if the SDK has not yet completed initialization.
          *   Note that there is no way to specify a default value for each flag as there is with the
          *   `*Variation` methods, so any flag that cannot be evaluated will have a null value.
          */
@@ -733,6 +694,23 @@ declare module 'launchdarkly-react-native-client-sdk' {
          *   A promise indicating when this operation is complete (meaning that flags are ready for evaluation).
          */
         identify(user: LDUser): Promise<null>;
+
+        /**
+         * Alias associates two users for analytics purposes by generating an alias event.
+         *
+         * This can be helpful in the situation where a person is represented by multiple
+         * LaunchDarkly users. This may happen, for example, when a person initially logs into
+         * an application-- the person might be represented by an anonymous user prior to logging
+         * in and a different user after logging in, as denoted by a different user key.
+         *
+         * @param user
+         *   The new user context
+         * @param previousUser
+         *   The original user context
+         * @param environment
+         *   Optional string to execute the function in a different environment than the default.
+         */
+        alias(user: LDUser, previousUser: LDUser, environment?: string): void;
         
         /**
          * Registers a callback to be called when the flag with key `flagKey` changes from its current value. 

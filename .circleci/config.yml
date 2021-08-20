@@ -50,17 +50,30 @@ jobs:
 
   common:
     docker:
-      - image: circleci/node:11.10.1
+      - image: cimg/node:current
     steps:
       - checkout
 
       - run: npm install
+      - run: mkdir -p reports/jest
+      - run:
+          command: npm run test:junit
+          environment:
+            JEST_JUNIT_OUTPUT_DIR: "./reports/jest"
+
       - run: npm run check-typescript
+
+      - store_test_results:
+          path: reports
 
 workflows:
   version: 2
   android-ios:
     jobs:
-      - android
-      - ios
       - common
+      - android:
+          requires:
+            - common
+      - ios:
+          requires:
+            - common
