@@ -775,7 +775,7 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
             @Override
             public void onChange(List<String> flagKeys) {
                 WritableMap result = Arguments.createMap();
-                result.putString("flagKeys", gson.toJson(flagKeys));
+                result.putArray("flagKeys", Arguments.fromList(flagKeys));
                 result.putString("listenerId", multiListenerId);
 
                 getReactApplicationContext()
