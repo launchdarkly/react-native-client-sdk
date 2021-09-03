@@ -53,7 +53,7 @@ allprojects {
 
 dependencies {
     implementation("com.facebook.react:react-native:+")
-    implementation("com.launchdarkly:launchdarkly-android-client-sdk:3.1.0")
+    implementation("com.launchdarkly:launchdarkly-android-client-sdk:3.1.1")
     implementation("com.jakewharton.timber:timber:4.7.1")
     implementation("com.google.code.gson:gson:2.8.6")
 }
