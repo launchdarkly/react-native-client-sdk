@@ -2,6 +2,13 @@
 
 All notable changes to the LaunchDarkly React Native SDK will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [5.0.1] - 2021-09-03
+### Fixed:
+- Android: Fixed an inconsistency in the argument type given to all flags listeners. On Android the callback was given a string with a JSON representation of an array of strings, rather than an actual array of strings. (Thanks, [rodperottoni](https://github.com/launchdarkly/react-native-client-sdk/pull/91)!) ([#89](https://github.com/launchdarkly/react-native-client-sdk/issues/89))
+- Android: Fixed runtime crashes caused by code shrinking when compiling with Proguard/R8. The SDK now specifies consumer Proguard rules for Android SDK methods accessed with runtime reflection.
+- Android: Removed the `android:allowBackup` tag from the SDK's `AndroidManifest.xml` file to avoid requiring applications to explicitly replace the tag if given a different value. ([#138](https://github.com/launchdarkly/android-client-sdk/issues/138))
+- Android: Changed the SDK's network detection check to consider network transport over a VPN as a connected state. This fixes an issue where the SDK would prevent network requests on a VPN due to considering the network to be unavailable. (Thanks, [lguipeng](https://github.com/launchdarkly/android-client-sdk/pull/137)!)
+
 ## [5.0.0] - 2021-08-20
 ### Added:
 - The SDK now supports the ability to control the proportion of traffic allocation to an experiment. This works in conjunction with a new platform feature now available to early access customers.
