@@ -774,8 +774,13 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
         LDAllFlagsListener listener = new LDAllFlagsListener() {
             @Override
             public void onChange(List<String> flagKeys) {
+                WritableArray flagKeysArray = Arguments.createArray();
+                for (String flagKey: flagKeys) {
+                    flagKeysArray.pushString((flagKey));
+                }
+
                 WritableMap result = Arguments.createMap();
-                result.putString("flagKeys", gson.toJson(flagKeys));
+                result.putArray("flagKeys", flagKeysArray);
                 result.putString("listenerId", multiListenerId);
 
                 getReactApplicationContext()
