@@ -46,6 +46,11 @@ jobs:
       - run: cd ../hello-react-native && npm install
       - run: sudo npm install -g react-native-cli
       - run: cp -r ../project/ ../hello-react-native/node_modules/launchdarkly-react-native-client-sdk/
+      # Newer cocoapods required for following pod install
+      - run: sudo gem install cocoapods
+      # RN 0.64 has an issue with embedding absolute paths in the cocoapods generated build files, so must regenerate.
+      # https://github.com/facebook/react-native/issues/31121
+      - run: cd ../hello-react-native/ios && pod install
       - run: cd ../hello-react-native && react-native run-ios --configuration Release --simulator rn-ios
 
   common:
