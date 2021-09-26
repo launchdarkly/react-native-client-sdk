@@ -186,7 +186,7 @@ declare module 'launchdarkly-react-native-client-sdk' {
 
         /**
          * The secondary key for the user. See the 
-         * [documentation](https://docs.launchdarkly.com/home/managing-flags/targeting-users#percentage-rollout-logic) 
+         * [documentation](https://docs.launchdarkly.com/home/flags/targeting-users#percentage-rollouts) 
          * for more information on it's use for percentage rollout bucketing.
          */
         secondary?: string;

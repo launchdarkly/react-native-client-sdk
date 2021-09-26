@@ -80,7 +80,7 @@ All notable changes to the LaunchDarkly React Native SDK will be documented in t
 
 ## [4.2.0] - 2021-05-19
 ### Added:
-- `LDUser` now has an optional `secondary` attribute to match other LaunchDarkly SDKs. For more on the behavior of this attribute see [the documentation on targeting users](https://docs.launchdarkly.com/home/managing-flags/targeting-users).
+- `LDUser` now has an optional `secondary` attribute to match other LaunchDarkly SDKs. For more on the behavior of this attribute see [the documentation on targeting users](https://docs.launchdarkly.com/home/flags/targeting-users).
 - Support for multiple LaunchDarkly projects or environments. Each set of feature flags associated with a mobile key is called an environment. ([#10](https://github.com/launchdarkly/react-native-client-sdk/issues/10))
   - `secondaryMobileKeys` is now a config option which allows a mapping of names to the SDK keys for each additional environment. `mobileKey` is still required, and represents the primary environment.
   - Many methods including variations, track, and listeners now support an optional `environment` parameter to evaluate the method against the given `environment`.
