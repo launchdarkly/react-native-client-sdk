@@ -172,6 +172,22 @@ declare module 'launchdarkly-react-native-client-sdk' {
          * The default is false.
          */
         allUserAttributesPrivate?: boolean;
+
+        /**
+         * Whether to disable the automatic sending of an alias event when [[LDClient.identify]] is
+         * called with a non-anonymous user when the previous user is anonymous.
+         *
+         * The default value is `false`.
+         */
+        autoAliasingOptOut?: boolean;
+
+        /**
+         * Whether to include full user details in every analytics event.
+         *
+         * The default is `false`: events will only include the user key, except for one "identify" event
+         * that provides the full details for the user.
+         */
+        inlineUsersInEvents?: boolean;
     };
   
     /**
