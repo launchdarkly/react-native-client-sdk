@@ -660,12 +660,12 @@ declare module 'launchdarkly-react-native-client-sdk' {
          * the client has successfully connected to LaunchDarkly and received feature flags, or the
          * client has been put into offline mode (in which case it will return only default flag values).
          * 
-         * This function only works when running in Android. On iOS, this function will return a rejected promise.
+         * This function will return a rejected promise in case it has not been isInitialized.
          *
          * @param environment
          *   Optional environment name to obtain the result from the corresponding secondary environment
          * @returns 
-         *   A promise contianing true if the client is initialized or offline
+         *   A promise contianing true if the client is initialized or offline, otherwise a rejected promise
          */
         isInitialized(environment?: string): Promise<boolean>;
         
