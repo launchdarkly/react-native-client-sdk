@@ -19,7 +19,7 @@ This SDK is currently compatible with React Native 0.63.x - 0.64.x and Xcode 12 
 | SDK version                      | React Native version |
 |----------------------------------|----------------------|
 | 4.1.x - current                  | 0.64.x               |
-| 5.0.2 - current<br>3.2.x - 4.0.x | 0.63.x               |
+| 5.1.0 - current<br>3.2.x - 4.0.x | 0.63.x               |
 | 3.1.x                            | 0.62.x               |
 
 Getting started
