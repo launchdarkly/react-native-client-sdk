@@ -89,6 +89,7 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
         configField(&ldConfig.diagnosticRecordingInterval, config["diagnosticRecordingIntervalMillis"], millis)
         configField(&ldConfig.allUserAttributesPrivate, config["allUserAttributesPrivate"], id)
         configField(&ldConfig.autoAliasingOptOut, config["autoAliasingOptOut"], id)
+        configField(&ldConfig.inlineUserInEvents, config["inlineUsersInEvents"], id)
 
         if let val = config["secondaryMobileKeys"] as? [String: String] {
             try! ldConfig.setSecondaryMobileKeys(val)

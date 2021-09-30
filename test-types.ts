@@ -46,6 +46,8 @@ async function tests() {
         diagnosticOptOut: true,
         diagnosticRecordingIntervalMillis: 100000,
         allUserAttributesPrivate: true,
+        autoAliasingOptOut: true,
+        inlineUsersInEvents: true,
     };
     const userWithKeyOnly: LDUser = { key: 'user' };
     const user: LDUser = {

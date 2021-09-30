@@ -1,6 +1,9 @@
-version: 2
+version: 2.1
 jobs:
   android:
+    parameters:
+      hello-app-branch:
+        type: string
     docker:
       - image: circleci/android@sha256:9d2e4571898fd9b1dc97bfb9da942aaeea46859eb5b1e4cfc85a44c42733643c
     environment:
@@ -26,7 +29,7 @@ jobs:
           no_output_timeout: 20m
       - run: sudo npm install -g react-native-cli
       - run: cd .. && git clone https://github.com/launchdarkly/hello-react-native.git
-      - run: cd ../hello-react-native && npm install
+      - run: cd ../hello-react-native && git checkout <<parameters.hello-app-branch>> && npm install
       - run: cp -r ../project/ ../hello-react-native/node_modules/launchdarkly-react-native-client-sdk/
       - run: circle-android wait-for-boot
       - run: 
@@ -35,6 +38,9 @@ jobs:
           timeout: 1200
 
   ios:
+    parameters:
+      hello-app-branch:
+        type: string
     macos:
       xcode: "11.4"
     steps:
@@ -43,14 +49,14 @@ jobs:
       - run: xcrun simctl create rn-ios com.apple.CoreSimulator.SimDeviceType.iPhone-X com.apple.CoreSimulator.SimRuntime.iOS-12-2
       - run: xcrun simctl boot rn-ios
       - run: cd .. && git clone https://github.com/launchdarkly/hello-react-native.git
-      - run: cd ../hello-react-native && npm install
+      - run: cd ../hello-react-native && git checkout <<parameters.hello-app-branch>> && npm install
       - run: sudo npm install -g react-native-cli
       - run: cp -r ../project/ ../hello-react-native/node_modules/launchdarkly-react-native-client-sdk/
       # Newer cocoapods required for following pod install
       - run: sudo gem install cocoapods
       # RN 0.64 has an issue with embedding absolute paths in the cocoapods generated build files, so must regenerate.
       # https://github.com/facebook/react-native/issues/31121
-      - run: cd ../hello-react-native/ios && pod install
+      - run: cd ../hello-react-native/ios && pod update && pod install
       - run: cd ../hello-react-native && react-native run-ios --configuration Release --simulator rn-ios
 
   common:
@@ -77,8 +83,23 @@ workflows:
     jobs:
       - common
       - android:
+          name: Android + RN 0.63
+          hello-app-branch: rn-0.63
           requires:
             - common
       - ios:
+          name: iOS + RN 0.63
+          hello-app-branch: rn-0.63
           requires:
             - common
+      - android:
+          name: Android + RN 0.64
+          hello-app-branch: rn-0.64
+          requires:
+            - common
+      - ios:
+          name: iOS + RN 0.64
+          hello-app-branch: rn-0.64
+          requires:
+            - common
+            

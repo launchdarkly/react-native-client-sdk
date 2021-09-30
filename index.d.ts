@@ -172,6 +172,22 @@ declare module 'launchdarkly-react-native-client-sdk' {
          * The default is false.
          */
         allUserAttributesPrivate?: boolean;
+
+        /**
+         * Whether to disable the automatic sending of an alias event when [[LDClient.identify]] is
+         * called with a non-anonymous user when the previous user is anonymous.
+         *
+         * The default value is `false`.
+         */
+        autoAliasingOptOut?: boolean;
+
+        /**
+         * Whether to include full user details in every analytics event.
+         *
+         * The default is `false`: events will only include the user key, except for one "identify" event
+         * that provides the full details for the user.
+         */
+        inlineUsersInEvents?: boolean;
     };
   
     /**
@@ -186,7 +202,7 @@ declare module 'launchdarkly-react-native-client-sdk' {
 
         /**
          * The secondary key for the user. See the 
-         * [documentation](https://docs.launchdarkly.com/home/managing-flags/targeting-users#percentage-rollout-logic) 
+         * [documentation](https://docs.launchdarkly.com/home/flags/targeting-users#percentage-rollouts) 
          * for more information on it's use for percentage rollout bucketing.
          */
         secondary?: string;
@@ -660,12 +676,12 @@ declare module 'launchdarkly-react-native-client-sdk' {
          * the client has successfully connected to LaunchDarkly and received feature flags, or the
          * client has been put into offline mode (in which case it will return only default flag values).
          * 
-         * This function will return a rejected promise in case it has not been isInitialized.
+         * This function will return a rejected promise in case the client has not been initialized.
          *
          * @param environment
          *   Optional environment name to obtain the result from the corresponding secondary environment
          * @returns 
-         *   A promise contianing true if the client is initialized or offline, otherwise a rejected promise
+         *   A promise containing true if the client is initialized or offline, otherwise a rejected promise
          */
         isInitialized(environment?: string): Promise<boolean>;
         

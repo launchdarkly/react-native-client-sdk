@@ -74,7 +74,8 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
         CONFIG_DIAGNOSTIC_OPT_OUT("diagnosticOptOut", ConfigEntryType.Boolean),
         CONFIG_DIAGNOSTIC_RECORDING_INTERVAL("diagnosticRecordingIntervalMillis", ConfigEntryType.Integer),
         CONFIG_SECONDARY_MOBILE_KEYS("secondaryMobileKeys", ConfigEntryType.Map),
-        CONFIG_AUTO_ALIASING_OPT_OUT("autoAliasingOptOut", ConfigEntryType.Boolean);
+        CONFIG_AUTO_ALIASING_OPT_OUT("autoAliasingOptOut", ConfigEntryType.Boolean),
+        CONFIG_INLINE_USERS_IN_EVENTS("inlineUsersInEvents", ConfigEntryType.Boolean);
 
         final String key;
         final ConfigEntryType type;
