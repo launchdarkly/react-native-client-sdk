@@ -2,6 +2,16 @@
 
 All notable changes to the LaunchDarkly React Native SDK will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [5.1.0] - 2021-09-30
+### Added:
+- Added the `inlineUsersInEvents` configuration option which can be used to configure the SDK to include full user details in all analytics events.
+
+### Changed:
+- Restored compatibility with React Native 0.63, this version of the SDK can be used with either 0.63 or 0.64 React Native releases.
+
+### Fixed:
+- Added missing TypeScript definition for `autoAliasingOptOut` configuration field.
+
 ## [5.0.1] - 2021-09-03
 ### Fixed:
 - Android: Fixed an inconsistency in the argument type given to all flags listeners. On Android the callback was given a string with a JSON representation of an array of strings, rather than an actual array of strings. (Thanks, [rodperottoni](https://github.com/launchdarkly/react-native-client-sdk/pull/91)!) ([#89](https://github.com/launchdarkly/react-native-client-sdk/issues/89))
