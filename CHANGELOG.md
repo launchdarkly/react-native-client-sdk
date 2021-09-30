@@ -11,6 +11,7 @@ All notable changes to the LaunchDarkly React Native SDK will be documented in t
 
 ### Fixed:
 - Added missing TypeScript definition for `autoAliasingOptOut` configuration field.
+- Fixed an outdated `LDClient#isInitialized` description (Thanks, [christophby](https://github.com/launchdarkly/react-native-client-sdk/pull/97)!)
 
 ## [5.0.1] - 2021-09-03
 ### Fixed:
