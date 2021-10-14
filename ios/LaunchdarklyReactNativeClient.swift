@@ -298,7 +298,7 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
     }
     
     @objc func isOffline(_ resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-        resolve(LDClient.get()?.isOnline)
+        resolve(!(LDClient.get()?.isOnline ?? false))
     }
     
     @objc func setOnline(_ resolve: @escaping RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
