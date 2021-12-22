@@ -215,17 +215,7 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
         }
 
         final LDConfig.Builder ldConfigBuilder = configBuild(config);
-        final LDUser.Builder userBuilder = userBuild(user);
-
-        if (ldConfigBuilder == null) {
-            promise.reject(ERROR_INIT, "Client could not be built using supplied configuration");
-            return;
-        }
-
-        if (userBuilder == null) {
-            promise.reject(ERROR_INIT, "User could not be built using supplied configuration");
-            return;
-        }
+        final LDUser ldUser = userBuild(user).build();
 
         if (config.hasKey("allUserAttributesPrivate")
             && config.getType("allUserAttributesPrivate").equals(ConfigEntryType.Boolean.getReadableType()) 
@@ -240,10 +230,10 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
                 @Override
                 public void run() {
                     if (timeout != null) {
-                        LDClient.init(application, ldConfigBuilder.build(), userBuilder.build(), timeout);
+                        LDClient.init(application, ldConfigBuilder.build(), ldUser, timeout);
                     } else {
                         try {
-                            LDClient.init(application, ldConfigBuilder.build(), userBuilder.build()).get();
+                            LDClient.init(application, ldConfigBuilder.build(), ldUser).get();
                         } catch (ExecutionException | InterruptedException e) {
                             Timber.e(e, "Exception during Client initialization");
                         }
@@ -270,13 +260,12 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
     }
 
     private LDUser.Builder userBuild(ReadableMap options) {
-        if (!options.hasKey("key")) {
-            return null;
+        String userKey = null;
+        if (options.hasKey("key") && options.getType("key") == ReadableType.String) {
+            userKey = options.getString("key");
         }
 
-        String key = options.getString("key");
-        LDUser.Builder userBuilder = new LDUser.Builder(key);
-
+        LDUser.Builder userBuilder = new LDUser.Builder(userKey);
         Set<String> privateAttrs = new HashSet<>();
 
         if (options.hasKey("privateAttributeNames") &&
@@ -612,16 +601,12 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
 
     @ReactMethod
     public void identify(ReadableMap options, final Promise promise) {
-        final LDUser.Builder userBuilder = userBuild(options);
-        if (userBuilder == null) {
-            promise.reject(ERROR_IDENTIFY, "User could not be built using supplied configuration");
-            return;
-        }
+        final LDUser user = userBuild(options).build();
         Thread background = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    LDClient.get().identify(userBuilder.build()).get();
+                    LDClient.get().identify(user).get();
                     promise.resolve(null);
                 } catch (InterruptedException e) {
                     Timber.w(e);
@@ -640,20 +625,15 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
 
     @ReactMethod
     public void alias(String environment, ReadableMap user, ReadableMap previousUser) {
-        LDUser.Builder userBuilder = userBuild(user);
-        LDUser.Builder previousUserBuilder = userBuild(previousUser);
-        if (userBuilder == null || previousUserBuilder == null) {
-            return;
-        }
         try {
-            LDClient.getForMobileKey(environment).alias(userBuilder.build(), previousUserBuilder.build());
+            LDClient.getForMobileKey(environment).alias(userBuild(user).build(), userBuild(previousUser).build());
         } catch (LaunchDarklyException e) {
             Timber.w("LaunchDarkly alias called with invalid environment");
         }
     }
 
     @ReactMethod
-    public void getConnectionMode(String environment,Promise promise) {
+    public void getConnectionMode(String environment, Promise promise) {
         try {
             promise.resolve(LDClient.getForMobileKey(environment).getConnectionInformation().getConnectionMode().name());
         } catch (Exception e) {
@@ -662,7 +642,7 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
     }
 
     @ReactMethod
-    public void getLastSuccessfulConnection(String environment,Promise promise) {
+    public void getLastSuccessfulConnection(String environment, Promise promise) {
         try {
             promise.resolve(LDClient.getForMobileKey(environment).getConnectionInformation().getLastSuccessfulConnection().intValue());
         } catch (Exception e) {
@@ -671,7 +651,7 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
     }
 
     @ReactMethod
-    public void getLastFailedConnection(String environment,Promise promise) {
+    public void getLastFailedConnection(String environment, Promise promise) {
         try {
             promise.resolve(LDClient.getForMobileKey(environment).getConnectionInformation().getLastFailedConnection().intValue());
         } catch (Exception e) {
@@ -680,7 +660,7 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
     }
 
     @ReactMethod
-    public void getLastFailure(String environment,Promise promise) {
+    public void getLastFailure(String environment, Promise promise) {
         try {
             promise.resolve(LDClient.getForMobileKey(environment).getConnectionInformation().getLastFailure().getFailureType().name());
         } catch (Exception e) {
