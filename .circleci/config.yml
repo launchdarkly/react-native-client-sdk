@@ -100,12 +100,12 @@ workflows:
       - common
       - android:
           name: Android + RN 0.63
-          hello-app-branch: gw/rn-0.63-sdk-5.1.0
+          hello-app-branch: rn-0.63
           requires:
             - common
       - ios:
           name: iOS + RN 0.63
-          hello-app-branch: gw/rn-0.63-sdk-5.1.0
+          hello-app-branch: rn-0.63
           requires:
             - common
       - android:
