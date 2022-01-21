@@ -10,7 +10,7 @@ aliases:
     command: |
       cd ../hello-react-native
       TEMP_FILE=`mktemp -u` || exit 1
-      sed 's/"launchdarkly-react-native-client-sdk": "^\{0,1\}[0-9.]*"\,$/"launchdarkly-react-native-client-sdk": "file:..\/project"\,/' 'package.json' > $TEMP_FILE
+      sed 's/"launchdarkly-react-native-client-sdk" *: *"[^"]*" *, *$/"launchdarkly-react-native-client-sdk": "file:..\/project"\,/' 'package.json' > $TEMP_FILE
       mv $TEMP_FILE 'package.json'
 
 jobs:
