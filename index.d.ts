@@ -197,8 +197,15 @@ declare module 'launchdarkly-react-native-client-sdk' {
 
         /**
          * A unique string identifying a user.
+         *
+         * If this value is not provided, a key will be generated automatically and the `anonymous`
+         * property of the user will be set to `true`. The SDK will provide a key value that is
+         * non-identifying, unique between devices, but usually stable between launches of the
+         * application on a specific device. The SDK cannot guarantee the value will not change
+         * between launches as the platform may change identifiers provided to the application or
+         * remove the locally stored application data.
          */
-        key: string;
+        key?: string;
 
         /**
          * The secondary key for the user. See the 

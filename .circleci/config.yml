@@ -1,63 +1,79 @@
 version: 2.1
+
+orbs:
+  android: circleci/android@1.0
+  node: circleci/node@4.8.0
+
+aliases:
+  - &use_local_sdk
+    name: Set hello application to use local SDK and RN version
+    command: |
+      cd ../hello-react-native
+      TEMP_FILE=`mktemp -u` || exit 1
+      sed 's/"launchdarkly-react-native-client-sdk" *: *"[^"]*" *, *$/"launchdarkly-react-native-client-sdk": "file:..\/project"\,/' 'package.json' > $TEMP_FILE
+      mv $TEMP_FILE 'package.json'
+
 jobs:
   android:
     parameters:
       hello-app-branch:
         type: string
-    docker:
-      - image: circleci/android@sha256:9d2e4571898fd9b1dc97bfb9da942aaeea46859eb5b1e4cfc85a44c42733643c
-    environment:
-      QEMU_AUDIO_DRV: none
-      _JAVA_OPTIONS: "-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -Xms2048m -Xmx4096m"
-      GRADLE_OPTS: "-Dorg.gradle.daemon=false"
+
+    executor:
+      name: android/android-machine
+      resource-class: large
+
     steps:
       - checkout
 
-      - setup_remote_docker:
-          docker_layer_caching: true
-          reusable: true  # Deprecated version of above
-
-      - run: mkdir -p ~/.gradle && echo "org.gradle.daemon=false" >> ~/.gradle/gradle.properties
-      - run: sdkmanager "system-images;android-24;default;armeabi-v7a"
-      - run: sdkmanager --licenses
-      - run: sudo apt-get update && sudo apt-get install libpulse0
-      - run: echo no | avdmanager create avd -n rn-android -f -k "system-images;android-24;default;armeabi-v7a"
-      - run: 
-          command: emulator -avd rn-android -netdelay none -netspeed full -no-audio -no-window -no-snapshot -use-system-libs -no-boot-anim
-          background: true
-          timeout: 1200
-          no_output_timeout: 20m
-      - run: sudo npm install -g react-native-cli
-      - run: cd .. && git clone https://github.com/launchdarkly/hello-react-native.git
-      - run: cd ../hello-react-native && git checkout <<parameters.hello-app-branch>> && npm install
-      - run: cp -r ../project/ ../hello-react-native/node_modules/launchdarkly-react-native-client-sdk/
-      - run: circle-android wait-for-boot
-      - run: 
-          command: cd ../hello-react-native && react-native run-android
-          background: true
-          timeout: 1200
+      - run: cd .. && git clone --depth 1 https://github.com/launchdarkly/hello-react-native.git -b <<parameters.hello-app-branch>>
+      - run: *use_local_sdk
+      - node/install:
+          lts: true
+          install-yarn: true
+      - run:
+          name: Build bundle
+          command: |
+            cd ../hello-react-native
+            npx yarn install
+            npx react-native bundle --entry-file index.js --platform android --bundle-output android/main.jsbundle --assets-dest android
+      - run:
+          name: Setup debug keystore
+          command: |
+            keytool -genkey -v -keystore debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "cn=Unknown, ou=Unknown, o=Unknown, c=Unknown"
+            cp debug.keystore ../hello-react-native/android/app/
+            mkdir -p ~/.android
+            cp debug.keystore ~/.android/
+      - run: cd ../hello-react-native/android && ./gradlew packageDebug
 
   ios:
     parameters:
       hello-app-branch:
         type: string
     macos:
-      xcode: "11.4"
+      xcode: "12.4.0"
     steps:
       - checkout
-
-      - run: xcrun simctl create rn-ios com.apple.CoreSimulator.SimDeviceType.iPhone-X com.apple.CoreSimulator.SimRuntime.iOS-12-2
-      - run: xcrun simctl boot rn-ios
-      - run: cd .. && git clone https://github.com/launchdarkly/hello-react-native.git
-      - run: cd ../hello-react-native && git checkout <<parameters.hello-app-branch>> && npm install
-      - run: sudo npm install -g react-native-cli
-      - run: cp -r ../project/ ../hello-react-native/node_modules/launchdarkly-react-native-client-sdk/
-      # Newer cocoapods required for following pod install
-      - run: sudo gem install cocoapods
-      # RN 0.64 has an issue with embedding absolute paths in the cocoapods generated build files, so must regenerate.
-      # https://github.com/facebook/react-native/issues/31121
-      - run: cd ../hello-react-native/ios && pod update && pod install
-      - run: cd ../hello-react-native && react-native run-ios --configuration Release --simulator rn-ios
+      - run: cd .. && git clone --depth 1 https://github.com/launchdarkly/hello-react-native.git -b <<parameters.hello-app-branch>>
+      - run: *use_local_sdk
+      - run: cd ../hello-react-native && npx yarn install
+      - run:
+          name: Build bundle
+          command: |
+            cd ../hello-react-native
+            npx yarn install
+            npx react-native bundle --entry-file index.js --platform ios --bundle-output ios/main.jsbundle --assets-dest ios
+      - run:
+          name: Build application
+          command: |
+            cd ../hello-react-native/ios
+            # Newer cocoapods required for following pod install
+            sudo gem install cocoapods
+            # RN 0.64 has an issue with embedding absolute paths in the cocoapods generated build files, so must regenerate.
+            # https://github.com/facebook/react-native/issues/31121
+            pod update
+            pod install
+            xcodebuild build -workspace HelloReactNative.xcworkspace -configuration Release -scheme HelloReactNative -sdk iphonesimulator -arch x86_64 CODE_SIGN_IDENTITY=
 
   common:
     docker:
@@ -102,4 +118,3 @@ workflows:
           hello-app-branch: rn-0.64
           requires:
             - common
-            

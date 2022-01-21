@@ -49,6 +49,7 @@ async function tests() {
         autoAliasingOptOut: true,
         inlineUsersInEvents: true,
     };
+    const userEmpty: LDUser = {};
     const userWithKeyOnly: LDUser = { key: 'user' };
     const user: LDUser = {
         key: 'user',

@@ -34,12 +34,11 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
 
     private func internalConfigure(config: NSDictionary, user: NSDictionary, timeout: Int?, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         let config = configBuild(config: config)
-        let user = userBuild(userDict: user)
 
-        if config != nil && user != nil {
+        if let config = config {
             if let timeoutUnwrapped = timeout {
                 let startWaitSeconds: TimeInterval = Double(timeoutUnwrapped)
-                LDClient.start(config: config!, user: user, startWaitSeconds: startWaitSeconds) { timedOut in
+                LDClient.start(config: config, user: userBuild(user), startWaitSeconds: startWaitSeconds) { timedOut in
                     if timedOut {
                         reject(self.ERROR_INIT, "SDK initialization timed out", nil)
                     } else {
@@ -47,7 +46,7 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
                     }
                 }
             } else {
-                LDClient.start(config: config!, user: user, completion: {() -> Void in 
+                LDClient.start(config: config, user: userBuild(user), completion: {() -> Void in
                     resolve(nil)
                 })
             }
@@ -98,11 +97,11 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
         return ldConfig
     }
     
-    private func userBuild(userDict: NSDictionary) -> LDUser? {
-        guard let userKey = userDict["key"] as? String
-        else { return nil }
-
-        var user = LDUser(key: userKey, isAnonymous: userDict["anonymous"] as? Bool)
+    private func userBuild(_ userDict: NSDictionary) -> LDUser {
+        var user = LDUser(key: userDict["key"] as? String)
+        if let anon = userDict["anonymous"] as? Bool, anon {
+            user.isAnonymous = true
+        }
         user.secondary = userDict["secondary"] as? String
         user.name = userDict["name"] as? String
         user.firstName = userDict["firstName"] as? String
@@ -298,7 +297,7 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
     }
     
     @objc func isOffline(_ resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-        resolve(LDClient.get()?.isOnline)
+        resolve(!(LDClient.get()?.isOnline ?? false))
     }
     
     @objc func setOnline(_ resolve: @escaping RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
@@ -317,25 +316,13 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
     }
     
     @objc func identify(_ options: NSDictionary, resolve: @escaping RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-        let user = userBuild(userDict: options)
-        if let usr = user {
-            LDClient.get()?.identify(user: usr) {
-                resolve(nil)
-            }
-        } else {
-            reject(ERROR_IDENTIFY, "User could not be built using supplied configuration", nil)
+        LDClient.get()?.identify(user: userBuild(options)) {
+            resolve(nil)
         }
     }
 
     @objc func alias(_ environment: String, user: NSDictionary, previousUser: NSDictionary) -> Void {
-        let builtUser = userBuild(userDict: user)
-        let builtPreviousUser = userBuild(userDict: previousUser)
-        guard let user = builtUser,
-              let previousUser = builtPreviousUser
-        else {
-            return
-        }
-        LDClient.get(environment: environment)!.alias(context: user, previousContext: previousUser)
+        LDClient.get(environment: environment)!.alias(context: userBuild(user), previousContext: userBuild(previousUser))
     }
     
     @objc func allFlags(_ environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
