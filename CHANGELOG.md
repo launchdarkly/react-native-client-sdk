@@ -2,6 +2,16 @@
 
 All notable changes to the LaunchDarkly React Native SDK will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [5.1.1] - 2022-01-21
+### Changed:
+- The `key` property on `LDUser` objects is now optional, if it is not provided the SDK will automatically generate a key and mark the user as anonymous. See the [API documentation](https://launchdarkly.github.io/react-native-client-sdk/index.html#lduser) for more details.
+- Updated native Android and iOS SDK to the [3.1.2 release](https://github.com/launchdarkly/android-client-sdk/releases/tag/3.1.2) and [5.4.4 release](https://github.com/launchdarkly/ios-client-sdk/releases/tag/5.4.4) respectively.
+
+### Fixed:
+- Android: Removed reference of `jcenter` from the Gradle build to reflect the shutdown of the JCenter artifact repository.
+- iOS: `isOffline` has been corrected to no longer return `true` when online and `false` when offline.
+- iOS: Fixed memory leak when stream connections are terminated caused by the native server sent events implementation.
+
 ## [5.1.0] - 2021-09-30
 ### Added:
 - Added the `inlineUsersInEvents` configuration option which can be used to configure the SDK to include full user details in all analytics events.
