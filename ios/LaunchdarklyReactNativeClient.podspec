@@ -1,7 +1,10 @@
+require 'json'
+
+package = JSON.parse(File.read(File.join(__dir__, "..", "package.json")))
 
 Pod::Spec.new do |s|
   s.name         = "LaunchdarklyReactNativeClient"
-  s.version      = "5.1.1"
+  s.version      = package["version"]
   s.summary      = "LaunchdarklyReactNativeClient"
   s.description  = <<-DESC
                   LaunchdarklyReactNativeClient
@@ -11,11 +14,11 @@ Pod::Spec.new do |s|
   s.license      = { :type => "Apache-2.0", :file => "../LICENSE" }
   s.author       = { "author" => "support@launchdarkly.com" }
   s.platform     = :ios, "10.0"
-  s.source       = { :git => "https://github.com/launchdarkly/react-native-client-sdk.git", :tag => "master" }
+  s.source       = { :git => "https://github.com/launchdarkly/react-native-client-sdk.git", :tag => s.version }
   s.source_files  = "**/*.{h,m,swift}"
   s.swift_version = "5.0"
 
-  s.dependency "React"
+  s.dependency "React-Core"
   s.dependency "LaunchDarkly", "5.4.4"
 
 end
