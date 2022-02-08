@@ -144,8 +144,8 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
         resolve(LDClient.get(environment: environment)!.variation(forKey: flagKey, defaultValue: defaultValue) as String)
     }
 
-    @objc func jsonVariationArray(_ flagKey: String, defaultValue: Array<RCTConvert>, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-        resolve(LDClient.get(environment: environment)!.variation(forKey: flagKey, defaultValue: defaultValue) as Array)
+    @objc func jsonVariationArray(_ flagKey: String, defaultValue: Array<Any>, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+        resolve(LDClient.get(environment: environment)!.variation(forKey: flagKey, defaultValue: defaultValue) as Array<Any>)
     }
 
     @objc func jsonVariationObject(_ flagKey: String, defaultValue: NSDictionary, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
@@ -222,7 +222,7 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
         resolve(jsonObject)
     }
     
-    @objc func jsonVariationDetailArray(_ flagKey: String, defaultValue: Array<RCTConvert>, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+    @objc func jsonVariationDetailArray(_ flagKey: String, defaultValue: Array<Any>, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
         let detail = LDClient.get(environment: environment)!.variationDetail(forKey: flagKey, defaultValue: defaultValue)
         let jsonObject: NSDictionary = [
             "value": (detail.value as Any),
