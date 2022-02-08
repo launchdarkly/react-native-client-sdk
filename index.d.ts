@@ -5,6 +5,7 @@
  * set up your connection to LaunchDarkly.
  *
  * For more information, see the [SDK reference guide](https://docs.launchdarkly.com/sdk/client-side/react-native).
+ * @module
  */
 declare module 'launchdarkly-react-native-client-sdk' {
 
