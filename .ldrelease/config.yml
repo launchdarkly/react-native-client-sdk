@@ -1,3 +1,5 @@
+version: 2
+
 repo:
   public: react-native-client-sdk
   private: react-native-client-sdk-private
@@ -6,13 +8,14 @@ publications:
   - url: https://www.npmjs.com/package/launchdarkly-react-native-client-sdk
     description: npm
 
-template:
-  name: npm
-  skip:
-    - test
+jobs:
+  - docker:
+      image: node:16-buster
+    template:
+      name: npm
 
 documentation:
-  githubPages: true
+  gitHubPages: true
   title: LaunchDarkly Client-Side SDK for React Native
 
 sdk:

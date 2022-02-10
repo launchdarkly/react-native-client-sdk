@@ -1,81 +1,117 @@
 version: 2.1
 
-orbs:
-  android: circleci/android@1.0
-  node: circleci/node@4.8.0
-
-aliases:
-  - &use_local_sdk
-    name: Set hello application to use local SDK and RN version
-    command: |
-      cd ../hello-react-native
-      TEMP_FILE=`mktemp -u` || exit 1
-      sed 's/"launchdarkly-react-native-client-sdk" *: *"[^"]*" *, *$/"launchdarkly-react-native-client-sdk": "file:..\/project"\,/' 'package.json' > $TEMP_FILE
-      mv $TEMP_FILE 'package.json'
-
 jobs:
-  android:
+  # This job simulates integrating the SDK into a freshly created React Native project template and
+  # then builds Android and iOS applications using the template.
+  build-applications-using-template:
     parameters:
-      hello-app-branch:
+      rn-version:
+        description: The React Native project template version
+        type: string
+      xcode-version:
+        description: The Xcode version to build with
         type: string
 
-    executor:
-      name: android/android-machine
-      resource-class: large
+    macos:
+      xcode: <<parameters.xcode-version>>
+    resource_class: macos.x86.medium.gen2
+
+    environment:
+      ANDROID_SDK_ROOT: "/tmp/Android"
 
     steps:
       - checkout
 
-      - run: cd .. && git clone --depth 1 https://github.com/launchdarkly/hello-react-native.git -b <<parameters.hello-app-branch>>
-      - run: *use_local_sdk
-      - node/install:
-          lts: true
-          install-yarn: true
       - run:
-          name: Build bundle
+          name: Download Android command line tools
           command: |
-            cd ../hello-react-native
-            npx yarn install
-            npx react-native bundle --entry-file index.js --platform android --bundle-output android/main.jsbundle --assets-dest android
+            mkdir -p $ANDROID_SDK_ROOT/cmdline-tools/latest
+            curl https://dl.google.com/android/repository/commandlinetools-mac-8092744_latest.zip -o cmdline-tools.zip
+            unzip cmdline-tools.zip
+            mv cmdline-tools/* $ANDROID_SDK_ROOT/cmdline-tools/latest/
+            yes | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --licenses > /dev/null || true
+
       - run:
-          name: Setup debug keystore
+          name: Setup Android debug keystore
           command: |
             keytool -genkey -v -keystore debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "cn=Unknown, ou=Unknown, o=Unknown, c=Unknown"
-            cp debug.keystore ../hello-react-native/android/app/
             mkdir -p ~/.android
             cp debug.keystore ~/.android/
-      - run: cd ../hello-react-native/android && ./gradlew packageDebug
 
-  ios:
-    parameters:
-      hello-app-branch:
-        type: string
-    macos:
-      xcode: "12.4.0"
-    steps:
-      - checkout
-      - run: cd .. && git clone --depth 1 https://github.com/launchdarkly/hello-react-native.git -b <<parameters.hello-app-branch>>
-      - run: *use_local_sdk
-      - run: cd ../hello-react-native && npx yarn install
+      - restore_cache:
+          name: Restore RN project template from cache
+          key: v1-rn-template-cache-<<parameters.rn-version>>
+
       - run:
-          name: Build bundle
+          name: Create CI test application for RN <<parameters.rn-version>>
           command: |
-            cd ../hello-react-native
-            npx yarn install
-            npx react-native bundle --entry-file index.js --platform ios --bundle-output ios/main.jsbundle --assets-dest ios
+            [ -d "CITest" ] || npx react-native init CITest --version <<parameters.rn-version>> --skip-install
+
+      - save_cache:
+          name: Save RN project template to cache
+          key: v1-rn-template-cache-<<parameters.rn-version>>
+          paths:
+            - CITest
+
+      # See the `patches` directory
       - run:
-          name: Build application
+          name: Do any necessary patching
           command: |
-            cd ../hello-react-native/ios
-            # Newer cocoapods required for following pod install
+            if [ -d ".circleci/patches/<<parameters.rn-version>>" ]; then cp -r .circleci/patches/<<parameters.rn-version>>/* CITest/; fi
+            if [ -x "CITest/patch.sh" ] ; then cd CITest && ./patch.sh; fi
+
+      - run:
+          name: Add LaunchDarkly dependency
+          command: cd CITest && npx yarn add file:..
+
+      - restore_cache:
+          name: Restore gem cache
+          key: v1-gem-cache-<<parameters.xcode-version>>-
+
+      # Newer cocoapods fixes Swift library auto-linking errors
+      - run:
+          name: Update CocoaPods
+          command: |
             sudo gem install cocoapods
-            # RN 0.64 has an issue with embedding absolute paths in the cocoapods generated build files, so must regenerate.
-            # https://github.com/facebook/react-native/issues/31121
-            pod update
-            pod install
-            xcodebuild build -workspace HelloReactNative.xcworkspace -configuration Release -scheme HelloReactNative -sdk iphonesimulator -arch x86_64 CODE_SIGN_IDENTITY=
+            sudo gem cleanup
+            # Used as cache key to prevent storing redundant caches
+            gem list > /tmp/cache-key.txt
 
-  common:
+      - save_cache:
+          name: Save gem cache
+          key: v1-gem-cache-<<parameters.xcode-version>>-{{ checksum "/tmp/cache-key.txt" }}
+          paths:
+            - ~/.gem
+
+      - run:
+          name: Install iOS Pods
+          command: cd CITest/ios && pod install
+
+      - run:
+          name: Build application for iOS (Release)
+          command: |
+            mkdir -p artifacts
+            cd CITest/ios
+            xcodebuild -workspace CITest.xcworkspace -scheme CITest build -configuration Release -destination "generic/platform=iOS" CODE_SIGNING_ALLOWED=NO GCC_WARN_INHIBIT_ALL_WARNINGS=YES | tee '../../artifacts/xcb-<<parameters.rn-version>>.txt' | xcpretty
+
+      - when:
+          # We only care to build Android application and debug iOS Build for a single XCode version
+          condition:
+            equal: [ 13.2.1, << parameters.xcode-version >> ]
+          steps:
+            - run:
+                name: Build application for iOS (Debug)
+                command: |
+                  cd CITest/ios
+                  xcodebuild -workspace CITest.xcworkspace -scheme CITest build -configuration Debug -destination "generic/platform=iOS" CODE_SIGNING_ALLOWED=NO GCC_WARN_INHIBIT_ALL_WARNINGS=YES | tee '../../artifacts/xcb-<<parameters.rn-version>>.txt' | xcpretty
+            - run:
+                name: Build application for Android
+                command: cd CITest/android && ./gradlew packageRelease
+
+      - store_artifacts:
+          path: artifacts
+
+  test-javascript:
     docker:
       - image: cimg/node:current
     steps:
@@ -95,26 +131,14 @@ jobs:
 
 workflows:
   version: 2
-  android-ios:
+  all-tests:
     jobs:
-      - common
-      - android:
-          name: Android + RN 0.63
-          hello-app-branch: rn-0.63
+      - test-javascript
+      - build-applications-using-template:
+          name: rn<<matrix.rn-version>>-xc<<matrix.xcode-version>>-build-apps-using-template
+          matrix:
+            parameters:
+              rn-version: ["0.64.3", "0.65.2", "0.66.4", "0.67.2"]
+              xcode-version: ["12.2.0", "12.5.1", "13.2.1"]
           requires:
-            - common
-      - ios:
-          name: iOS + RN 0.63
-          hello-app-branch: rn-0.63
-          requires:
-            - common
-      - android:
-          name: Android + RN 0.64
-          hello-app-branch: rn-0.64
-          requires:
-            - common
-      - ios:
-          name: iOS + RN 0.64
-          hello-app-branch: rn-0.64
-          requires:
-            - common
+            - test-javascript
