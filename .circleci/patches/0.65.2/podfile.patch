@@ -1,0 +1,16 @@
+--- ios/Podfile
++++ ios/Podfile
+@@ -25,5 +25,13 @@
+ 
+   post_install do |installer|
+     react_native_post_install(installer)
++    installer.pods_project.targets.each do |target|
++      if target.name == "RCT-Folly"
++        target.build_configurations.each do |config|
++          config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '10.0'
++          config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= ['$(inherited)', 'FOLLY_HAVE_CLOCK_GETTIME=1']
++        end
++      end
++    end
+   end
+ end

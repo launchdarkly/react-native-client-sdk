@@ -18,13 +18,23 @@ Build instructions
 
 ### Prerequisites
 
-This SDK requires that you have [`npm`](https://www.npmjs.com/) and [`react-native-cli`](https://www.npmjs.com/package/react-native-cli) installed in order to develop with it.
+Follow the [React Native development environment setup guide](https://reactnative.dev/docs/environment-setup) to install all required tools for contributing to the project.
 
-### Building and running
+### Building and testing
 
-You can modify and verify changes by developing within the LaunchDarkly React Native SDK sample application (`hello-react-native`).
+First, install the dependencies by running:
+```
+npm install
+```
 
-1. Clone and setup the [`hello-react-native`](https://github.com/launchdarkly/hello-react-native) repository.
-2. In your `hello-react-native` directory, copy your `react-native-client-sdk` directory into `node_modules` as `launchdarkly-react-native-client-sdk`. Alternatively, you can use [wml](https://github.com/wix/wml) to monitor and copy files.
-3. Launch your emulator (`emulator -avd <NAME>` for Android) or connect your device.
-4. Test your changes in `hello-react-native` by running either `react-native run-ios` or `react-native run-android` depending on your desired runtime environment.
+To run tests of the JavaScript portion of the implementation:
+```
+npm test
+```
+
+To validate the TypeScript module definition, run:
+```
+npm run check-typescript
+```
+
+Testing the native module implementation must be done by integrating the SDK into an application, such as one created with `npx react-native init`.
