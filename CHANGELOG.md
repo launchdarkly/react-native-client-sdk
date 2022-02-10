@@ -2,6 +2,21 @@
 
 All notable changes to the LaunchDarkly React Native SDK will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [6.0.0] - 2022-02-10
+### Added:
+- Expanded supported versions of React Native to include 0.65, 0.66, and 0.67 releases.
+- Added a manual testing application to the repository.
+- Extensive testing of build configurations in CI to allow quicker validation of compatibility against multiple React Native releases and XCode versions.
+
+### Changed:
+- iOS: The native `podspec` for iOS has been renamed to fix automatic linking. Updating may require removing references to the old `podspec`.
+
+### Fixed:
+- iOS: Fixed an issue that prevented using `jsonVariation` and `jsonVariationDetail` with array default values. ([#112](https://github.com/launchdarkly/react-native-client-sdk/issues/112))
+
+### Removed:
+- Support for React Native 0.63.
+
 ## [5.1.1] - 2022-01-21
 ### Changed:
 - The `key` property on `LDUser` objects is now optional, if it is not provided the SDK will automatically generate a key and mark the user as anonymous. See the [API documentation](https://launchdarkly.github.io/react-native-client-sdk/index.html#lduser) for more details.
