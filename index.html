@@ -1,827 +1,180 @@
-<!doctype html>
-<html class="default no-js">
-<head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>&quot;launchdarkly-react-native-client-sdk&quot; | LaunchDarkly Client-Side SDK for React Native (5.1.1)</title>
-	<meta name="description" content="Documentation for LaunchDarkly Client-Side SDK for React Native (5.1.1)">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="assets/css/main.css">
-</head>
-<body>
-<header>
-	<div class="tsd-page-toolbar">
-		<div class="container">
-			<div class="table-wrap">
-				<div class="table-cell" id="tsd-search" data-index="assets/js/search.json" data-base=".">
-					<div class="field">
-						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
-						<input id="tsd-search-field" type="text" />
-					</div>
-					<ul class="results">
-						<li class="state loading">Preparing search index...</li>
-						<li class="state failure">The search index is not available</li>
-					</ul>
-					<a href="index.html" class="title">LaunchDarkly Client-Side SDK for React Native (5.1.1)</a>
-				</div>
-				<div class="table-cell" id="tsd-widgets">
-					<div id="tsd-filter">
-						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
-						<div class="tsd-filter-group">
-							<div class="tsd-select" id="tsd-filter-visibility">
-								<span class="tsd-select-label">All</span>
-								<ul class="tsd-select-list">
-									<li data-value="public">Public</li>
-									<li data-value="protected">Public/Protected</li>
-									<li data-value="private" class="selected">All</li>
-								</ul>
-							</div>
-							<input type="checkbox" id="tsd-filter-inherited" checked />
-							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
-							<input type="checkbox" id="tsd-filter-externals" checked />
-							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
-							<input type="checkbox" id="tsd-filter-only-exported" />
-							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
-						</div>
-					</div>
-					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="tsd-page-title">
-		<div class="container">
-			<ul class="tsd-breadcrumb">
-				<li>
-					<a href="index.html">&quot;launchdarkly-react-native-client-sdk&quot;</a>
-				</li>
-			</ul>
-			<h1>Module &quot;launchdarkly-react-native-client-sdk&quot;</h1>
-		</div>
-	</div>
-</header>
-<div class="container container-main">
-	<div class="row">
-		<div class="col-8 col-content">
-			<section class="tsd-panel tsd-comment">
-				<div class="tsd-comment tsd-typography">
-					<div class="lead">
-						<p>This is the API reference for the LaunchDarkly Client-Side SDK for React Native.</p>
-					</div>
-					<p>In typical usage, you will instantiate <a href="classes/_launchdarkly_react_native_client_sdk_.ldclient.html">LDClient</a> and then call <a href="classes/_launchdarkly_react_native_client_sdk_.ldclient.html#configure">configure</a> once at startup time to
-					set up your connection to LaunchDarkly.</p>
-					<p>For more information, see the <a href="https://docs.launchdarkly.com/sdk/client-side/react-native">SDK reference guide</a>.</p>
-				</div>
-			</section>
-			<section class="tsd-panel-group tsd-index-group">
-				<h2>Index</h2>
-				<section class="tsd-panel tsd-index-panel">
-					<div class="tsd-index-content">
-						<section class="tsd-index-section ">
-							<h3>Classes</h3>
-							<ul class="tsd-index-list">
-								<li class="tsd-kind-class tsd-parent-kind-module"><a href="classes/_launchdarkly_react_native_client_sdk_.ldclient.html" class="tsd-kind-icon">LDClient</a></li>
-							</ul>
-						</section>
-						<section class="tsd-index-section ">
-							<h3>Interfaces</h3>
-							<ul class="tsd-index-list">
-								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/_launchdarkly_react_native_client_sdk_.ldconnectionmode.html" class="tsd-kind-icon">LDConnection<wbr>Mode</a></li>
-								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/_launchdarkly_react_native_client_sdk_.ldevaluationreasonerrorkind.html" class="tsd-kind-icon">LDEvaluation<wbr>Reason<wbr>Error<wbr>Kind</a></li>
-								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/_launchdarkly_react_native_client_sdk_.ldevaluationreasonkind.html" class="tsd-kind-icon">LDEvaluation<wbr>Reason<wbr>Kind</a></li>
-								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/_launchdarkly_react_native_client_sdk_.ldfailurereason.html" class="tsd-kind-icon">LDFailure<wbr>Reason</a></li>
-								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/_launchdarkly_react_native_client_sdk_.ldflagset.html" class="tsd-kind-icon">LDFlag<wbr>Set</a></li>
-							</ul>
-						</section>
-						<section class="tsd-index-section ">
-							<h3>Type aliases</h3>
-							<ul class="tsd-index-list">
-								<li class="tsd-kind-type-alias tsd-parent-kind-module"><a href="index.html#ldconfig" class="tsd-kind-icon">LDConfig</a></li>
-								<li class="tsd-kind-type-alias tsd-parent-kind-module tsd-has-type-parameter"><a href="index.html#ldevaluationdetail" class="tsd-kind-icon">LDEvaluation<wbr>Detail</a></li>
-								<li class="tsd-kind-type-alias tsd-parent-kind-module"><a href="index.html#ldevaluationreason" class="tsd-kind-icon">LDEvaluation<wbr>Reason</a></li>
-								<li class="tsd-kind-type-alias tsd-parent-kind-module"><a href="index.html#ldevaluationreasonerror" class="tsd-kind-icon">LDEvaluation<wbr>Reason<wbr>Error</a></li>
-								<li class="tsd-kind-type-alias tsd-parent-kind-module"><a href="index.html#ldevaluationreasonfallthrough" class="tsd-kind-icon">LDEvaluation<wbr>Reason<wbr>Fallthrough</a></li>
-								<li class="tsd-kind-type-alias tsd-parent-kind-module"><a href="index.html#ldevaluationreasonoff" class="tsd-kind-icon">LDEvaluation<wbr>Reason<wbr>Off</a></li>
-								<li class="tsd-kind-type-alias tsd-parent-kind-module"><a href="index.html#ldevaluationreasonprerequisitefailed" class="tsd-kind-icon">LDEvaluation<wbr>Reason<wbr>Prerequisite<wbr>Failed</a></li>
-								<li class="tsd-kind-type-alias tsd-parent-kind-module"><a href="index.html#ldevaluationreasonrulematch" class="tsd-kind-icon">LDEvaluation<wbr>Reason<wbr>Rule<wbr>Match</a></li>
-								<li class="tsd-kind-type-alias tsd-parent-kind-module"><a href="index.html#ldevaluationreasontargetmatch" class="tsd-kind-icon">LDEvaluation<wbr>Reason<wbr>Target<wbr>Match</a></li>
-								<li class="tsd-kind-type-alias tsd-parent-kind-module"><a href="index.html#lduser" class="tsd-kind-icon">LDUser</a></li>
-							</ul>
-						</section>
-					</div>
-				</section>
-			</section>
-			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Type aliases</h2>
-				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module">
-					<a name="ldconfig" class="tsd-anchor"></a>
-					<h3>LDConfig</h3>
-					<div class="tsd-signature tsd-kind-icon">LDConfig<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>allUserAttributesPrivate<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>autoAliasingOptOut<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>backgroundPollingIntervalMillis<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>connectionTimeoutMillis<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>debugMode<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>diagnosticOptOut<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>diagnosticRecordingIntervalMillis<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>disableBackgroundUpdating<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>evaluationReasons<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>eventsCapacity<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>eventsFlushIntervalMillis<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>eventsUri<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>inlineUsersInEvents<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>maxCachedUsers<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>mobileKey<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>offline<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>pollUri<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>pollingIntervalMillis<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>secondaryMobileKeys<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">; </span>stream<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>streamUri<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>useReport<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol"> }</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/launchdarkly/react-native-client-sdk-private/blob/aa39b22/index.d.ts#L14">index.d.ts:14</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>Configuration options for the LaunchDarkly React Native SDK.</p>
-						</div>
-					</div>
-					<div class="tsd-type-declaration">
-						<h4>Type declaration</h4>
-						<ul class="tsd-parameters">
-							<li class="tsd-parameter">
-								<h5><span class="tsd-flag ts-flagOptional">Optional</span> all<wbr>User<wbr>Attributes<wbr>Private<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span></h5>
-								<div class="tsd-comment tsd-typography">
-									<div class="lead">
-										<p>Whether to treat all user attributes as private for event reporting for all users.
-											The SDK will not include private attribute values in analytics events, but private attribute names will be sent.
-										The default is false.</p>
-									</div>
-								</div>
-							</li>
-							<li class="tsd-parameter">
-								<h5><span class="tsd-flag ts-flagOptional">Optional</span> auto<wbr>Aliasing<wbr>Opt<wbr>Out<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span></h5>
-								<div class="tsd-comment tsd-typography">
-									<div class="lead">
-										<p>Whether to disable the automatic sending of an alias event when <a href="classes/_launchdarkly_react_native_client_sdk_.ldclient.html#identify">LDClient.identify</a> is
-										called with a non-anonymous user when the previous user is anonymous.</p>
-									</div>
-									<p>The default value is <code>false</code>.</p>
-								</div>
-							</li>
-							<li class="tsd-parameter">
-								<h5><span class="tsd-flag ts-flagOptional">Optional</span> background<wbr>Polling<wbr>Interval<wbr>Millis<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span></h5>
-								<div class="tsd-comment tsd-typography">
-									<div class="lead">
-										<p>The interval by which the SDK polls for flag updates when the application is in the background.</p>
-									</div>
-									<p>The default value is 3600000ms (1 hour).</p>
-								</div>
-							</li>
-							<li class="tsd-parameter">
-								<h5><span class="tsd-flag ts-flagOptional">Optional</span> connection<wbr>Timeout<wbr>Millis<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span></h5>
-								<div class="tsd-comment tsd-typography">
-									<div class="lead">
-										<p>The timeout interval for connecting to LaunchDarkly for flag requests and event reports.</p>
-									</div>
-									<p>The default value is 10000ms (10 seconds).</p>
-								</div>
-							</li>
-							<li class="tsd-parameter">
-								<h5><span class="tsd-flag ts-flagOptional">Optional</span> debug<wbr>Mode<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span></h5>
-								<div class="tsd-comment tsd-typography">
-									<div class="lead">
-										<p>Controls information logged to the console, and modifying some setting ranges to facilitate debugging.</p>
-									</div>
-									<p>This setting is only used when running in iOS. In Android this setting is ignored.</p>
-									<p>The default value is false.</p>
-								</div>
-							</li>
-							<li class="tsd-parameter">
-								<h5><span class="tsd-flag ts-flagOptional">Optional</span> diagnostic<wbr>Opt<wbr>Out<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span></h5>
-								<div class="tsd-comment tsd-typography">
-									<div class="lead">
-										<p>Setting for whether sending diagnostic data about the SDK is disabled. The default is false.</p>
-									</div>
-								</div>
-							</li>
-							<li class="tsd-parameter">
-								<h5><span class="tsd-flag ts-flagOptional">Optional</span> diagnostic<wbr>Recording<wbr>Interval<wbr>Millis<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span></h5>
-								<div class="tsd-comment tsd-typography">
-									<div class="lead">
-										<p>The time interval between sending periodic diagnostic data. The default is 900000 (15 minutes).</p>
-									</div>
-								</div>
-							</li>
-							<li class="tsd-parameter">
-								<h5><span class="tsd-flag ts-flagOptional">Optional</span> disable<wbr>Background<wbr>Updating<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span></h5>
-								<div class="tsd-comment tsd-typography">
-									<div class="lead">
-										<p>Whether or not the SDK should attempt to check for flag updates while the application
-										runs in the background.</p>
-									</div>
-									<p>If this is true, the client will periodically poll for updates while in the background; if
-									false, the SDK will not attempt to receive updates while the app is backgrounded.</p>
-									<p>The default value is false.</p>
-								</div>
-							</li>
-							<li class="tsd-parameter">
-								<h5><span class="tsd-flag ts-flagOptional">Optional</span> evaluation<wbr>Reasons<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span></h5>
-								<div class="tsd-comment tsd-typography">
-									<div class="lead">
-										<p>Whether LaunchDarkly should provide additional information about how flag values were
-										calculated.</p>
-									</div>
-									<p>The additional information will then be available through the client&#39;s
-										<code>LDClient.*VariationDetail</code> methods. Since this increases the size of network requests,
-									such information is not sent unless you set this option to true.</p>
-								</div>
-							</li>
-							<li class="tsd-parameter">
-								<h5><span class="tsd-flag ts-flagOptional">Optional</span> events<wbr>Capacity<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span></h5>
-								<div class="tsd-comment tsd-typography">
-									<div class="lead">
-										<p>The capacity of the analytics events queue.</p>
-									</div>
-									<p>The client buffers up to this many events in memory before flushing. If the capacity is exceeded
-										before the queue is flushed, events will be discarded. Increasing the capacity means that events
-										are less likely to be discarded, at the cost of consuming more memory. Note that in regular usage
-										flag evaluations do not produce individual events, only summary counts, so you only need a large
-										capacity if you are generating a large number of click, pageview, or identify events (or if you
-									are using the event debugger).</p>
-									<p>The default value is 100.</p>
-								</div>
-							</li>
-							<li class="tsd-parameter">
-								<h5><span class="tsd-flag ts-flagOptional">Optional</span> events<wbr>Flush<wbr>Interval<wbr>Millis<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span></h5>
-								<div class="tsd-comment tsd-typography">
-									<div class="lead">
-										<p>The interval in between flushes of the analytics events queue, in milliseconds.</p>
-									</div>
-									<p>The default value is 30000ms (30 seconds).</p>
-								</div>
-							</li>
-							<li class="tsd-parameter">
-								<h5><span class="tsd-flag ts-flagOptional">Optional</span> events<wbr>Uri<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
-								<div class="tsd-comment tsd-typography">
-									<div class="lead">
-										<p>The base URI for the LaunchDarkly events server.</p>
-									</div>
-									<p>Most users should use the default value.</p>
-								</div>
-							</li>
-							<li class="tsd-parameter">
-								<h5><span class="tsd-flag ts-flagOptional">Optional</span> inline<wbr>Users<wbr>InEvents<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span></h5>
-								<div class="tsd-comment tsd-typography">
-									<div class="lead">
-										<p>Whether to include full user details in every analytics event.</p>
-									</div>
-									<p>The default is <code>false</code>: events will only include the user key, except for one &quot;identify&quot; event
-									that provides the full details for the user.</p>
-								</div>
-							</li>
-							<li class="tsd-parameter">
-								<h5><span class="tsd-flag ts-flagOptional">Optional</span> max<wbr>Cached<wbr>Users<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span></h5>
-								<div class="tsd-comment tsd-typography">
-									<div class="lead">
-										<p>Setting for the maximum number of locally cached users. Default is 5 users.</p>
-									</div>
-								</div>
-							</li>
-							<li class="tsd-parameter">
-								<h5>mobile<wbr>Key<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
-								<div class="tsd-comment tsd-typography">
-									<div class="lead">
-										<p>The mobile SDK key associated with your LaunchDarkly environment.</p>
-									</div>
-									<p>This field is required as the React Native SDK will use this value to uniquely
-									identify your LaunchDarkly account.</p>
-								</div>
-							</li>
-							<li class="tsd-parameter">
-								<h5><span class="tsd-flag ts-flagOptional">Optional</span> offline<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span></h5>
-								<div class="tsd-comment tsd-typography">
-									<div class="lead">
-										<p>Disables all network calls from the LaunchDarkly SDK.</p>
-									</div>
-									<p>This can also be specified after the client has been created, using LDClient.setOffline().</p>
-									<p>The default value is true (the client will make network calls).</p>
-								</div>
-							</li>
-							<li class="tsd-parameter">
-								<h5><span class="tsd-flag ts-flagOptional">Optional</span> poll<wbr>Uri<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
-								<div class="tsd-comment tsd-typography">
-									<div class="lead">
-										<p>The base URI for the LaunchDarkly polling server.</p>
-									</div>
-									<p>Most users should use the default value.</p>
-								</div>
-							</li>
-							<li class="tsd-parameter">
-								<h5><span class="tsd-flag ts-flagOptional">Optional</span> polling<wbr>Interval<wbr>Millis<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span></h5>
-								<div class="tsd-comment tsd-typography">
-									<div class="lead">
-										<p>The interval by which the SDK polls for flag updates when the application is in the foreground. This
-										property is only used if is the streaming connection is disabled.</p>
-									</div>
-									<p>The default value is 300000ms (5 min).</p>
-								</div>
-							</li>
-							<li class="tsd-parameter">
-								<h5><span class="tsd-flag ts-flagOptional">Optional</span> secondary<wbr>Mobile<wbr>Keys<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></h5>
-								<div class="tsd-comment tsd-typography">
-									<div class="lead">
-										<p>The mapping of environment names as keys to mobile keys for each environment as values.</p>
-									</div>
-								</div>
-							</li>
-							<li class="tsd-parameter">
-								<h5><span class="tsd-flag ts-flagOptional">Optional</span> stream<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span></h5>
-								<div class="tsd-comment tsd-typography">
-									<div class="lead">
-										<p>Whether or not to open a streaming connection to LaunchDarkly for live flag updates.</p>
-									</div>
-									<p>If this is true, the client will always attempt to maintain a streaming connection; if false,
-									it never will.</p>
-									<p>The default value is true.</p>
-								</div>
-							</li>
-							<li class="tsd-parameter">
-								<h5><span class="tsd-flag ts-flagOptional">Optional</span> stream<wbr>Uri<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
-								<div class="tsd-comment tsd-typography">
-									<div class="lead">
-										<p>The base URI for the LaunchDarkly streaming server.</p>
-									</div>
-									<p>Most users should use the default value.</p>
-								</div>
-							</li>
-							<li class="tsd-parameter">
-								<h5><span class="tsd-flag ts-flagOptional">Optional</span> use<wbr>Report<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span></h5>
-								<div class="tsd-comment tsd-typography">
-									<div class="lead">
-										<p>Whether or not to use the REPORT verb to fetch flag settings.</p>
-									</div>
-									<p>If this is true, flag settings will be fetched with a REPORT request
-									including a JSON entity body with the user object.</p>
-									<p>Otherwise (by default) a GET request will be issued with the user passed as
-									a base64 URL-encoded path parameter.</p>
-									<p>Do not use unless advised by LaunchDarkly.</p>
-								</div>
-							</li>
-						</ul>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module tsd-has-type-parameter">
-					<a name="ldevaluationdetail" class="tsd-anchor"></a>
-					<h3>LDEvaluation<wbr>Detail</h3>
-					<div class="tsd-signature tsd-kind-icon">LDEvaluation<wbr>Detail&lt;T&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>reason<span class="tsd-signature-symbol">: </span><a href="index.html#ldevaluationreason" class="tsd-signature-type">LDEvaluationReason</a><span class="tsd-signature-symbol">; </span>value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">; </span>variationIndex<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> }</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/launchdarkly/react-native-client-sdk-private/blob/aa39b22/index.d.ts#L405">index.d.ts:405</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>An object that combines the result of a feature flag evaluation with information about
-							how it was calculated.</p>
-						</div>
-						<p>This is the result of calling one of the <code>LDClient.*VariationDetail</code> methods.</p>
-						<p>For more information, see the <a href="https://docs.launchdarkly.com/sdk/concepts/evaluation-reasons">documentation</a>.</p>
-					</div>
-					<h4 class="tsd-type-parameters-title">Type parameters</h4>
-					<ul class="tsd-type-parameters">
-						<li>
-							<h4>T</h4>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>  The type of flag being evaluated.</p>
-								</div>
-							</div>
-						</li>
-					</ul>
-					<div class="tsd-type-declaration">
-						<h4>Type declaration</h4>
-						<ul class="tsd-parameters">
-							<li class="tsd-parameter">
-								<h5>reason<span class="tsd-signature-symbol">: </span><a href="index.html#ldevaluationreason" class="tsd-signature-type">LDEvaluationReason</a></h5>
-								<div class="tsd-comment tsd-typography">
-									<div class="lead">
-										<p>An object describing the main factor that influenced the flag evaluation value.</p>
-									</div>
-								</div>
-							</li>
-							<li class="tsd-parameter">
-								<h5>value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span></h5>
-								<div class="tsd-comment tsd-typography">
-									<div class="lead">
-										<p>The result of the flag evaluation. This will be either one of the flag&#39;s variations or
-										the default value that was passed to the variation detail function.</p>
-									</div>
-								</div>
-							</li>
-							<li class="tsd-parameter">
-								<h5><span class="tsd-flag ts-flagOptional">Optional</span> variation<wbr>Index<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span></h5>
-								<div class="tsd-comment tsd-typography">
-									<div class="lead">
-										<p>The index of the returned value within the flag&#39;s list of variations, e.g. 0 for the
-										first variation-- or <code>null</code> if the default value was returned.</p>
-									</div>
-								</div>
-							</li>
-						</ul>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module">
-					<a name="ldevaluationreason" class="tsd-anchor"></a>
-					<h3>LDEvaluation<wbr>Reason</h3>
-					<div class="tsd-signature tsd-kind-icon">LDEvaluation<wbr>Reason<span class="tsd-signature-symbol">:</span> <a href="index.html#ldevaluationreasonoff" class="tsd-signature-type">LDEvaluationReasonOff</a><span class="tsd-signature-symbol"> | </span><a href="index.html#ldevaluationreasonfallthrough" class="tsd-signature-type">LDEvaluationReasonFallthrough</a><span class="tsd-signature-symbol"> | </span><a href="index.html#ldevaluationreasontargetmatch" class="tsd-signature-type">LDEvaluationReasonTargetMatch</a><span class="tsd-signature-symbol"> | </span><a href="index.html#ldevaluationreasonrulematch" class="tsd-signature-type">LDEvaluationReasonRuleMatch</a><span class="tsd-signature-symbol"> | </span><a href="index.html#ldevaluationreasonprerequisitefailed" class="tsd-signature-type">LDEvaluationReasonPrerequisiteFailed</a><span class="tsd-signature-symbol"> | </span><a href="index.html#ldevaluationreasonerror" class="tsd-signature-type">LDEvaluationReasonError</a></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/launchdarkly/react-native-client-sdk-private/blob/aa39b22/index.d.ts#L386">index.d.ts:386</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>Describes the reason that a flag evaluation produced a particular value. This is
-							part of the <a href="index.html#ldevaluationdetail">LDEvaluationDetail</a> object returned by the variation detail methods.</p>
-						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module">
-					<a name="ldevaluationreasonerror" class="tsd-anchor"></a>
-					<h3>LDEvaluation<wbr>Reason<wbr>Error</h3>
-					<div class="tsd-signature tsd-kind-icon">LDEvaluation<wbr>Reason<wbr>Error<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>errorKind<span class="tsd-signature-symbol">: </span><a href="interfaces/_launchdarkly_react_native_client_sdk_.ldevaluationreasonerrorkind.html" class="tsd-signature-type">LDEvaluationReasonErrorKind</a><span class="tsd-signature-symbol">; </span>kind<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">"ERROR"</span><span class="tsd-signature-symbol"> }</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/launchdarkly/react-native-client-sdk-private/blob/aa39b22/index.d.ts#L364">index.d.ts:364</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>The flag could not be evaluated, so the default value was returned.</p>
-						</div>
-					</div>
-					<div class="tsd-type-declaration">
-						<h4>Type declaration</h4>
-						<ul class="tsd-parameters">
-							<li class="tsd-parameter">
-								<h5>error<wbr>Kind<span class="tsd-signature-symbol">: </span><a href="interfaces/_launchdarkly_react_native_client_sdk_.ldevaluationreasonerrorkind.html" class="tsd-signature-type">LDEvaluationReasonErrorKind</a></h5>
-								<div class="tsd-comment tsd-typography">
-									<div class="lead">
-										<p>The kind of error which occurred.</p>
-									</div>
-									<p>Kinds of errors include:</p>
-									<ul>
-										<li><code>&#39;CLIENT_NOT_READY&#39;</code>: The client is not able to establish a connection to LaunchDarkly yet. If there is a persistent feature store, the store does not yet contain flag data.</li>
-										<li><code>&#39;FLAG_NOT_FOUND&#39;</code>: The flag key did not match any known flag.</li>
-										<li><code>&#39;USER_NOT_SPECIFIED&#39;</code>: The user object or user key was not provided.</li>
-										<li><code>&#39;MALFORMED_FLAG&#39;</code>: There was an internal inconsistency in the flag data. For example, a rule specified a nonexistent variation. This is an unusual condition that might require assistance from LaunchDarkly&#39;s Support team.</li>
-										<li><code>&#39;WRONG_TYPE&#39;</code>: The application code requested the flag value with a different data type than it actually is. For example, the code asked for a boolean when the flag type is actually a string.</li>
-										<li><code>&#39;EXCEPTION&#39;</code>: An unexpected error stopped flag evaluation. This could happen if you are using a persistent feature store and the database stops working. When this happens, the SDK always prints the specific error to the log.</li>
-									</ul>
-								</div>
-							</li>
-							<li class="tsd-parameter">
-								<h5>kind<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">"ERROR"</span></h5>
-							</li>
-						</ul>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module">
-					<a name="ldevaluationreasonfallthrough" class="tsd-anchor"></a>
-					<h3>LDEvaluation<wbr>Reason<wbr>Fallthrough</h3>
-					<div class="tsd-signature tsd-kind-icon">LDEvaluation<wbr>Reason<wbr>Fallthrough<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>kind<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">"FALLTHROUGH"</span><span class="tsd-signature-symbol"> }</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/launchdarkly/react-native-client-sdk-private/blob/aa39b22/index.d.ts#L320">index.d.ts:320</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>The flag is on, but the user did not match any targets or rules, so it returned the value that appears
-							on the dashboard under &quot;Default rule.&quot;</p>
-						</div>
-					</div>
-					<div class="tsd-type-declaration">
-						<h4>Type declaration</h4>
-						<ul class="tsd-parameters">
-							<li class="tsd-parameter">
-								<h5>kind<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">"FALLTHROUGH"</span></h5>
-							</li>
-						</ul>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module">
-					<a name="ldevaluationreasonoff" class="tsd-anchor"></a>
-					<h3>LDEvaluation<wbr>Reason<wbr>Off</h3>
-					<div class="tsd-signature tsd-kind-icon">LDEvaluation<wbr>Reason<wbr>Off<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>kind<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">"OFF"</span><span class="tsd-signature-symbol"> }</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/launchdarkly/react-native-client-sdk-private/blob/aa39b22/index.d.ts#L312">index.d.ts:312</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>The flag is off and therefore returned its configured off value.</p>
-						</div>
-					</div>
-					<div class="tsd-type-declaration">
-						<h4>Type declaration</h4>
-						<ul class="tsd-parameters">
-							<li class="tsd-parameter">
-								<h5>kind<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">"OFF"</span></h5>
-							</li>
-						</ul>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module">
-					<a name="ldevaluationreasonprerequisitefailed" class="tsd-anchor"></a>
-					<h3>LDEvaluation<wbr>Reason<wbr>Prerequisite<wbr>Failed</h3>
-					<div class="tsd-signature tsd-kind-icon">LDEvaluation<wbr>Reason<wbr>Prerequisite<wbr>Failed<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>kind<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">"PREREQUISITE_FAILED"</span><span class="tsd-signature-symbol">; </span>prerequisiteKey<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/launchdarkly/react-native-client-sdk-private/blob/aa39b22/index.d.ts#L352">index.d.ts:352</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>The flag had at least one prerequisite flag that either was off or did not return the desired variation.
-							Because of this, the flag returned its &quot;off&quot; value.</p>
-						</div>
-					</div>
-					<div class="tsd-type-declaration">
-						<h4>Type declaration</h4>
-						<ul class="tsd-parameters">
-							<li class="tsd-parameter">
-								<h5>kind<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">"PREREQUISITE_FAILED"</span></h5>
-							</li>
-							<li class="tsd-parameter">
-								<h5>prerequisite<wbr>Key<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
-								<div class="tsd-comment tsd-typography">
-									<div class="lead">
-										<p>The key of the prerequisite flag that failed.</p>
-									</div>
-								</div>
-							</li>
-						</ul>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module">
-					<a name="ldevaluationreasonrulematch" class="tsd-anchor"></a>
-					<h3>LDEvaluation<wbr>Reason<wbr>Rule<wbr>Match</h3>
-					<div class="tsd-signature tsd-kind-icon">LDEvaluation<wbr>Reason<wbr>Rule<wbr>Match<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>kind<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">"RULE_MATCH"</span><span class="tsd-signature-symbol">; </span>ruleId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>ruleIndex<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> }</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/launchdarkly/react-native-client-sdk-private/blob/aa39b22/index.d.ts#L334">index.d.ts:334</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>The user who encountered the flag matched one of the flag&#39;s rules.</p>
-						</div>
-					</div>
-					<div class="tsd-type-declaration">
-						<h4>Type declaration</h4>
-						<ul class="tsd-parameters">
-							<li class="tsd-parameter">
-								<h5>kind<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">"RULE_MATCH"</span></h5>
-							</li>
-							<li class="tsd-parameter">
-								<h5>rule<wbr>Id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
-								<div class="tsd-comment tsd-typography">
-									<div class="lead">
-										<p>The rule&#39;s unique identifier, which stays the same even if you rearrange the order of the rules.</p>
-									</div>
-								</div>
-							</li>
-							<li class="tsd-parameter">
-								<h5>rule<wbr>Index<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></h5>
-								<div class="tsd-comment tsd-typography">
-									<div class="lead">
-										<p>The positional index of the matched rule (0 for the first rule).</p>
-									</div>
-								</div>
-							</li>
-						</ul>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module">
-					<a name="ldevaluationreasontargetmatch" class="tsd-anchor"></a>
-					<h3>LDEvaluation<wbr>Reason<wbr>Target<wbr>Match</h3>
-					<div class="tsd-signature tsd-kind-icon">LDEvaluation<wbr>Reason<wbr>Target<wbr>Match<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>kind<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">"TARGET_MATCH"</span><span class="tsd-signature-symbol"> }</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/launchdarkly/react-native-client-sdk-private/blob/aa39b22/index.d.ts#L327">index.d.ts:327</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>The user key was specifically targeted for this flag in the &quot;Target individual users&quot; section.</p>
-						</div>
-					</div>
-					<div class="tsd-type-declaration">
-						<h4>Type declaration</h4>
-						<ul class="tsd-parameters">
-							<li class="tsd-parameter">
-								<h5>kind<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">"TARGET_MATCH"</span></h5>
-							</li>
-						</ul>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module">
-					<a name="lduser" class="tsd-anchor"></a>
-					<h3>LDUser</h3>
-					<div class="tsd-signature tsd-kind-icon">LDUser<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>anonymous<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>avatar<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>country<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>custom<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">{}</span><span class="tsd-signature-symbol">; </span>email<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>firstName<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>ip<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>key<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>lastName<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>name<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>privateAttributeNames<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span>secondary<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/launchdarkly/react-native-client-sdk-private/blob/aa39b22/index.d.ts#L196">index.d.ts:196</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>A LaunchDarkly user object.</p>
-						</div>
-					</div>
-					<div class="tsd-type-declaration">
-						<h4>Type declaration</h4>
-						<ul class="tsd-parameters">
-							<li class="tsd-parameter">
-								<h5><span class="tsd-flag ts-flagOptional">Optional</span> anonymous<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span></h5>
-								<div class="tsd-comment tsd-typography">
-									<div class="lead">
-										<p>Whether to show the user on the Users page in LaunchDarkly.</p>
-									</div>
-									<p>The default value is false.</p>
-								</div>
-							</li>
-							<li class="tsd-parameter">
-								<h5><span class="tsd-flag ts-flagOptional">Optional</span> avatar<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
-								<div class="tsd-comment tsd-typography">
-									<div class="lead">
-										<p>The avatar associated with the user.</p>
-									</div>
-								</div>
-							</li>
-							<li class="tsd-parameter">
-								<h5><span class="tsd-flag ts-flagOptional">Optional</span> country<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
-								<div class="tsd-comment tsd-typography">
-									<div class="lead">
-										<p>The country associated with the user.</p>
-									</div>
-								</div>
-							</li>
-							<li class="tsd-parameter">
-								<h5><span class="tsd-flag ts-flagOptional">Optional</span> custom<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">{}</span></h5>
-								<div class="tsd-comment tsd-typography">
-									<div class="lead">
-										<p>Any additional attributes associated with the user.</p>
-									</div>
-								</div>
-							</li>
-							<li class="tsd-parameter">
-								<h5><span class="tsd-flag ts-flagOptional">Optional</span> email<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
-								<div class="tsd-comment tsd-typography">
-									<div class="lead">
-										<p>The user&#39;s email address.</p>
-									</div>
-								</div>
-							</li>
-							<li class="tsd-parameter">
-								<h5><span class="tsd-flag ts-flagOptional">Optional</span> first<wbr>Name<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
-								<div class="tsd-comment tsd-typography">
-									<div class="lead">
-										<p>The user&#39;s first name.</p>
-									</div>
-								</div>
-							</li>
-							<li class="tsd-parameter">
-								<h5><span class="tsd-flag ts-flagOptional">Optional</span> ip<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
-								<div class="tsd-comment tsd-typography">
-									<div class="lead">
-										<p>The IP address associated with the user.</p>
-									</div>
-								</div>
-							</li>
-							<li class="tsd-parameter">
-								<h5><span class="tsd-flag ts-flagOptional">Optional</span> key<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
-								<div class="tsd-comment tsd-typography">
-									<div class="lead">
-										<p>A unique string identifying a user.</p>
-									</div>
-									<p>If this value is not provided, a key will be generated automatically and the <code>anonymous</code>
-										property of the user will be set to <code>true</code>. The SDK will provide a key value that is
-										non-identifying, unique between devices, but usually stable between launches of the
-										application on a specific device. The SDK cannot guarantee the value will not change
-										between launches as the platform may change identifiers provided to the application or
-									remove the locally stored application data.</p>
-								</div>
-							</li>
-							<li class="tsd-parameter">
-								<h5><span class="tsd-flag ts-flagOptional">Optional</span> last<wbr>Name<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
-								<div class="tsd-comment tsd-typography">
-									<div class="lead">
-										<p>The user&#39;s last name.</p>
-									</div>
-								</div>
-							</li>
-							<li class="tsd-parameter">
-								<h5><span class="tsd-flag ts-flagOptional">Optional</span> name<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
-								<div class="tsd-comment tsd-typography">
-									<div class="lead">
-										<p>The user&#39;s name.</p>
-									</div>
-									<p>You can search for users on the User page by name.</p>
-								</div>
-							</li>
-							<li class="tsd-parameter">
-								<h5><span class="tsd-flag ts-flagOptional">Optional</span> private<wbr>Attribute<wbr>Names<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></h5>
-								<div class="tsd-comment tsd-typography">
-									<div class="lead">
-										<p>Specifies a list of attribute names (either built-in or custom) which should be
-										marked as private, and not sent to LaunchDarkly in analytics events.</p>
-									</div>
-								</div>
-							</li>
-							<li class="tsd-parameter">
-								<h5><span class="tsd-flag ts-flagOptional">Optional</span> secondary<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
-								<div class="tsd-comment tsd-typography">
-									<div class="lead">
-										<p>The secondary key for the user. See the
-											<a href="https://docs.launchdarkly.com/home/flags/targeting-users#percentage-rollouts">documentation</a>
-										for more information on it&#39;s use for percentage rollout bucketing.</p>
-									</div>
-								</div>
-							</li>
-						</ul>
-					</div>
-				</section>
-			</section>
-		</div>
-		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
-			<nav class="tsd-navigation primary">
-				<ul>
-					<li class="current tsd-kind-module">
-						<a href="index.html">&quot;launchdarkly-<wbr>react-<wbr>native-<wbr>client-<wbr>sdk&quot;</a>
-					</li>
-				</ul>
-			</nav>
-			<nav class="tsd-navigation secondary menu-sticky">
-				<ul class="before-current">
-					<li class=" tsd-kind-class tsd-parent-kind-module">
-						<a href="classes/_launchdarkly_react_native_client_sdk_.ldclient.html" class="tsd-kind-icon">LDClient</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="interfaces/_launchdarkly_react_native_client_sdk_.ldconnectionmode.html" class="tsd-kind-icon">LDConnection<wbr>Mode</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="interfaces/_launchdarkly_react_native_client_sdk_.ldevaluationreasonerrorkind.html" class="tsd-kind-icon">LDEvaluation<wbr>Reason<wbr>Error<wbr>Kind</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="interfaces/_launchdarkly_react_native_client_sdk_.ldevaluationreasonkind.html" class="tsd-kind-icon">LDEvaluation<wbr>Reason<wbr>Kind</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="interfaces/_launchdarkly_react_native_client_sdk_.ldfailurereason.html" class="tsd-kind-icon">LDFailure<wbr>Reason</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="interfaces/_launchdarkly_react_native_client_sdk_.ldflagset.html" class="tsd-kind-icon">LDFlag<wbr>Set</a>
-					</li>
-					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
-						<a href="index.html#ldconfig" class="tsd-kind-icon">LDConfig</a>
-					</li>
-					<li class=" tsd-kind-type-alias tsd-parent-kind-module tsd-has-type-parameter">
-						<a href="index.html#ldevaluationdetail" class="tsd-kind-icon">LDEvaluation<wbr>Detail</a>
-					</li>
-					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
-						<a href="index.html#ldevaluationreason" class="tsd-kind-icon">LDEvaluation<wbr>Reason</a>
-					</li>
-					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
-						<a href="index.html#ldevaluationreasonerror" class="tsd-kind-icon">LDEvaluation<wbr>Reason<wbr>Error</a>
-					</li>
-					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
-						<a href="index.html#ldevaluationreasonfallthrough" class="tsd-kind-icon">LDEvaluation<wbr>Reason<wbr>Fallthrough</a>
-					</li>
-					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
-						<a href="index.html#ldevaluationreasonoff" class="tsd-kind-icon">LDEvaluation<wbr>Reason<wbr>Off</a>
-					</li>
-					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
-						<a href="index.html#ldevaluationreasonprerequisitefailed" class="tsd-kind-icon">LDEvaluation<wbr>Reason<wbr>Prerequisite<wbr>Failed</a>
-					</li>
-					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
-						<a href="index.html#ldevaluationreasonrulematch" class="tsd-kind-icon">LDEvaluation<wbr>Reason<wbr>Rule<wbr>Match</a>
-					</li>
-					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
-						<a href="index.html#ldevaluationreasontargetmatch" class="tsd-kind-icon">LDEvaluation<wbr>Reason<wbr>Target<wbr>Match</a>
-					</li>
-					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
-						<a href="index.html#lduser" class="tsd-kind-icon">LDUser</a>
-					</li>
-				</ul>
-			</nav>
-		</div>
-	</div>
-</div>
-<footer class="with-border-bottom">
-	<div class="container">
-		<h2>Legend</h2>
-		<div class="tsd-legend-group">
-			<ul class="tsd-legend">
-				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
-				<li class="tsd-kind-type-alias tsd-has-type-parameter"><span class="tsd-kind-icon">Type alias with type parameter</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
-			</ul>
-		</div>
-	</div>
-</footer>
-<div class="container tsd-generator">
-	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
-</div>
-<div class="overlay"></div>
-<script src="assets/js/main.js"></script>
-</body>
-</html>
+<!DOCTYPE html><html class="default no-js"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>LaunchDarkly Client-Side SDK for React Native (6.0.0)</title><meta name="description" content="Documentation for LaunchDarkly Client-Side SDK for React Native (6.0.0)"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><script async src="assets/search.js" id="search-script"></script></head><body><header><div class="tsd-page-toolbar"><div class="container"><div class="table-wrap"><div class="table-cell" id="tsd-search" data-base="."><div class="field"><label for="tsd-search-field" class="tsd-widget search no-caption">Search</label><input type="text" id="tsd-search-field"/></div><ul class="results"><li class="state loading">Preparing search index...</li><li class="state failure">The search index is not available</li></ul><a href="index.html" class="title">LaunchDarkly Client-Side SDK for React Native (6.0.0)</a></div><div class="table-cell" id="tsd-widgets"><div id="tsd-filter"><a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a><div class="tsd-filter-group"><div class="tsd-select" id="tsd-filter-visibility"><span class="tsd-select-label">All</span><ul class="tsd-select-list"><li data-value="public">Public</li><li data-value="protected">Public/Protected</li><li data-value="private" class="selected">All</li></ul></div> <input type="checkbox" id="tsd-filter-inherited" checked/><label class="tsd-widget" for="tsd-filter-inherited">Inherited</label><input type="checkbox" id="tsd-filter-externals" checked/><label class="tsd-widget" for="tsd-filter-externals">Externals</label></div></div><a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a></div></div></div></div><div class="tsd-page-title"><div class="container"><h1>LaunchDarkly Client-Side SDK for React Native (6.0.0)</h1></div></div></header><div class="container container-main"><div class="row"><div class="col-8 col-content"><section class="tsd-panel tsd-comment"><div class="tsd-comment tsd-typography"><div class="lead">
+<p>This is the API reference for the LaunchDarkly Client-Side SDK for React Native.</p>
+</div><div><p>In typical usage, you will instantiate <a href="classes/LDClient.html">LDClient</a> and then call <a href="classes/LDClient.html#configure">configure</a> once at startup time to
+set up your connection to LaunchDarkly.</p>
+<p>For more information, see the <a href="https://docs.launchdarkly.com/sdk/client-side/react-native">SDK reference guide</a>.</p>
+</div></div></section><section class="tsd-panel-group tsd-index-group"><h2>Index</h2><section class="tsd-panel tsd-index-panel"><div class="tsd-index-content"><section class="tsd-index-section "><h3>Classes</h3><ul class="tsd-index-list"><li class="tsd-kind-class"><a href="classes/LDClient.html" class="tsd-kind-icon">LDClient</a></li></ul></section><section class="tsd-index-section "><h3>Interfaces</h3><ul class="tsd-index-list"><li class="tsd-kind-interface"><a href="interfaces/LDConnectionMode.html" class="tsd-kind-icon">LDConnection<wbr/>Mode</a></li><li class="tsd-kind-interface"><a href="interfaces/LDEvaluationReasonErrorKind.html" class="tsd-kind-icon">LDEvaluation<wbr/>Reason<wbr/>Error<wbr/>Kind</a></li><li class="tsd-kind-interface"><a href="interfaces/LDEvaluationReasonKind.html" class="tsd-kind-icon">LDEvaluation<wbr/>Reason<wbr/>Kind</a></li><li class="tsd-kind-interface"><a href="interfaces/LDFailureReason.html" class="tsd-kind-icon">LDFailure<wbr/>Reason</a></li><li class="tsd-kind-interface"><a href="interfaces/LDFlagSet.html" class="tsd-kind-icon">LDFlag<wbr/>Set</a></li></ul></section><section class="tsd-index-section "><h3>Type aliases</h3><ul class="tsd-index-list"><li class="tsd-kind-type-alias"><a href="index.html#LDConfig" class="tsd-kind-icon">LDConfig</a></li><li class="tsd-kind-type-alias tsd-has-type-parameter"><a href="index.html#LDEvaluationDetail" class="tsd-kind-icon">LDEvaluation<wbr/>Detail</a></li><li class="tsd-kind-type-alias"><a href="index.html#LDEvaluationReason" class="tsd-kind-icon">LDEvaluation<wbr/>Reason</a></li><li class="tsd-kind-type-alias"><a href="index.html#LDEvaluationReasonError" class="tsd-kind-icon">LDEvaluation<wbr/>Reason<wbr/>Error</a></li><li class="tsd-kind-type-alias"><a href="index.html#LDEvaluationReasonFallthrough" class="tsd-kind-icon">LDEvaluation<wbr/>Reason<wbr/>Fallthrough</a></li><li class="tsd-kind-type-alias"><a href="index.html#LDEvaluationReasonOff" class="tsd-kind-icon">LDEvaluation<wbr/>Reason<wbr/>Off</a></li><li class="tsd-kind-type-alias"><a href="index.html#LDEvaluationReasonPrerequisiteFailed" class="tsd-kind-icon">LDEvaluation<wbr/>Reason<wbr/>Prerequisite<wbr/>Failed</a></li><li class="tsd-kind-type-alias"><a href="index.html#LDEvaluationReasonRuleMatch" class="tsd-kind-icon">LDEvaluation<wbr/>Reason<wbr/>Rule<wbr/>Match</a></li><li class="tsd-kind-type-alias"><a href="index.html#LDEvaluationReasonTargetMatch" class="tsd-kind-icon">LDEvaluation<wbr/>Reason<wbr/>Target<wbr/>Match</a></li><li class="tsd-kind-type-alias"><a href="index.html#LDUser" class="tsd-kind-icon">LDUser</a></li></ul></section></div></section></section><section class="tsd-panel-group tsd-member-group "><h2>Type aliases</h2><section class="tsd-panel tsd-member tsd-kind-type-alias"><a name="LDConfig" class="tsd-anchor"></a><h3>LDConfig</h3><div class="tsd-signature tsd-kind-icon">LDConfig<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>allUserAttributesPrivate<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">; </span>autoAliasingOptOut<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">; </span>backgroundPollingIntervalMillis<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>connectionTimeoutMillis<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>debugMode<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">; </span>diagnosticOptOut<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">; </span>diagnosticRecordingIntervalMillis<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>disableBackgroundUpdating<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">; </span>evaluationReasons<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">; </span>eventsCapacity<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>eventsFlushIntervalMillis<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>eventsUri<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>inlineUsersInEvents<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">; </span>maxCachedUsers<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>mobileKey<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>offline<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">; </span>pollUri<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>pollingIntervalMillis<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>secondaryMobileKeys<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">; </span>stream<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">; </span>streamUri<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>useReport<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> }</span></div><aside class="tsd-sources"><ul><li>Defined in index.d.ts:15</li></ul></aside><div class="tsd-comment tsd-typography"><div class="lead">
+<p>Configuration options for the LaunchDarkly React Native SDK.</p>
+</div></div><div class="tsd-type-declaration"><h4>Type declaration</h4><ul class="tsd-parameters"><li class="tsd-parameter"><h5><span class="tsd-flag ts-flagOptional">Optional</span> all<wbr/>User<wbr/>Attributes<wbr/>Private<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span></h5><div class="tsd-comment tsd-typography"><div class="lead">
+<p>Whether to treat all user attributes as private for event reporting for all users.
+The SDK will not include private attribute values in analytics events, but private attribute names will be sent.
+The default is false.</p>
+</div></div></li><li class="tsd-parameter"><h5><span class="tsd-flag ts-flagOptional">Optional</span> auto<wbr/>Aliasing<wbr/>Opt<wbr/>Out<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span></h5><div class="tsd-comment tsd-typography"><div class="lead">
+<p>Whether to disable the automatic sending of an alias event when <a href="classes/LDClient.html#identify">LDClient.identify</a> is
+called with a non-anonymous user when the previous user is anonymous.</p>
+</div><div><p>The default value is <code>false</code>.</p>
+</div></div></li><li class="tsd-parameter"><h5><span class="tsd-flag ts-flagOptional">Optional</span> background<wbr/>Polling<wbr/>Interval<wbr/>Millis<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span></h5><div class="tsd-comment tsd-typography"><div class="lead">
+<p>The interval by which the SDK polls for flag updates when the application is in the background.</p>
+</div><div><p>The default value is 3600000ms (1 hour).</p>
+</div></div></li><li class="tsd-parameter"><h5><span class="tsd-flag ts-flagOptional">Optional</span> connection<wbr/>Timeout<wbr/>Millis<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span></h5><div class="tsd-comment tsd-typography"><div class="lead">
+<p>The timeout interval for connecting to LaunchDarkly for flag requests and event reports.</p>
+</div><div><p>The default value is 10000ms (10 seconds).</p>
+</div></div></li><li class="tsd-parameter"><h5><span class="tsd-flag ts-flagOptional">Optional</span> debug<wbr/>Mode<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span></h5><div class="tsd-comment tsd-typography"><div class="lead">
+<p>Controls information logged to the console, and modifying some setting ranges to facilitate debugging.</p>
+</div><div><p>This setting is only used when running in iOS. In Android this setting is ignored.</p>
+<p>The default value is false.</p>
+</div></div></li><li class="tsd-parameter"><h5><span class="tsd-flag ts-flagOptional">Optional</span> diagnostic<wbr/>Opt<wbr/>Out<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span></h5><div class="tsd-comment tsd-typography"><div class="lead">
+<p>Setting for whether sending diagnostic data about the SDK is disabled. The default is false.</p>
+</div></div></li><li class="tsd-parameter"><h5><span class="tsd-flag ts-flagOptional">Optional</span> diagnostic<wbr/>Recording<wbr/>Interval<wbr/>Millis<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span></h5><div class="tsd-comment tsd-typography"><div class="lead">
+<p>The time interval between sending periodic diagnostic data. The default is 900000 (15 minutes).</p>
+</div></div></li><li class="tsd-parameter"><h5><span class="tsd-flag ts-flagOptional">Optional</span> disable<wbr/>Background<wbr/>Updating<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span></h5><div class="tsd-comment tsd-typography"><div class="lead">
+<p>Whether or not the SDK should attempt to check for flag updates while the application
+runs in the background.</p>
+</div><div><p>If this is true, the client will periodically poll for updates while in the background; if
+false, the SDK will not attempt to receive updates while the app is backgrounded.</p>
+<p>The default value is false.</p>
+</div></div></li><li class="tsd-parameter"><h5><span class="tsd-flag ts-flagOptional">Optional</span> evaluation<wbr/>Reasons<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span></h5><div class="tsd-comment tsd-typography"><div class="lead">
+<p>Whether LaunchDarkly should provide additional information about how flag values were
+calculated.</p>
+</div><div><p>The additional information will then be available through the client&#39;s
+<code>LDClient.*VariationDetail</code> methods. Since this increases the size of network requests,
+such information is not sent unless you set this option to true.</p>
+</div></div></li><li class="tsd-parameter"><h5><span class="tsd-flag ts-flagOptional">Optional</span> events<wbr/>Capacity<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span></h5><div class="tsd-comment tsd-typography"><div class="lead">
+<p>The capacity of the analytics events queue.</p>
+</div><div><p>The client buffers up to this many events in memory before flushing. If the capacity is exceeded
+before the queue is flushed, events will be discarded. Increasing the capacity means that events
+are less likely to be discarded, at the cost of consuming more memory. Note that in regular usage
+flag evaluations do not produce individual events, only summary counts, so you only need a large
+capacity if you are generating a large number of click, pageview, or identify events (or if you
+are using the event debugger).</p>
+<p>The default value is 100.</p>
+</div></div></li><li class="tsd-parameter"><h5><span class="tsd-flag ts-flagOptional">Optional</span> events<wbr/>Flush<wbr/>Interval<wbr/>Millis<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span></h5><div class="tsd-comment tsd-typography"><div class="lead">
+<p>The interval in between flushes of the analytics events queue, in milliseconds.</p>
+</div><div><p>The default value is 30000ms (30 seconds).</p>
+</div></div></li><li class="tsd-parameter"><h5><span class="tsd-flag ts-flagOptional">Optional</span> events<wbr/>Uri<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span></h5><div class="tsd-comment tsd-typography"><div class="lead">
+<p>The base URI for the LaunchDarkly events server.</p>
+</div><div><p>Most users should use the default value.</p>
+</div></div></li><li class="tsd-parameter"><h5><span class="tsd-flag ts-flagOptional">Optional</span> inline<wbr/>Users<wbr/>In<wbr/>Events<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span></h5><div class="tsd-comment tsd-typography"><div class="lead">
+<p>Whether to include full user details in every analytics event.</p>
+</div><div><p>The default is <code>false</code>: events will only include the user key, except for one &quot;identify&quot; event
+that provides the full details for the user.</p>
+</div></div></li><li class="tsd-parameter"><h5><span class="tsd-flag ts-flagOptional">Optional</span> max<wbr/>Cached<wbr/>Users<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span></h5><div class="tsd-comment tsd-typography"><div class="lead">
+<p>Setting for the maximum number of locally cached users. Default is 5 users.</p>
+</div></div></li><li class="tsd-parameter"><h5>mobile<wbr/>Key<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5><div class="tsd-comment tsd-typography"><div class="lead">
+<p>The mobile SDK key associated with your LaunchDarkly environment.</p>
+</div><div><p>This field is required as the React Native SDK will use this value to uniquely
+identify your LaunchDarkly account.</p>
+</div></div></li><li class="tsd-parameter"><h5><span class="tsd-flag ts-flagOptional">Optional</span> offline<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span></h5><div class="tsd-comment tsd-typography"><div class="lead">
+<p>Disables all network calls from the LaunchDarkly SDK.</p>
+</div><div><p>This can also be specified after the client has been created, using LDClient.setOffline().</p>
+<p>The default value is true (the client will make network calls).</p>
+</div></div></li><li class="tsd-parameter"><h5><span class="tsd-flag ts-flagOptional">Optional</span> poll<wbr/>Uri<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span></h5><div class="tsd-comment tsd-typography"><div class="lead">
+<p>The base URI for the LaunchDarkly polling server.</p>
+</div><div><p>Most users should use the default value.</p>
+</div></div></li><li class="tsd-parameter"><h5><span class="tsd-flag ts-flagOptional">Optional</span> polling<wbr/>Interval<wbr/>Millis<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span></h5><div class="tsd-comment tsd-typography"><div class="lead">
+<p>The interval by which the SDK polls for flag updates when the application is in the foreground. This
+property is only used if is the streaming connection is disabled.</p>
+</div><div><p>The default value is 300000ms (5 min).</p>
+</div></div></li><li class="tsd-parameter"><h5><span class="tsd-flag ts-flagOptional">Optional</span> secondary<wbr/>Mobile<wbr/>Keys<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></h5><div class="tsd-comment tsd-typography"><div class="lead">
+<p>The mapping of environment names as keys to mobile keys for each environment as values.</p>
+</div></div></li><li class="tsd-parameter"><h5><span class="tsd-flag ts-flagOptional">Optional</span> stream<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span></h5><div class="tsd-comment tsd-typography"><div class="lead">
+<p>Whether or not to open a streaming connection to LaunchDarkly for live flag updates.</p>
+</div><div><p>If this is true, the client will always attempt to maintain a streaming connection; if false,
+it never will.</p>
+<p>The default value is true.</p>
+</div></div></li><li class="tsd-parameter"><h5><span class="tsd-flag ts-flagOptional">Optional</span> stream<wbr/>Uri<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span></h5><div class="tsd-comment tsd-typography"><div class="lead">
+<p>The base URI for the LaunchDarkly streaming server.</p>
+</div><div><p>Most users should use the default value.</p>
+</div></div></li><li class="tsd-parameter"><h5><span class="tsd-flag ts-flagOptional">Optional</span> use<wbr/>Report<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span></h5><div class="tsd-comment tsd-typography"><div class="lead">
+<p>Whether or not to use the REPORT verb to fetch flag settings.</p>
+</div><div><p>If this is true, flag settings will be fetched with a REPORT request
+including a JSON entity body with the user object.</p>
+<p>Otherwise (by default) a GET request will be issued with the user passed as
+a base64 URL-encoded path parameter.</p>
+<p>Do not use unless advised by LaunchDarkly.</p>
+</div></div></li></ul></div></section><section class="tsd-panel tsd-member tsd-kind-type-alias tsd-has-type-parameter"><a name="LDEvaluationDetail" class="tsd-anchor"></a><h3>LDEvaluation<wbr/>Detail</h3><div class="tsd-signature tsd-kind-icon">LDEvaluation<wbr/>Detail&lt;T&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>reason<span class="tsd-signature-symbol">: </span><a href="index.html#LDEvaluationReason" class="tsd-signature-type" data-tsd-kind="Type alias">LDEvaluationReason</a><span class="tsd-signature-symbol">; </span>value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">; </span>variationIndex<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> }</span></div><aside class="tsd-sources"><ul><li>Defined in index.d.ts:406</li></ul></aside><div class="tsd-comment tsd-typography"><div class="lead">
+<p>An object that combines the result of a feature flag evaluation with information about
+how it was calculated.</p>
+</div><div><p>This is the result of calling one of the <code>LDClient.*VariationDetail</code> methods.</p>
+<p>For more information, see the <a href="https://docs.launchdarkly.com/sdk/concepts/evaluation-reasons">documentation</a>.</p>
+</div></div><h4 class="tsd-type-parameters-title">Type parameters</h4><ul class="tsd-type-parameters"><li><h4>T</h4><div class="tsd-comment tsd-typography"><div><p>  The type of flag being evaluated.</p>
+</div></div></li></ul><div class="tsd-type-declaration"><h4>Type declaration</h4><ul class="tsd-parameters"><li class="tsd-parameter"><h5>reason<span class="tsd-signature-symbol">: </span><a href="index.html#LDEvaluationReason" class="tsd-signature-type" data-tsd-kind="Type alias">LDEvaluationReason</a></h5><div class="tsd-comment tsd-typography"><div class="lead">
+<p>An object describing the main factor that influenced the flag evaluation value.</p>
+</div></div></li><li class="tsd-parameter"><h5>value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span></h5><div class="tsd-comment tsd-typography"><div class="lead">
+<p>The result of the flag evaluation. This will be either one of the flag&#39;s variations or
+the default value that was passed to the variation detail function.</p>
+</div></div></li><li class="tsd-parameter"><h5><span class="tsd-flag ts-flagOptional">Optional</span> variation<wbr/>Index<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span></h5><div class="tsd-comment tsd-typography"><div class="lead">
+<p>The index of the returned value within the flag&#39;s list of variations, e.g. 0 for the
+first variation-- or <code>null</code> if the default value was returned.</p>
+</div></div></li></ul></div></section><section class="tsd-panel tsd-member tsd-kind-type-alias"><a name="LDEvaluationReason" class="tsd-anchor"></a><h3>LDEvaluation<wbr/>Reason</h3><div class="tsd-signature tsd-kind-icon">LDEvaluation<wbr/>Reason<span class="tsd-signature-symbol">:</span> <a href="index.html#LDEvaluationReasonOff" class="tsd-signature-type" data-tsd-kind="Type alias">LDEvaluationReasonOff</a><span class="tsd-signature-symbol"> | </span><a href="index.html#LDEvaluationReasonFallthrough" class="tsd-signature-type" data-tsd-kind="Type alias">LDEvaluationReasonFallthrough</a><span class="tsd-signature-symbol"> | </span><a href="index.html#LDEvaluationReasonTargetMatch" class="tsd-signature-type" data-tsd-kind="Type alias">LDEvaluationReasonTargetMatch</a><span class="tsd-signature-symbol"> | </span><a href="index.html#LDEvaluationReasonRuleMatch" class="tsd-signature-type" data-tsd-kind="Type alias">LDEvaluationReasonRuleMatch</a><span class="tsd-signature-symbol"> | </span><a href="index.html#LDEvaluationReasonPrerequisiteFailed" class="tsd-signature-type" data-tsd-kind="Type alias">LDEvaluationReasonPrerequisiteFailed</a><span class="tsd-signature-symbol"> | </span><a href="index.html#LDEvaluationReasonError" class="tsd-signature-type" data-tsd-kind="Type alias">LDEvaluationReasonError</a></div><aside class="tsd-sources"><ul><li>Defined in index.d.ts:387</li></ul></aside><div class="tsd-comment tsd-typography"><div class="lead">
+<p>Describes the reason that a flag evaluation produced a particular value. This is
+part of the <a href="index.html#LDEvaluationDetail">LDEvaluationDetail</a> object returned by the variation detail methods.</p>
+</div></div></section><section class="tsd-panel tsd-member tsd-kind-type-alias"><a name="LDEvaluationReasonError" class="tsd-anchor"></a><h3>LDEvaluation<wbr/>Reason<wbr/>Error</h3><div class="tsd-signature tsd-kind-icon">LDEvaluation<wbr/>Reason<wbr/>Error<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>errorKind<span class="tsd-signature-symbol">: </span><a href="interfaces/LDEvaluationReasonErrorKind.html" class="tsd-signature-type" data-tsd-kind="Interface">LDEvaluationReasonErrorKind</a><span class="tsd-signature-symbol">; </span>kind<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">&quot;ERROR&quot;</span><span class="tsd-signature-symbol"> }</span></div><aside class="tsd-sources"><ul><li>Defined in index.d.ts:365</li></ul></aside><div class="tsd-comment tsd-typography"><div class="lead">
+<p>The flag could not be evaluated, so the default value was returned.</p>
+</div></div><div class="tsd-type-declaration"><h4>Type declaration</h4><ul class="tsd-parameters"><li class="tsd-parameter"><h5>error<wbr/>Kind<span class="tsd-signature-symbol">: </span><a href="interfaces/LDEvaluationReasonErrorKind.html" class="tsd-signature-type" data-tsd-kind="Interface">LDEvaluationReasonErrorKind</a></h5><div class="tsd-comment tsd-typography"><div class="lead">
+<p>The kind of error which occurred.</p>
+</div><div><p>Kinds of errors include:</p>
+<ul>
+<li><code>&#39;CLIENT_NOT_READY&#39;</code>: The client is not able to establish a connection to LaunchDarkly yet. If there is a persistent feature store, the store does not yet contain flag data.</li>
+<li><code>&#39;FLAG_NOT_FOUND&#39;</code>: The flag key did not match any known flag.</li>
+<li><code>&#39;USER_NOT_SPECIFIED&#39;</code>: The user object or user key was not provided.</li>
+<li><code>&#39;MALFORMED_FLAG&#39;</code>: There was an internal inconsistency in the flag data. For example, a rule specified a nonexistent variation. This is an unusual condition that might require assistance from LaunchDarkly&#39;s Support team.</li>
+<li><code>&#39;WRONG_TYPE&#39;</code>: The application code requested the flag value with a different data type than it actually is. For example, the code asked for a boolean when the flag type is actually a string.</li>
+<li><code>&#39;EXCEPTION&#39;</code>: An unexpected error stopped flag evaluation. This could happen if you are using a persistent feature store and the database stops working. When this happens, the SDK always prints the specific error to the log.</li>
+</ul>
+</div></div></li><li class="tsd-parameter"><h5>kind<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">&quot;ERROR&quot;</span></h5></li></ul></div></section><section class="tsd-panel tsd-member tsd-kind-type-alias"><a name="LDEvaluationReasonFallthrough" class="tsd-anchor"></a><h3>LDEvaluation<wbr/>Reason<wbr/>Fallthrough</h3><div class="tsd-signature tsd-kind-icon">LDEvaluation<wbr/>Reason<wbr/>Fallthrough<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>kind<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">&quot;FALLTHROUGH&quot;</span><span class="tsd-signature-symbol"> }</span></div><aside class="tsd-sources"><ul><li>Defined in index.d.ts:321</li></ul></aside><div class="tsd-comment tsd-typography"><div class="lead">
+<p>The flag is on, but the user did not match any targets or rules, so it returned the value that appears
+on the dashboard under &quot;Default rule.&quot;</p>
+</div></div><div class="tsd-type-declaration"><h4>Type declaration</h4><ul class="tsd-parameters"><li class="tsd-parameter"><h5>kind<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">&quot;FALLTHROUGH&quot;</span></h5></li></ul></div></section><section class="tsd-panel tsd-member tsd-kind-type-alias"><a name="LDEvaluationReasonOff" class="tsd-anchor"></a><h3>LDEvaluation<wbr/>Reason<wbr/>Off</h3><div class="tsd-signature tsd-kind-icon">LDEvaluation<wbr/>Reason<wbr/>Off<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>kind<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">&quot;OFF&quot;</span><span class="tsd-signature-symbol"> }</span></div><aside class="tsd-sources"><ul><li>Defined in index.d.ts:313</li></ul></aside><div class="tsd-comment tsd-typography"><div class="lead">
+<p>The flag is off and therefore returned its configured off value.</p>
+</div></div><div class="tsd-type-declaration"><h4>Type declaration</h4><ul class="tsd-parameters"><li class="tsd-parameter"><h5>kind<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">&quot;OFF&quot;</span></h5></li></ul></div></section><section class="tsd-panel tsd-member tsd-kind-type-alias"><a name="LDEvaluationReasonPrerequisiteFailed" class="tsd-anchor"></a><h3>LDEvaluation<wbr/>Reason<wbr/>Prerequisite<wbr/>Failed</h3><div class="tsd-signature tsd-kind-icon">LDEvaluation<wbr/>Reason<wbr/>Prerequisite<wbr/>Failed<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>kind<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">&quot;PREREQUISITE_FAILED&quot;</span><span class="tsd-signature-symbol">; </span>prerequisiteKey<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span></div><aside class="tsd-sources"><ul><li>Defined in index.d.ts:353</li></ul></aside><div class="tsd-comment tsd-typography"><div class="lead">
+<p>The flag had at least one prerequisite flag that either was off or did not return the desired variation.
+Because of this, the flag returned its &quot;off&quot; value.</p>
+</div></div><div class="tsd-type-declaration"><h4>Type declaration</h4><ul class="tsd-parameters"><li class="tsd-parameter"><h5>kind<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">&quot;PREREQUISITE_FAILED&quot;</span></h5></li><li class="tsd-parameter"><h5>prerequisite<wbr/>Key<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5><div class="tsd-comment tsd-typography"><div class="lead">
+<p>The key of the prerequisite flag that failed.</p>
+</div></div></li></ul></div></section><section class="tsd-panel tsd-member tsd-kind-type-alias"><a name="LDEvaluationReasonRuleMatch" class="tsd-anchor"></a><h3>LDEvaluation<wbr/>Reason<wbr/>Rule<wbr/>Match</h3><div class="tsd-signature tsd-kind-icon">LDEvaluation<wbr/>Reason<wbr/>Rule<wbr/>Match<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>kind<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">&quot;RULE_MATCH&quot;</span><span class="tsd-signature-symbol">; </span>ruleId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>ruleIndex<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> }</span></div><aside class="tsd-sources"><ul><li>Defined in index.d.ts:335</li></ul></aside><div class="tsd-comment tsd-typography"><div class="lead">
+<p>The user who encountered the flag matched one of the flag&#39;s rules.</p>
+</div></div><div class="tsd-type-declaration"><h4>Type declaration</h4><ul class="tsd-parameters"><li class="tsd-parameter"><h5>kind<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">&quot;RULE_MATCH&quot;</span></h5></li><li class="tsd-parameter"><h5>rule<wbr/>Id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5><div class="tsd-comment tsd-typography"><div class="lead">
+<p>The rule&#39;s unique identifier, which stays the same even if you rearrange the order of the rules.</p>
+</div></div></li><li class="tsd-parameter"><h5>rule<wbr/>Index<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></h5><div class="tsd-comment tsd-typography"><div class="lead">
+<p>The positional index of the matched rule (0 for the first rule).</p>
+</div></div></li></ul></div></section><section class="tsd-panel tsd-member tsd-kind-type-alias"><a name="LDEvaluationReasonTargetMatch" class="tsd-anchor"></a><h3>LDEvaluation<wbr/>Reason<wbr/>Target<wbr/>Match</h3><div class="tsd-signature tsd-kind-icon">LDEvaluation<wbr/>Reason<wbr/>Target<wbr/>Match<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>kind<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">&quot;TARGET_MATCH&quot;</span><span class="tsd-signature-symbol"> }</span></div><aside class="tsd-sources"><ul><li>Defined in index.d.ts:328</li></ul></aside><div class="tsd-comment tsd-typography"><div class="lead">
+<p>The user key was specifically targeted for this flag in the &quot;Target individual users&quot; section.</p>
+</div></div><div class="tsd-type-declaration"><h4>Type declaration</h4><ul class="tsd-parameters"><li class="tsd-parameter"><h5>kind<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">&quot;TARGET_MATCH&quot;</span></h5></li></ul></div></section><section class="tsd-panel tsd-member tsd-kind-type-alias"><a name="LDUser" class="tsd-anchor"></a><h3>LDUser</h3><div class="tsd-signature tsd-kind-icon">LDUser<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>anonymous<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">; </span>avatar<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>country<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>custom<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{}</span><span class="tsd-signature-symbol">; </span>email<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>firstName<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>ip<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>key<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>lastName<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>name<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>privateAttributeNames<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span>secondary<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span></div><aside class="tsd-sources"><ul><li>Defined in index.d.ts:197</li></ul></aside><div class="tsd-comment tsd-typography"><div class="lead">
+<p>A LaunchDarkly user object.</p>
+</div></div><div class="tsd-type-declaration"><h4>Type declaration</h4><ul class="tsd-parameters"><li class="tsd-parameter"><h5><span class="tsd-flag ts-flagOptional">Optional</span> anonymous<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span></h5><div class="tsd-comment tsd-typography"><div class="lead">
+<p>Whether to show the user on the Users page in LaunchDarkly.</p>
+</div><div><p>The default value is false.</p>
+</div></div></li><li class="tsd-parameter"><h5><span class="tsd-flag ts-flagOptional">Optional</span> avatar<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span></h5><div class="tsd-comment tsd-typography"><div class="lead">
+<p>The avatar associated with the user.</p>
+</div></div></li><li class="tsd-parameter"><h5><span class="tsd-flag ts-flagOptional">Optional</span> country<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span></h5><div class="tsd-comment tsd-typography"><div class="lead">
+<p>The country associated with the user.</p>
+</div></div></li><li class="tsd-parameter"><h5><span class="tsd-flag ts-flagOptional">Optional</span> custom<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{}</span></h5><div class="tsd-comment tsd-typography"><div class="lead">
+<p>Any additional attributes associated with the user.</p>
+</div></div><ul class="tsd-parameters"><li class="tsd-parameter-index-signature"><h5><span class="tsd-signature-symbol">[</span>key: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]: </span><span class="tsd-signature-type">any</span></h5></li></ul></li><li class="tsd-parameter"><h5><span class="tsd-flag ts-flagOptional">Optional</span> email<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span></h5><div class="tsd-comment tsd-typography"><div class="lead">
+<p>The user&#39;s email address.</p>
+</div></div></li><li class="tsd-parameter"><h5><span class="tsd-flag ts-flagOptional">Optional</span> first<wbr/>Name<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span></h5><div class="tsd-comment tsd-typography"><div class="lead">
+<p>The user&#39;s first name.</p>
+</div></div></li><li class="tsd-parameter"><h5><span class="tsd-flag ts-flagOptional">Optional</span> ip<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span></h5><div class="tsd-comment tsd-typography"><div class="lead">
+<p>The IP address associated with the user.</p>
+</div></div></li><li class="tsd-parameter"><h5><span class="tsd-flag ts-flagOptional">Optional</span> key<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span></h5><div class="tsd-comment tsd-typography"><div class="lead">
+<p>A unique string identifying a user.</p>
+</div><div><p>If this value is not provided, a key will be generated automatically and the <code>anonymous</code>
+property of the user will be set to <code>true</code>. The SDK will provide a key value that is
+non-identifying, unique between devices, but usually stable between launches of the
+application on a specific device. The SDK cannot guarantee the value will not change
+between launches as the platform may change identifiers provided to the application or
+remove the locally stored application data.</p>
+</div></div></li><li class="tsd-parameter"><h5><span class="tsd-flag ts-flagOptional">Optional</span> last<wbr/>Name<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span></h5><div class="tsd-comment tsd-typography"><div class="lead">
+<p>The user&#39;s last name.</p>
+</div></div></li><li class="tsd-parameter"><h5><span class="tsd-flag ts-flagOptional">Optional</span> name<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span></h5><div class="tsd-comment tsd-typography"><div class="lead">
+<p>The user&#39;s name.</p>
+</div><div><p>You can search for users on the User page by name.</p>
+</div></div></li><li class="tsd-parameter"><h5><span class="tsd-flag ts-flagOptional">Optional</span> private<wbr/>Attribute<wbr/>Names<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></h5><div class="tsd-comment tsd-typography"><div class="lead">
+<p>Specifies a list of attribute names (either built-in or custom) which should be
+marked as private, and not sent to LaunchDarkly in analytics events.</p>
+</div></div></li><li class="tsd-parameter"><h5><span class="tsd-flag ts-flagOptional">Optional</span> secondary<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span></h5><div class="tsd-comment tsd-typography"><div class="lead">
+<p>The secondary key for the user. See the
+<a href="https://docs.launchdarkly.com/home/flags/targeting-users#percentage-rollouts">documentation</a>
+for more information on it&#39;s use for percentage rollout bucketing.</p>
+</div></div></li></ul></div></section></section></div><div class="col-4 col-menu menu-sticky-wrap menu-highlight"><nav class="tsd-navigation primary"><ul><li class="current"><a href="index.html">Exports</a></li></ul></nav><nav class="tsd-navigation secondary menu-sticky"><ul><li class="tsd-kind-class"><a href="classes/LDClient.html" class="tsd-kind-icon">LDClient</a></li><li class="tsd-kind-interface"><a href="interfaces/LDConnectionMode.html" class="tsd-kind-icon">LDConnection<wbr/>Mode</a></li><li class="tsd-kind-interface"><a href="interfaces/LDEvaluationReasonErrorKind.html" class="tsd-kind-icon">LDEvaluation<wbr/>Reason<wbr/>Error<wbr/>Kind</a></li><li class="tsd-kind-interface"><a href="interfaces/LDEvaluationReasonKind.html" class="tsd-kind-icon">LDEvaluation<wbr/>Reason<wbr/>Kind</a></li><li class="tsd-kind-interface"><a href="interfaces/LDFailureReason.html" class="tsd-kind-icon">LDFailure<wbr/>Reason</a></li><li class="tsd-kind-interface"><a href="interfaces/LDFlagSet.html" class="tsd-kind-icon">LDFlag<wbr/>Set</a></li><li class="tsd-kind-type-alias"><a href="index.html#LDConfig" class="tsd-kind-icon">LDConfig</a></li><li class="tsd-kind-type-alias tsd-has-type-parameter"><a href="index.html#LDEvaluationDetail" class="tsd-kind-icon">LDEvaluation<wbr/>Detail</a></li><li class="tsd-kind-type-alias"><a href="index.html#LDEvaluationReason" class="tsd-kind-icon">LDEvaluation<wbr/>Reason</a></li><li class="tsd-kind-type-alias"><a href="index.html#LDEvaluationReasonError" class="tsd-kind-icon">LDEvaluation<wbr/>Reason<wbr/>Error</a></li><li class="tsd-kind-type-alias"><a href="index.html#LDEvaluationReasonFallthrough" class="tsd-kind-icon">LDEvaluation<wbr/>Reason<wbr/>Fallthrough</a></li><li class="tsd-kind-type-alias"><a href="index.html#LDEvaluationReasonOff" class="tsd-kind-icon">LDEvaluation<wbr/>Reason<wbr/>Off</a></li><li class="tsd-kind-type-alias"><a href="index.html#LDEvaluationReasonPrerequisiteFailed" class="tsd-kind-icon">LDEvaluation<wbr/>Reason<wbr/>Prerequisite<wbr/>Failed</a></li><li class="tsd-kind-type-alias"><a href="index.html#LDEvaluationReasonRuleMatch" class="tsd-kind-icon">LDEvaluation<wbr/>Reason<wbr/>Rule<wbr/>Match</a></li><li class="tsd-kind-type-alias"><a href="index.html#LDEvaluationReasonTargetMatch" class="tsd-kind-icon">LDEvaluation<wbr/>Reason<wbr/>Target<wbr/>Match</a></li><li class="tsd-kind-type-alias"><a href="index.html#LDUser" class="tsd-kind-icon">LDUser</a></li></ul></nav></div></div></div><footer class="with-border-bottom"><div class="container"><h2>Legend</h2><div class="tsd-legend-group"><ul class="tsd-legend"><li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li><li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li></ul></div><h2>Settings</h2><p>Theme <select id="theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></p></div></footer><div class="container tsd-generator"><p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></div><div class="overlay"></div><script src="assets/main.js"></script></body></html>
