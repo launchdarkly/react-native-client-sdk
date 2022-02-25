@@ -138,7 +138,7 @@ workflows:
           name: rn<<matrix.rn-version>>-xc<<matrix.xcode-version>>-build-apps-using-template
           matrix:
             parameters:
-              rn-version: ["0.64.3", "0.65.2", "0.66.4", "0.67.2"]
+              rn-version: ["0.64.3", "0.65.2", "0.66.4", "0.67.3"]
               xcode-version: ["12.2.0", "12.5.1", "13.2.1"]
           requires:
             - test-javascript
