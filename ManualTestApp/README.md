@@ -1,3 +1,3 @@
 ## Manual testing application
 
-Add your mobile key in `App.js`, `npx pod-install`, `yarn run <android|ios>`.
+Add your mobile key in `App.js`, `npx yarn install`, `npx pod-install`, `npx yarn run <android|ios>`.

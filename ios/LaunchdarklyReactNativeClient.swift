@@ -3,15 +3,17 @@ import LaunchDarkly
 
 @objc(LaunchdarklyReactNativeClient)
 class LaunchdarklyReactNativeClient: RCTEventEmitter {
-    private var listenerKeys: [String:LDObserverOwner] = [:]
-    
     private let FLAG_PREFIX = "LaunchDarkly-Flag-"
     private let ALL_FLAGS_PREFIX = "LaunchDarkly-All-Flags-"
     private let CONNECTION_MODE_PREFIX = "LaunchDarkly-Connection-Mode-"
     private let ERROR_INIT = "E_INITIALIZE"
     private let ERROR_IDENTIFY = "E_IDENTIFY"
     private let ERROR_UNKNOWN = "E_UNKNOWN"
-    
+
+    private var flagListenerOwners: [String: ObserverOwner] = [:]
+    private var allFlagsListenerOwners: [String: ObserverOwner] = [:]
+    private var connectionModeListenerOwners: [String: ObserverOwner] = [:]
+
     override func supportedEvents() -> [String]! {
         return [FLAG_PREFIX, ALL_FLAGS_PREFIX, CONNECTION_MODE_PREFIX]
     }
@@ -383,53 +385,56 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
 
     @objc func registerFeatureFlagListener(_ flagKey: String, environment: String) -> Void {
         let multiListenerId = envConcat(environment: environment, identifier: flagKey)
-        let flagChangeOwner = multiListenerId as LDObserverOwner
-        listenerKeys[multiListenerId] = flagChangeOwner
-        LDClient.get(environment: environment)!.observe(key: flagKey, owner: flagChangeOwner, handler: { changedFlag in
+        let owner = ObserverOwner()
+        flagListenerOwners[multiListenerId] = owner
+        LDClient.get(environment: environment)!.observe(key: flagKey, owner: owner) { changedFlag in
             if self.bridge != nil {
                 self.sendEvent(withName: self.FLAG_PREFIX, body: ["flagKey": changedFlag.key, "listenerId": multiListenerId])
             }
-        })
-    }
-    
-    private func unregisterListener(_ key: String, _ environment: String) -> Void {
-        let multiListenerId = envConcat(environment: environment, identifier: key)
-        let owner = multiListenerId as LDObserverOwner
-        if listenerKeys.removeValue(forKey: multiListenerId) != nil {
-            LDClient.get(environment: environment)!.stopObserving(owner: owner)
         }
     }
     
     @objc func unregisterFeatureFlagListener(_ flagKey: String, environment: String) -> Void {
-        unregisterListener(flagKey, environment)
+        let multiListenerId = envConcat(environment: environment, identifier: flagKey)
+        if let owner = flagListenerOwners.removeValue(forKey: multiListenerId) {
+            LDClient.get(environment: environment)!.stopObserving(owner: owner)
+        }
     }
     
     @objc func registerCurrentConnectionModeListener(_ listenerId: String, environment: String) -> Void {
         let multiListenerId = envConcat(environment: environment, identifier: listenerId)
-        let currentConnectionModeOwner = multiListenerId as LDObserverOwner
-        LDClient.get(environment: environment)!.observeCurrentConnectionMode(owner: currentConnectionModeOwner, handler: { connectionMode in
+        let owner = ObserverOwner()
+        connectionModeListenerOwners[multiListenerId] = owner
+        LDClient.get(environment: environment)!.observeCurrentConnectionMode(owner: owner) { connectionMode in
             if self.bridge != nil {
                 self.sendEvent(withName: self.CONNECTION_MODE_PREFIX, body: ["connectionMode": connectionMode, "listenerId": multiListenerId])
             }
-        })
+        }
     }
     
     @objc func unregisterCurrentConnectionModeListener(_ listenerId: String, environment: String) -> Void {
-        unregisterListener(listenerId, environment)
+        let multiListenerId = envConcat(environment: environment, identifier: listenerId)
+        if let owner = connectionModeListenerOwners.removeValue(forKey: multiListenerId) {
+            LDClient.get(environment: environment)!.stopObserving(owner: owner)
+        }
     }
     
     @objc func registerAllFlagsListener(_ listenerId: String, environment: String) -> Void {
         let multiListenerId = envConcat(environment: environment, identifier: listenerId)
-        let flagChangeOwner = multiListenerId as LDObserverOwner
-        LDClient.get(environment: environment)!.observeAll(owner: flagChangeOwner, handler: { changedFlags in
+        let owner = ObserverOwner()
+        allFlagsListenerOwners[multiListenerId] = owner
+        LDClient.get(environment: environment)!.observeAll(owner: owner) { changedFlags in
             if self.bridge != nil {
                 self.sendEvent(withName: self.ALL_FLAGS_PREFIX, body: ["flagKeys": Array(changedFlags.keys), "listenerId": multiListenerId])
             }
-        })
+        }
     }
     
     @objc func unregisterAllFlagsListener(_ listenerId: String, environment: String) -> Void {
-        unregisterListener(listenerId, environment)
+        let multiListenerId = envConcat(environment: environment, identifier: listenerId)
+        if let owner = allFlagsListenerOwners.removeValue(forKey: multiListenerId) {
+            LDClient.get(environment: environment)!.stopObserving(owner: owner)
+        }
     }
 
     @objc func isInitialized(_ environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
@@ -442,6 +447,8 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
         }
     }
 }
+
+class ObserverOwner{}
 
 extension NSDictionary {
     @objc var swiftDictionary: Dictionary<String, Any> {
