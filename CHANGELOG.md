@@ -2,6 +2,15 @@
 
 All notable changes to the LaunchDarkly React Native SDK will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [6.1.0] - 2022-02-25
+### Added:
+- Added `privateAttributeNames` configuration option for `LDConfig` allowing the configuration of private attributes for all users. ([#102](https://github.com/launchdarkly/react-native-client-sdk/issues/102))
+
+### Fixed:
+- Android: Updated Android SDK dependency to [3.1.3](https://github.com/launchdarkly/android-client-sdk/releases/tag/3.1.3).
+- Android: Added missing native module API stubs to prevent warning on `NativeEventEmitter`. ([#116](https://github.com/launchdarkly/react-native-client-sdk/issues/116))
+- iOS: Fixed ownership handling of native callbacks to avoid garbage collection of all flags and connection mode listeners that are still in use. ([#106](https://github.com/launchdarkly/react-native-client-sdk/issues/106))
+
 ## [6.0.0] - 2022-02-10
 ### Added:
 - Expanded supported versions of React Native to include 0.65, 0.66, and 0.67 releases.
