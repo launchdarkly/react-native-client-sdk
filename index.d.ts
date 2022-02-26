@@ -189,6 +189,14 @@ declare module 'launchdarkly-react-native-client-sdk' {
          * that provides the full details for the user.
          */
         inlineUsersInEvents?: boolean;
+
+        /**
+         * The names of user attributes that should be marked as private, and not sent to
+         * LaunchDarkly in analytics events.
+         *
+         * You can also specify this on a per-user basis with [[LDUser.privateAttributeNames]].
+         */
+        privateAttributeNames?: string[]
     };
   
     /**

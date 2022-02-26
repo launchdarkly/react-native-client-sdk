@@ -48,6 +48,7 @@ async function tests() {
         allUserAttributesPrivate: true,
         autoAliasingOptOut: true,
         inlineUsersInEvents: true,
+        privateAttributeNames: ['abc', 'def'],
     };
     const userEmpty: LDUser = {};
     const userWithKeyOnly: LDUser = { key: 'user' };

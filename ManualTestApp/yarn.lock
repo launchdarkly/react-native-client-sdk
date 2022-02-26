@@ -3137,7 +3137,7 @@ kleur@^3.0.3:
   integrity sha512-eTIzlVOSUR+JxdDFepEYcBMtZ9Qqdef+rnzWdRZuMbOywu5tO2w2N7rqjoANZ5k9vywhL6Br1VRjUIgTQx4E8w==
 
 "launchdarkly-react-native-client-sdk@file:..":
-  version "5.1.1"
+  version "6.0.0"
 
 leven@^3.1.0:
   version "3.1.0"
