@@ -2,6 +2,10 @@
 
 All notable changes to the LaunchDarkly React Native SDK will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [6.1.2] - 2022-03-25
+### Fixed:
+- Android: Prevent multiple allocations of the `DiagnosticEventProcessor`.
+
 ## [6.1.1] - 2022-03-18
 ### Fixed:
 - iOS: Fixed race condition in `LDSwiftEventSource` that could cause a crash if the stream is explicitly stopped (such as when `identify` is called) while the stream is waiting to reconnect.
