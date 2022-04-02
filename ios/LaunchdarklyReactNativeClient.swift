@@ -446,6 +446,16 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
             reject(ERROR_UNKNOWN, "SDK not configured with requested environment", nil)
         }
     }
+    
+    @objc func isInitializedSafe(_ environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+        if LDClient.get() == nil {
+            reject(ERROR_UNKNOWN, "SDK has not been configured", nil)
+        } else if let client = LDClient.get(environment: environment) {
+            resolve(client.isInitialized)
+        } else {
+            resolve(true)
+        }
+    }
 }
 
 class ObserverOwner{}
