@@ -210,6 +210,17 @@ test('isInitialized', () => {
   expect(nativeMock.isInitialized).toHaveBeenNthCalledWith(2, 'alt');
 });
 
+test('isInitializedSafe', () => {
+  nativeMock.isInitializedSafe.mockReturnValueOnce(false);
+  expect(client.isInitializedSafe()).toBe(false);
+  nativeMock.isInitializedSafe.mockReturnValueOnce(true);
+  expect(client.isInitializedSafe('alt')).toBe(true);
+
+  expect(nativeMock.isInitializedSafe).toHaveBeenCalledTimes(2);
+  expect(nativeMock.isInitializedSafe).toHaveBeenNthCalledWith(1, 'default');
+  expect(nativeMock.isInitializedSafe).toHaveBeenNthCalledWith(2, 'alt');
+});
+
 test('flush', () => {
   client.flush();
   expect(nativeMock.flush).toHaveBeenCalledTimes(1);
