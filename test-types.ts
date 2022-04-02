@@ -112,6 +112,7 @@ async function tests() {
     const setOnline: boolean = await client.setOnline();
     const isOffline: boolean = await client.isOffline();
     const isInitialized: boolean = await client.isInitialized();
+    const isInitializedSafe: boolean = await client.isInitializedSafe();
 
     const callback = function(_: string): void { };
     const registerFeatureFlagListener: void = client.registerFeatureFlagListener('key', callback);
