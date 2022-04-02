@@ -52,6 +52,7 @@ const mockNativeModule = {
   isOffline: jest.fn(),
   setOnline: jest.fn(),
   isInitialized: jest.fn(),
+  isInitializedSafe: jest.fn(),
   flush: jest.fn(),
   close: jest.fn(),
   identify: jest.fn(),
