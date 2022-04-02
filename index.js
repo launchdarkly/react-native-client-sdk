@@ -187,6 +187,11 @@ export default class LDClient {
     const env = environment !== undefined ? environment : "default";
     return LaunchdarklyReactNativeClient.isInitialized(env);
   }
+  
+  isInitialized(environment) {
+    const env = environment !== undefined ? environment : "default";
+    return LaunchdarklyReactNativeClient.isInitializedSafe(env);
+  }
 
   flush() {
     LaunchdarklyReactNativeClient.flush();
