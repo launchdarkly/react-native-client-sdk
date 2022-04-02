@@ -702,6 +702,18 @@ declare module 'launchdarkly-react-native-client-sdk' {
         isInitialized(environment?: string): Promise<boolean>;
         
         /**
+         * Same functionality as isInitialized but does not return a rejected promise in case the client has 
+         * been already initialized. Instead the function will return either true or false depending on the 
+         * client state.
+         *
+         * @param environment
+         *   Optional environment name to obtain the result from the corresponding secondary environment
+         * @returns 
+         *   A promise containing true if the client is initialized or offline, otherwise false
+         */
+        isInitializedSafe(environment?: string): Promise<boolean>;
+        
+        /**
          * Flushes all pending analytics events.
          *
          * Normally, batches of events are delivered in the background at intervals determined by the
