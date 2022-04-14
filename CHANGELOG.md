@@ -2,6 +2,15 @@
 
 All notable changes to the LaunchDarkly React Native SDK will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [6.1.3] - 2022-04-14
+### Added:
+- React Native 0.68 Support
+
+### Fixed:
+- Android: `variationDetail` methods return the correct variation when the reason is not present
+- Android: The object returned by `variationDetail` methods will now include the `inExperiment` field when appropriate.
+- ManualTestApp Int and Float options now work correctly
+
 ## [6.1.2] - 2022-03-25
 ### Fixed:
 - Android: Prevent multiple allocations of the `DiagnosticEventProcessor`.
