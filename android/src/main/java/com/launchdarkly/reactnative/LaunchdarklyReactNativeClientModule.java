@@ -434,19 +434,30 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
         ObjectBuilder resultMap = LDValue.buildObject();
         if (!detail.isDefaultValue()) {
             resultMap.put("variationIndex", detail.getVariationIndex());
+        } else {
+            resultMap.put("variationIndex", LDValue.ofNull());
         }
         EvaluationReason reason = detail.getReason();
+        if (reason == null) {
+            resultMap.put("reason", LDValue.ofNull());
+            return resultMap;
+        }
         ObjectBuilder reasonMap = LDValue.buildObject();
         reasonMap.put("kind", reason.getKind().name());
         switch (reason.getKind()) {
             case RULE_MATCH:
                 reasonMap.put("ruleIndex", reason.getRuleIndex());
-                if (reason.getRuleId() != null) {
-                    reasonMap.put("ruleId", reason.getRuleId());
+                reasonMap.put("ruleId", reason.getRuleId());
+                if (reason.isInExperiment()) {
+                    reasonMap.put("inExperiment", true);
                 }
                 break;
             case PREREQUISITE_FAILED: reasonMap.put("prerequisiteKey", reason.getPrerequisiteKey()); break;
             case ERROR: reasonMap.put("errorKind", reason.getErrorKind().name()); break;
+            case FALLTHROUGH:
+                if (reason.isInExperiment()) {
+                    reasonMap.put("inExperiment", true);
+                }
             default: break;
         }
         resultMap.put("reason", reasonMap.build());
