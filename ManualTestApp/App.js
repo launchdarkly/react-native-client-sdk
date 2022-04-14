@@ -63,9 +63,9 @@ const Body = () => {
     } else if (flagType === 'string') {
       res = await client.stringVariation(flagKey, '');
     } else if (flagType === 'int') {
-      res = await client.intVariation(flagKey, 0);
+      res = await client.numberVariation(flagKey, 0);
     } else if (flagType === 'float') {
-      res = await client.floatVariation(flagKey, 0.0);
+      res = await client.numberVariation(flagKey, 0.0);
     } else if (flagType === 'array') {
       res = await client.jsonVariation(flagKey, []);
     } else if (flagType === 'object') {
