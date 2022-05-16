@@ -13,17 +13,7 @@ RCT_EXTERN_METHOD(numberVariation:(NSString *)flagKey defaultValue:(NSNumber *)d
 
 RCT_EXTERN_METHOD(stringVariation:(NSString *)flagKey defaultValue:(NSString *)defaultValue environment:(NSString *)environment resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 
-RCT_EXTERN_METHOD(jsonVariationNone:(NSString *)flagKey environment:(NSString *)environment resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
-
-RCT_EXTERN_METHOD(jsonVariationNumber:(NSString *)flagKey defaultValue:(NSNumber *)defaultValue environment:(NSString *)environment resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
-
-RCT_EXTERN_METHOD(jsonVariationBool:(NSString *)flagKey defaultValue:(BOOL *)defaultValue environment:(NSString *)environment resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
-
-RCT_EXTERN_METHOD(jsonVariationString:(NSString *)flagKey defaultValue:(NSString *)defaultValue environment:(NSString *)environment resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
-
-RCT_EXTERN_METHOD(jsonVariationArray:(NSString *)flagKey defaultValue:(NSArray *)defaultValue environment:(NSString *)environment resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
-
-RCT_EXTERN_METHOD(jsonVariationObject:(NSString *)flagKey defaultValue:(NSDictionary *)defaultValue environment:(NSString *)environment resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(jsonVariation:(NSString *)flagKey defaultValue:(id *)defaultValue environment:(NSString *)environment resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 
 RCT_EXTERN_METHOD(boolVariationDetail:(NSString *)flagKey defaultValue:(BOOL *)defaultValue environment:(NSString *)environment resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 
@@ -31,41 +21,11 @@ RCT_EXTERN_METHOD(numberVariationDetail:(NSString *)flagKey defaultValue:(NSNumb
 
 RCT_EXTERN_METHOD(stringVariationDetail:(NSString *)flagKey defaultValue:(NSString *)defaultValue environment:(NSString *)environment resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 
-RCT_EXTERN_METHOD(jsonVariationDetailNone:(NSString *)flagKey environment:(NSString *)environment resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(jsonVariationDetail:(NSString *)flagKey defaultValue:(id *)defaultValue environment:(NSString *)environment resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 
-RCT_EXTERN_METHOD(jsonVariationDetailNumber:(NSString *)flagKey defaultValue:(NSNumber *)defaultValue environment:(NSString *)environment resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(trackData:(NSString *)eventName data:(id *)data environment:(NSString *)environment)
 
-RCT_EXTERN_METHOD(jsonVariationDetailBool:(NSString *)flagKey defaultValue:(BOOL *)defaultValue environment:(NSString *)environment resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
-
-RCT_EXTERN_METHOD(jsonVariationDetailString:(NSString *)flagKey defaultValue:(NSString *)defaultValue environment:(NSString *)environment resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
-
-RCT_EXTERN_METHOD(jsonVariationDetailArray:(NSString *)flagKey defaultValue:(NSArray *)defaultValue environment:(NSString *)environment resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
-
-RCT_EXTERN_METHOD(jsonVariationDetailObject:(NSString *)flagKey defaultValue:(NSDictionary *)defaultValue environment:(NSString *)environment resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
-
-RCT_EXTERN_METHOD(trackBool:(NSString *)eventName data:(BOOL *)data environment:(NSString *)environment)
-
-RCT_EXTERN_METHOD(trackArray:(NSString *)eventName data:(NSArray *)data environment:(NSString *)environment)
-
-RCT_EXTERN_METHOD(trackNumber:(NSString *)eventName data:(NSNumber * _Nonnull)data environment:(NSString *)environment)
-
-RCT_EXTERN_METHOD(trackString:(NSString *)eventName data:(NSString *)data environment:(NSString *)environment)
-
-RCT_EXTERN_METHOD(trackObject:(NSString *)eventName data:(NSDictionary *)data environment:(NSString *)environment)
-
-RCT_EXTERN_METHOD(track:(NSString *)eventName environment:(NSString *)environment)
-
-RCT_EXTERN_METHOD(trackBoolMetricValue:(NSString *)eventName data:(BOOL *)data metricValue:(NSNumber * _Nonnull)metricValue environment:(NSString *)environment)
-
-RCT_EXTERN_METHOD(trackArrayMetricValue:(NSString *)eventName data:(NSArray *)data metricValue:(NSNumber * _Nonnull)metricValue environment:(NSString *)environment)
-
-RCT_EXTERN_METHOD(trackNumberMetricValue:(NSString *)eventName data:(NSNumber *)data metricValue:(NSNumber * _Nonnull)metricValue environment:(NSString *)environment)
-
-RCT_EXTERN_METHOD(trackStringMetricValue:(NSString *)eventName data:(NSString *)data metricValue:(NSNumber * _Nonnull)metricValue environment:(NSString *)environment)
-
-RCT_EXTERN_METHOD(trackObjectMetricValue:(NSString *)eventName data:(NSDictionary *)data metricValue:(NSNumber * _Nonnull)metricValue environment:(NSString *)environment)
-
-RCT_EXTERN_METHOD(trackMetricValue:(NSString *)eventName metricValue:(NSNumber * _Nonnull)metricValue environment:(NSString *)environment)
+RCT_EXTERN_METHOD(trackMetricValue:(NSString *)eventName data:(id *)data metricValue:(NSNumber * _Nonnull)metricValue environment:(NSString *)environment)
 
 RCT_EXTERN_METHOD(setOffline:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 

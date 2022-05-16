@@ -22,6 +22,8 @@ async function tests() {
         'f': [ 1, 2 ]
     };
 
+    const jsonArr: any[] = ['a', 1, null, false, {'a': 3}, []];
+
     const configWithKeyOnly: LDConfig = {
         mobileKey: ''
     };
@@ -76,17 +78,19 @@ async function tests() {
     const boolFlagValue: boolean = await client.boolVariation('key', false);
     const floatFlagValue: number = await client.numberVariation('key', 2.3);
     const stringFlagValue: string = await client.stringVariation('key', 'default');
-    const jsonFlagValue: Record<string, any> = await client.jsonVariation('key', jsonObj);
+    const jsonObjFlagValue: any = await client.jsonVariation('key', jsonObj);
+    const jsonArrFlagValue: any = await client.jsonVariation('key', jsonArr);
+    const jsonSimpleFlagValue: any = await client.jsonVariation('key', 3);
 
     const boolDetail: LDEvaluationDetail<boolean> = await client.boolVariationDetail('key', false);
     const floatDetail: LDEvaluationDetail<number> = await client.numberVariationDetail('key', 2.3);
     const stringDetail: LDEvaluationDetail<string> = await client.stringVariationDetail('key', 'default');
-    const jsonDetail: LDEvaluationDetail<Record<string, any>> = await client.jsonVariationDetail('key', jsonObj);
+    const jsonDetail: LDEvaluationDetail<any> = await client.jsonVariationDetail('key', jsonObj);
 
     const boolDetailMulti: LDEvaluationDetail<boolean> = await client.boolVariationDetail('key', false, 'test');
     const floatDetailMulti: LDEvaluationDetail<number> = await client.numberVariationDetail('key', 2.3, 'test');
     const stringDetailMulti: LDEvaluationDetail<string> = await client.stringVariationDetail('key', 'default', 'test');
-    const jsonDetailMulti: LDEvaluationDetail<Record<string, any>> = await client.jsonVariationDetail('key', jsonObj, 'test');
+    const jsonDetailMulti: LDEvaluationDetail<any> = await client.jsonVariationDetail('key', jsonObj, 'test');
 
     const detailIndex: number | undefined = boolDetail.variationIndex;
     const detailReason: LDEvaluationReason = boolDetail.reason;

@@ -11,6 +11,7 @@ import { SafeAreaView,
        } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import LDClient from 'launchdarkly-react-native-client-sdk';
+import MessageQueue from 'react-native/Libraries/BatchedBridge/MessageQueue.js';
 
 const Wrapper = ({children}): Node => {
   const styles = {
@@ -62,14 +63,10 @@ const Body = () => {
       res = await client.boolVariation(flagKey, false);
     } else if (flagType === 'string') {
       res = await client.stringVariation(flagKey, '');
-    } else if (flagType === 'int') {
-      res = await client.numberVariation(flagKey, 0);
-    } else if (flagType === 'float') {
+    } else if (flagType === 'number') {
       res = await client.numberVariation(flagKey, 0.0);
-    } else if (flagType === 'array') {
-      res = await client.jsonVariation(flagKey, []);
-    } else if (flagType === 'object') {
-      res = await client.jsonVariation(flagKey, {});
+    } else if (flagType === 'json') {
+      res = await client.jsonVariation(flagKey, null);
     }
 
     Alert.alert('LD Server Response', JSON.stringify(res));
@@ -121,10 +118,8 @@ const Body = () => {
                 onValueChange={(itemValue, _) => setFlagType(itemValue)}>
           <Picker.Item label="Bool" value="bool" />
           <Picker.Item label="String" value="string" />
-          <Picker.Item label="Int" value="int" />
-          <Picker.Item label="Float" value="float" />
-          <Picker.Item label="Array" value="array" />
-          <Picker.Item label="Object" value="object" />
+          <Picker.Item label="Number" value="number" />
+          <Picker.Item label="JSON" value="json" />
         </Picker>
         <Text>Offline</Text>
         <Switch value={isOffline} onValueChange={setOffline} />
@@ -169,5 +164,27 @@ const App = () => {
     </Wrapper>
   );
 }
+
+MessageQueue.spy((msg) => {
+  if (msg.module != 'LaunchdarklyReactNativeClient' && !msg.method.includes('LaunchdarklyReactNativeClient')) {
+    return;
+  }
+  let logMsg = msg.type === 0 ? 'N->JS: ' : 'JS->N: ';
+  logMsg += msg.method.replace('LaunchdarklyReactNativeClient.', '');
+
+  let params = [...msg.args];
+  if (params.length >= 2) {
+    let cbIdSucc = params[params.length - 1];
+    let cbIdFail = params[params.length - 2];
+    if (Number.isInteger(cbIdSucc) && Number.isInteger(cbIdFail) &&
+        (cbIdSucc & 1) === 1 && (cbIdFail & 1) === 0 &&
+        (cbIdSucc >>> 1 === cbIdFail >>> 1)) {
+      params.splice(-2, 2, '<promise>');
+    }
+  }
+
+  logMsg += '(' + params.map(p => JSON.stringify(p)).join(', ') + ')';
+  console.log(logMsg);
+});
 
 export default App;
