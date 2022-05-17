@@ -26,15 +26,15 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
         return false
     }
     
-    @objc func configure(_ config: NSDictionary, user: NSDictionary, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
+    @objc func configure(_ config: NSDictionary, user: NSDictionary, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         internalConfigure(config: config, user: user, timeout: nil, resolve: resolve, reject: reject)
     }
 
-    @objc func configureWithTimeout(_ config: NSDictionary, user: NSDictionary, timeout: Int, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
+    @objc func configureWithTimeout(_ config: NSDictionary, user: NSDictionary, timeout: Int, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         internalConfigure(config: config, user: user, timeout: timeout, resolve: resolve, reject: reject)
     }
 
-    private func internalConfigure(config: NSDictionary, user: NSDictionary, timeout: Int?, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
+    private func internalConfigure(config: NSDictionary, user: NSDictionary, timeout: Int?, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         let config = configBuild(config: config)
 
         if let config = config {
@@ -91,7 +91,7 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
         configField(&ldConfig.allUserAttributesPrivate, config["allUserAttributesPrivate"], id)
         configField(&ldConfig.autoAliasingOptOut, config["autoAliasingOptOut"], id)
         configField(&ldConfig.inlineUserInEvents, config["inlineUsersInEvents"], id)
-        configField(&ldConfig.privateUserAttributes, config["privateAttributeNames"], id)
+        configField(&ldConfig.privateUserAttributes, config["privateAttributeNames"], { (x: [String]) in x.map { UserAttribute.forName($0) }})
 
         if let val = config["secondaryMobileKeys"] as? [String: String] {
             try! ldConfig.setSecondaryMobileKeys(val)
@@ -99,11 +99,11 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
 
         return ldConfig
     }
-    
+
     private func userBuild(_ userDict: NSDictionary) -> LDUser {
         var user = LDUser(key: userDict["key"] as? String)
-        if let anon = userDict["anonymous"] as? Bool, anon {
-            user.isAnonymous = true
+        if let anon = userDict["anonymous"] as? Bool {
+            user.isAnonymous = anon
         }
         user.secondary = userDict["secondary"] as? String
         user.name = userDict["name"] as? String
@@ -113,232 +113,103 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
         user.country = userDict["country"] as? String
         user.ipAddress = userDict["ip"] as? String
         user.avatar = userDict["avatar"] as? String
-        user.privateAttributes = userDict["privateAttributeNames"] as? [String]
-        user.custom = userDict["custom"] as? [String: Any]
+        let privateNames = userDict["privateAttributeNames"] as? [String] ?? []
+        user.privateAttributes = privateNames.map { UserAttribute.forName($0) }
+        user.custom = (userDict["custom"] as? [String: Any] ?? [:]).mapValues { LDValue.fromBridge($0) }
         return user
     }
-    
-    @objc func boolVariation(_ flagKey: String, defaultValue: ObjCBool, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-        resolve(LDClient.get(environment: environment)!.variation(forKey: flagKey, defaultValue: defaultValue.boolValue) as Bool)
-    }
-    
-    @objc func numberVariation(_ flagKey: String, defaultValue: Double, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-        resolve(LDClient.get(environment: environment)!.variation(forKey: flagKey, defaultValue: defaultValue) as Double)
-    }
-    
-    @objc func stringVariation(_ flagKey: String, defaultValue: String, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-        resolve(LDClient.get(environment: environment)!.variation(forKey: flagKey, defaultValue: defaultValue) as String)
-    }
-    
-    @objc func jsonVariationNone(_ flagKey: String, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-        let jsonFlagValue: Dictionary<String, Any>? = LDClient.get(environment: environment)!.variation(forKey: flagKey)
-        resolve(jsonFlagValue)
+
+    @objc func boolVariation(_ flagKey: String, defaultValue: ObjCBool, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+        resolve(LDClient.get(environment: environment)!.boolVariation(forKey: flagKey, defaultValue: defaultValue.boolValue))
     }
 
-    @objc func jsonVariationNumber(_ flagKey: String, defaultValue: Double, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-        resolve(LDClient.get(environment: environment)!.variation(forKey: flagKey, defaultValue: defaultValue) as Double)
+    @objc func numberVariation(_ flagKey: String, defaultValue: Double, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+        resolve(LDClient.get(environment: environment)!.doubleVariation(forKey: flagKey, defaultValue: defaultValue))
     }
 
-    @objc func jsonVariationBool(_ flagKey: String, defaultValue: Bool, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-        resolve(LDClient.get(environment: environment)!.variation(forKey: flagKey, defaultValue: defaultValue) as Bool)
+    @objc func stringVariation(_ flagKey: String, defaultValue: String, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+        resolve(LDClient.get(environment: environment)!.stringVariation(forKey: flagKey, defaultValue: defaultValue))
     }
 
-    @objc func jsonVariationString(_ flagKey: String, defaultValue: String, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-        resolve(LDClient.get(environment: environment)!.variation(forKey: flagKey, defaultValue: defaultValue) as String)
+    @objc func jsonVariation(_ flagKey: String, defaultValue: Any, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+        resolve(LDClient.get(environment: environment)!.jsonVariation(forKey: flagKey, defaultValue: LDValue.fromBridge(defaultValue)).toBridge())
     }
 
-    @objc func jsonVariationArray(_ flagKey: String, defaultValue: Array<Any>, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-        resolve(LDClient.get(environment: environment)!.variation(forKey: flagKey, defaultValue: defaultValue) as Array<Any>)
+    @objc func boolVariationDetail(_ flagKey: String, defaultValue: ObjCBool, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+        let detail = LDClient.get(environment: environment)!.boolVariationDetail(forKey: flagKey, defaultValue: defaultValue.boolValue)
+        resolve(bridgeDetail(detail, id))
     }
 
-    @objc func jsonVariationObject(_ flagKey: String, defaultValue: NSDictionary, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-        resolve(LDClient.get(environment: environment)!.variation(forKey: flagKey, defaultValue: defaultValue.swiftDictionary) as NSDictionary)
+    @objc func numberVariationDetail(_ flagKey: String, defaultValue: Double, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+        let detail = LDClient.get(environment: environment)!.doubleVariationDetail(forKey: flagKey, defaultValue: defaultValue)
+        resolve(bridgeDetail(detail, id))
     }
-    
-    @objc func boolVariationDetail(_ flagKey: String, defaultValue: ObjCBool, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-        let detail = LDClient.get(environment: environment)!.variationDetail(forKey: flagKey, defaultValue: defaultValue.boolValue)
-        let jsonObject: NSDictionary = [
-            "value": (detail.value as Any),
-            "variationIndex": (detail.variationIndex as Any),
-            "reason": (detail.reason as Any) 
+
+    @objc func stringVariationDetail(_ flagKey: String, defaultValue: String, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+        let detail = LDClient.get(environment: environment)!.stringVariationDetail(forKey: flagKey, defaultValue: defaultValue)
+        resolve(bridgeDetail(detail, id))
+    }
+
+    @objc func jsonVariationDetail(_ flagKey: String, defaultValue: Any, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+        let detail = LDClient.get(environment: environment)!.jsonVariationDetail(forKey: flagKey, defaultValue: LDValue.fromBridge(defaultValue))
+        resolve(bridgeDetail(detail, { $0.toBridge() }))
+    }
+
+    private func bridgeDetail<T>(_ detail: LDEvaluationDetail<T>, _ converter: ((T) -> Any)) -> NSDictionary {
+        [ "value": converter(detail.value)
+        , "variationIndex": (detail.variationIndex as Any)
+        , "reason": ((detail.reason?.mapValues { $0.toBridge() }) as Any)
         ]
-        resolve(jsonObject)
-    }
-    
-    @objc func numberVariationDetail(_ flagKey: String, defaultValue: Double, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-        let detail = LDClient.get(environment: environment)!.variationDetail(forKey: flagKey, defaultValue: defaultValue)
-        let jsonObject: NSDictionary = [
-            "value": (detail.value as Any),
-            "variationIndex": (detail.variationIndex as Any),
-            "reason": (detail.reason as Any) 
-        ]
-        resolve(jsonObject)
-    }
-    
-    @objc func stringVariationDetail(_ flagKey: String, defaultValue: String, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-        let detail = LDClient.get(environment: environment)!.variationDetail(forKey: flagKey, defaultValue: defaultValue)
-        let jsonObject: NSDictionary = [
-            "value": (detail.value as Any),
-            "variationIndex": (detail.variationIndex as Any),
-            "reason": (detail.reason as Any) 
-        ]
-        resolve(jsonObject)
-    }
-    
-    @objc func jsonVariationDetailNone(_ flagKey: String, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-        let detail: LDEvaluationDetail<Dictionary<String, Any>?> = LDClient.get(environment: environment)!.variationDetail(forKey: flagKey)
-        let jsonObject: NSDictionary = [
-            "value": (detail.value as Any),
-            "variationIndex": (detail.variationIndex as Any),
-            "reason": (detail.reason as Any) 
-        ]
-        resolve(jsonObject)
-    }
-    
-    @objc func jsonVariationDetailNumber(_ flagKey: String, defaultValue: Double, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-        let detail = LDClient.get(environment: environment)!.variationDetail(forKey: flagKey, defaultValue: defaultValue)
-        let jsonObject: NSDictionary = [
-            "value": (detail.value as Any),
-            "variationIndex": (detail.variationIndex as Any),
-            "reason": (detail.reason as Any) 
-        ]
-        resolve(jsonObject)
-    }
-    
-    @objc func jsonVariationDetailBool(_ flagKey: String, defaultValue: Bool, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-        let detail = LDClient.get(environment: environment)!.variationDetail(forKey: flagKey, defaultValue: defaultValue)
-        let jsonObject: NSDictionary = [
-            "value": (detail.value as Any),
-            "variationIndex": (detail.variationIndex as Any),
-            "reason": (detail.reason as Any) 
-        ]
-        resolve(jsonObject)
-    }
-    
-    @objc func jsonVariationDetailString(_ flagKey: String, defaultValue: String, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-        let detail = LDClient.get(environment: environment)!.variationDetail(forKey: flagKey, defaultValue: defaultValue)
-        let jsonObject: NSDictionary = [
-            "value": (detail.value as Any),
-            "variationIndex": (detail.variationIndex as Any),
-            "reason": (detail.reason as Any) 
-        ]
-        resolve(jsonObject)
-    }
-    
-    @objc func jsonVariationDetailArray(_ flagKey: String, defaultValue: Array<Any>, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-        let detail = LDClient.get(environment: environment)!.variationDetail(forKey: flagKey, defaultValue: defaultValue)
-        let jsonObject: NSDictionary = [
-            "value": (detail.value as Any),
-            "variationIndex": (detail.variationIndex as Any),
-            "reason": (detail.reason as Any) 
-        ]
-        resolve(jsonObject)
-    }
-    
-    @objc func jsonVariationDetailObject(_ flagKey: String, defaultValue: NSDictionary, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-        let detail = LDClient.get(environment: environment)!.variationDetail(forKey: flagKey, defaultValue: defaultValue.swiftDictionary)
-        let jsonObject: NSDictionary = [
-            "value": (detail.value as Any),
-            "variationIndex": (detail.variationIndex as Any),
-            "reason": (detail.reason as Any) 
-        ]
-        resolve(jsonObject)
     }
 
-    @objc func trackNumber(_ eventName: String, data: NSNumber, environment: String) -> Void {
-        try? LDClient.get(environment: environment)!.track(key: eventName, data: data)
+    @objc func trackData(_ eventName: String, data: Any, environment: String) {
+        LDClient.get(environment: environment)!.track(key: eventName, data: LDValue.fromBridge(data))
     }
 
-    @objc func trackBool(_ eventName: String, data: ObjCBool, environment: String) -> Void {
-        try? LDClient.get(environment: environment)!.track(key: eventName, data: data.boolValue)
+    @objc func trackMetricValue(_ eventName: String, data: Any, metricValue: NSNumber, environment: String) {
+        LDClient.get(environment: environment)!.track(key: eventName, data: LDValue.fromBridge(data), metricValue: Double(truncating: metricValue))
     }
 
-    @objc func trackString(_ eventName: String, data: String, environment: String) -> Void {
-        try? LDClient.get(environment: environment)!.track(key: eventName, data: data)
-    }
-
-    @objc func trackArray(_ eventName: String, data: NSArray, environment: String) -> Void {
-        try? LDClient.get(environment: environment)!.track(key: eventName, data: data)
-    }
-
-    @objc func trackObject(_ eventName: String, data: NSDictionary, environment: String) -> Void {
-        try? LDClient.get(environment: environment)!.track(key: eventName, data: data.swiftDictionary)
-    }
-
-    @objc func track(_ eventName: String, environment: String) -> Void {
-        try? LDClient.get(environment: environment)!.track(key: eventName)
-    }
-    
-    @objc func trackNumberMetricValue(_ eventName: String, data: NSNumber, metricValue: NSNumber, environment: String) -> Void {
-        try? LDClient.get(environment: environment)!.track(key: eventName, data: data, metricValue: Double(truncating: metricValue))
-    }
-    
-    @objc func trackBoolMetricValue(_ eventName: String, data: ObjCBool, metricValue: NSNumber, environment: String) -> Void {
-        try? LDClient.get(environment: environment)!.track(key: eventName, data: data.boolValue, metricValue: Double(truncating: metricValue))
-    }
-    
-    @objc func trackStringMetricValue(_ eventName: String, data: String, metricValue: NSNumber, environment: String) -> Void {
-        try? LDClient.get(environment: environment)!.track(key: eventName, data: data, metricValue: Double(truncating: metricValue))
-    }
-    
-    @objc func trackArrayMetricValue(_ eventName: String, data: NSArray, metricValue: NSNumber, environment: String) -> Void {
-        try? LDClient.get(environment: environment)!.track(key: eventName, data: data, metricValue: Double(truncating: metricValue))
-    }
-    
-    @objc func trackObjectMetricValue(_ eventName: String, data: NSDictionary, metricValue: NSNumber, environment: String) -> Void {
-        try? LDClient.get(environment: environment)!.track(key: eventName, data: data.swiftDictionary, metricValue: Double(truncating: metricValue))
-    }
-    
-    @objc func trackMetricValue(_ eventName: String, metricValue: NSNumber, environment: String) -> Void {
-        try? LDClient.get(environment: environment)!.track(key: eventName, metricValue: Double(truncating: metricValue))
-    }
-
-    @objc func setOffline(_ resolve: @escaping RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+    @objc func setOffline(_ resolve: @escaping RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         LDClient.get()?.setOnline(false) {
-            return resolve(true)
+            resolve(true)
         }
     }
-    
-    @objc func isOffline(_ resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+
+    @objc func isOffline(_ resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         resolve(!(LDClient.get()?.isOnline ?? false))
     }
-    
-    @objc func setOnline(_ resolve: @escaping RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+
+    @objc func setOnline(_ resolve: @escaping RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         LDClient.get()?.setOnline(true) {
-            return resolve(true)
+            resolve(true)
         }
     }
-    
-    @objc func flush() -> Void {
+
+    @objc func flush() {
         LDClient.get()?.flush()
     }
-    
-    @objc func close(_ resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+
+    @objc func close(_ resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         LDClient.get()?.close()
         resolve(true)
     }
-    
-    @objc func identify(_ options: NSDictionary, resolve: @escaping RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+
+    @objc func identify(_ options: NSDictionary, resolve: @escaping RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         LDClient.get()?.identify(user: userBuild(options)) {
             resolve(nil)
         }
     }
 
-    @objc func alias(_ environment: String, user: NSDictionary, previousUser: NSDictionary) -> Void {
+    @objc func alias(_ environment: String, user: NSDictionary, previousUser: NSDictionary) {
         LDClient.get(environment: environment)!.alias(context: userBuild(user), previousContext: userBuild(previousUser))
     }
-    
-    @objc func allFlags(_ environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-        var allFlagsDict: [String: Any] = [:]
-        if let allFlags = LDClient.get(environment: environment)!.allFlags {
-            for (key, value) in allFlags {
-                allFlagsDict[key] = value
-            }
-        }
-        resolve(allFlagsDict as NSDictionary)
+
+    @objc func allFlags(_ environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+        resolve(LDClient.get(environment: environment)!.allFlags?.mapValues { $0.toBridge() } ?? [:] as NSDictionary)
     }
-    
-    @objc func getConnectionMode(_ environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+
+    @objc func getConnectionMode(_ environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         let connectionInformation = LDClient.get(environment: environment)!.getConnectionInformation()
         var connectionMode: String
         switch connectionInformation.currentConnectionMode {
@@ -355,15 +226,15 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
     }
 
     // lastKnownFlagValidity is nil if either no connection has ever been successfully made or if the SDK has an active streaming connection. It will have a value if 1) in polling mode and at least one poll has completed successfully, or 2) if in streaming mode whenever the streaming connection closes.
-    @objc func getLastSuccessfulConnection(_ environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+    @objc func getLastSuccessfulConnection(_ environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         resolve(LDClient.get(environment: environment)!.getConnectionInformation().lastKnownFlagValidity ?? 0)
     }
 
-    @objc func getLastFailedConnection(_ environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+    @objc func getLastFailedConnection(_ environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         resolve(LDClient.get(environment: environment)!.getConnectionInformation().lastFailedConnection ?? 0)
     }
 
-    @objc func getLastFailure(_ environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+    @objc func getLastFailure(_ environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         let connectionInformation = LDClient.get(environment: environment)!.getConnectionInformation()
         var failureReason: String
         switch connectionInformation.lastConnectionFailureReason {
@@ -383,7 +254,7 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
         return environment + ";" + identifier
     }
 
-    @objc func registerFeatureFlagListener(_ flagKey: String, environment: String) -> Void {
+    @objc func registerFeatureFlagListener(_ flagKey: String, environment: String) {
         let multiListenerId = envConcat(environment: environment, identifier: flagKey)
         let owner = ObserverOwner()
         flagListenerOwners[multiListenerId] = owner
@@ -393,15 +264,15 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
             }
         }
     }
-    
-    @objc func unregisterFeatureFlagListener(_ flagKey: String, environment: String) -> Void {
+
+    @objc func unregisterFeatureFlagListener(_ flagKey: String, environment: String) {
         let multiListenerId = envConcat(environment: environment, identifier: flagKey)
         if let owner = flagListenerOwners.removeValue(forKey: multiListenerId) {
             LDClient.get(environment: environment)!.stopObserving(owner: owner)
         }
     }
-    
-    @objc func registerCurrentConnectionModeListener(_ listenerId: String, environment: String) -> Void {
+
+    @objc func registerCurrentConnectionModeListener(_ listenerId: String, environment: String) {
         let multiListenerId = envConcat(environment: environment, identifier: listenerId)
         let owner = ObserverOwner()
         connectionModeListenerOwners[multiListenerId] = owner
@@ -411,15 +282,15 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
             }
         }
     }
-    
-    @objc func unregisterCurrentConnectionModeListener(_ listenerId: String, environment: String) -> Void {
+
+    @objc func unregisterCurrentConnectionModeListener(_ listenerId: String, environment: String) {
         let multiListenerId = envConcat(environment: environment, identifier: listenerId)
         if let owner = connectionModeListenerOwners.removeValue(forKey: multiListenerId) {
             LDClient.get(environment: environment)!.stopObserving(owner: owner)
         }
     }
-    
-    @objc func registerAllFlagsListener(_ listenerId: String, environment: String) -> Void {
+
+    @objc func registerAllFlagsListener(_ listenerId: String, environment: String) {
         let multiListenerId = envConcat(environment: environment, identifier: listenerId)
         let owner = ObserverOwner()
         allFlagsListenerOwners[multiListenerId] = owner
@@ -429,15 +300,15 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
             }
         }
     }
-    
-    @objc func unregisterAllFlagsListener(_ listenerId: String, environment: String) -> Void {
+
+    @objc func unregisterAllFlagsListener(_ listenerId: String, environment: String) {
         let multiListenerId = envConcat(environment: environment, identifier: listenerId)
         if let owner = allFlagsListenerOwners.removeValue(forKey: multiListenerId) {
             LDClient.get(environment: environment)!.stopObserving(owner: owner)
         }
     }
 
-    @objc func isInitialized(_ environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+    @objc func isInitialized(_ environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         if LDClient.get() == nil {
             reject(ERROR_UNKNOWN, "SDK has not been configured", nil)
         } else if let client = LDClient.get(environment: environment) {
@@ -450,17 +321,36 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
 
 class ObserverOwner{}
 
-extension NSDictionary {
-    @objc var swiftDictionary: Dictionary<String, Any> {
-        var swiftDictionary = Dictionary<String, Any>()
-        
-        for key : Any in self.allKeys {
-            let stringKey = key as! String
-            if let keyValue = self.value(forKey: stringKey) {
-                swiftDictionary[stringKey] = keyValue
+extension LDValue {
+    static func fromBridge(_ value: Any) -> LDValue {
+        guard !(value is NSNull)
+        else { return .null }
+        if let nsNumValue = value as? NSNumber {
+            // Because we accept `LDValue` in contexts that can receive anything, the value is a
+            // reference type in Objective-C. Because of that, RN bridges the type as a `NSNumber`,
+            // so we must determine whether that `NSNumber` was originally created from a `BOOL`.
+            // Adapted from https://stackoverflow.com/a/30223989
+            let boolTypeId = CFBooleanGetTypeID()
+            if CFGetTypeID(nsNumValue) == boolTypeId {
+                return .bool(nsNumValue.boolValue)
+            } else {
+                return .number(Double(truncating: nsNumValue))
             }
         }
-        
-        return swiftDictionary;
+        if let stringValue = value as? String { return .string(stringValue) }
+        if let arrayValue = value as? [Any] { return .array(arrayValue.map { fromBridge($0) }) }
+        if let dictValue = value as? [String: Any] { return .object(dictValue.mapValues { fromBridge($0) }) }
+        return .null
+    }
+
+    func toBridge() -> Any {
+        switch self {
+        case .null: return NSNull()
+        case .bool(let boolValue): return boolValue
+        case .number(let numValue): return numValue
+        case .string(let stringValue): return stringValue
+        case .array(let arrayValue): return arrayValue.map { $0.toBridge() }
+        case .object(let objectValue): return objectValue.mapValues { $0.toBridge() }
+        }
     }
 }

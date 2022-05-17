@@ -527,9 +527,9 @@ declare module 'launchdarkly-react-native-client-sdk' {
          */
         jsonVariation(
             flagKey: string,
-            defaultValue: Record<string, any>,
+            defaultValue: any,
             environment?: string
-        ): Promise<Record<string, any>>;
+        ): Promise<any>;
         
         /**
          * Determines the variation of a boolean feature flag for a user, along with information about how it was
@@ -623,9 +623,9 @@ declare module 'launchdarkly-react-native-client-sdk' {
          */
         jsonVariationDetail(
             flagKey: string,
-            defaultValue: Record<string, any>,
+            defaultValue: any,
             environment?: string
-        ): Promise<LDEvaluationDetail<Record<string, any>>>;
+        ): Promise<LDEvaluationDetail<any>>;
         
         /**
          * Returns a map of all available flags to the current user's values.

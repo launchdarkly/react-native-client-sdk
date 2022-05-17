@@ -322,32 +322,7 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
     }
 
     @ReactMethod
-    public void jsonVariationNone(String flagKey, String environment, Promise promise) {
-        variation(LDClient::jsonValueVariation, id -> id, flagKey, LDValue.ofNull(), environment, promise);
-    }
-
-    @ReactMethod
-    public void jsonVariationNumber(String flagKey, double defaultValue, String environment, Promise promise) {
-        variation(LDClient::jsonValueVariation, id -> id, flagKey, LDValue.of(defaultValue), environment, promise);
-    }
-
-    @ReactMethod
-    public void jsonVariationBool(String flagKey, boolean defaultValue, String environment, Promise promise) {
-        variation(LDClient::jsonValueVariation, id -> id, flagKey, LDValue.of(defaultValue), environment, promise);
-    }
-
-    @ReactMethod
-    public void jsonVariationString(String flagKey, String defaultValue, String environment, Promise promise) {
-        variation(LDClient::jsonValueVariation, id -> id, flagKey, LDValue.of(defaultValue), environment, promise);
-    }
-
-    @ReactMethod
-    public void jsonVariationArray(String flagKey, ReadableArray defaultValue, String environment, Promise promise) {
-        variation(LDClient::jsonValueVariation, id -> id, flagKey, toLDValue(defaultValue), environment, promise);
-    }
-
-    @ReactMethod
-    public void jsonVariationObject(String flagKey, ReadableMap defaultValue, String environment, Promise promise) {
+    public void jsonVariation(String flagKey, Dynamic defaultValue, String environment, Promise promise) {
         variation(LDClient::jsonValueVariation, id -> id, flagKey, toLDValue(defaultValue), environment, promise);
     }
 
@@ -380,32 +355,7 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
     }
 
     @ReactMethod
-    public void jsonVariationDetailNone(String flagKey, String environment, Promise promise) {
-        detailVariation(LDClient::jsonValueVariationDetail, id -> id, flagKey, LDValue.ofNull(), environment, promise);
-    }
-
-    @ReactMethod
-    public void jsonVariationDetailNumber(String flagKey, double defaultValue, String environment, Promise promise) {
-        detailVariation(LDClient::jsonValueVariationDetail, id -> id, flagKey, LDValue.of(defaultValue), environment, promise);
-    }
-
-    @ReactMethod
-    public void jsonVariationDetailBool(String flagKey, boolean defaultValue, String environment, Promise promise) {
-        detailVariation(LDClient::jsonValueVariationDetail, id -> id, flagKey, LDValue.of(defaultValue), environment, promise);
-    }
-
-    @ReactMethod
-    public void jsonVariationDetailString(String flagKey, String defaultValue, String environment, Promise promise) {
-        detailVariation(LDClient::jsonValueVariationDetail, id -> id, flagKey, LDValue.of(defaultValue), environment, promise);
-    }
-
-    @ReactMethod
-    public void jsonVariationDetailArray(String flagKey, ReadableArray defaultValue, String environment, Promise promise) {
-        detailVariation(LDClient::jsonValueVariationDetail, id -> id, flagKey, toLDValue(defaultValue), environment, promise);
-    }
-
-    @ReactMethod
-    public void jsonVariationDetailObject(String flagKey, ReadableMap defaultValue, String environment, Promise promise) {
+    public void jsonVariationDetail(String flagKey, Dynamic defaultValue, String environment, Promise promise) {
         detailVariation(LDClient::jsonValueVariationDetail, id -> id, flagKey, toLDValue(defaultValue), environment, promise);
     }
 
@@ -489,63 +439,13 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
     }
 
     @ReactMethod
-    public void trackNumber(String eventName, double data, String environment) {
-        trackSafe(environment, eventName, LDValue.of(data), null);
-    }
-
-    @ReactMethod
-    public void trackBool(String eventName, boolean data, String environment) {
-        trackSafe(environment, eventName, LDValue.of(data), null);
-    }
-
-    @ReactMethod
-    public void trackString(String eventName, String data, String environment) {
-        trackSafe(environment, eventName, LDValue.of(data), null);
-    }
-
-    @ReactMethod
-    public void trackArray(String eventName, ReadableArray data, String environment) {
+    public void trackData(String eventName, Dynamic data, String environment) {
         trackSafe(environment, eventName, toLDValue(data), null);
     }
 
     @ReactMethod
-    public void trackObject(String eventName, ReadableMap data, String environment) {
-        trackSafe(environment, eventName, toLDValue(data), null);
-    }
-
-    @ReactMethod
-    public void track(String eventName, String environment) {
-        trackSafe(environment, eventName, LDValue.ofNull(), null);
-    }
-
-    @ReactMethod
-    public void trackNumberMetricValue(String eventName, double data, double metricValue, String environment) {
-        trackSafe(environment, eventName, LDValue.of(data), metricValue);
-    }
-
-    @ReactMethod
-    public void trackBoolMetricValue(String eventName, boolean data, double metricValue, String environment) {
-        trackSafe(environment, eventName, LDValue.of(data), metricValue);
-    }
-
-    @ReactMethod
-    public void trackStringMetricValue(String eventName, String data, double metricValue, String environment) {
-        trackSafe(environment, eventName, LDValue.of(data), metricValue);
-    }
-
-    @ReactMethod
-    public void trackArrayMetricValue(String eventName, ReadableArray data, double metricValue, String environment) {
+    public void trackMetricValue(String eventName, Dynamic data, double metricValue, String environment) {
         trackSafe(environment, eventName, toLDValue(data), metricValue);
-    }
-
-    @ReactMethod
-    public void trackObjectMetricValue(String eventName, ReadableMap data, double metricValue, String environment) {
-        trackSafe(environment, eventName, toLDValue(data), metricValue);
-    }
-
-    @ReactMethod
-    public void trackMetricValue(String eventName, double metricValue, String environment) {
-        trackSafe(environment, eventName, LDValue.ofNull(), metricValue);
     }
 
     private void trackSafe(String environment, String eventName, LDValue value, Double metricValue) {
