@@ -2,6 +2,15 @@
 
 All notable changes to the LaunchDarkly React Native SDK will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [6.2.0] - 2022-05-17
+### Changed:
+- iOS: Using "custom" as a private attribute name in `LDConfig.privateAttributeNames` or `LDUser.privateAttributeNames` will no longer set all `LDUser` custom attributes private.
+- iOS: The automatically set `device` and `operatingSystem` custom attributes can now be set private.
+- iOS: Significant internal changes from updating to the [6.0.0 release](https://github.com/launchdarkly/ios-client-sdk/releases/tag/6.0.0) of the iOS SDK.
+
+### Fixed:
+- The TypeScript definitions for `LDClient.jsonVariation` and `LDClient.jsonVariationDetail` no longer restrict the `defaultValue` and result type to `Record<string, any>`. These methods can accept `any` for `defaultValue` and return `any` type.
+
 ## [6.1.3] - 2022-04-14
 ### Added:
 - React Native 0.68 Support
