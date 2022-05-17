@@ -102,7 +102,9 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
 
     private func userBuild(_ userDict: NSDictionary) -> LDUser {
         var user = LDUser(key: userDict["key"] as? String)
-        user.isAnonymousNullable = userDict["anonymous"] as? Bool
+        if let anon = userDict["anonymous"] as? Bool {
+            user.isAnonymous = anon
+        }
         user.secondary = userDict["secondary"] as? String
         user.name = userDict["name"] as? String
         user.firstName = userDict["firstName"] as? String
