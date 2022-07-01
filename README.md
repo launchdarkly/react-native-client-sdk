@@ -14,7 +14,7 @@ LaunchDarkly overview
 Supported versions
 -------------------------
 
-This SDK is currently compatible with React Native versions `>=0.64 <0.69`, the minimum iOS deployment target is `10.0`, and the minimum Android SDK version is `21`. Builds are tested with XCode 12.2+.
+This SDK is currently compatible with React Native versions `>=0.64 <0.70`, the minimum iOS deployment target is `10.0`, and the minimum Android SDK version is `21`. Builds are tested with XCode 12.2+. Please look at the CircleCI test build to see which combination of React Native and XCode works together.
 
 For React Native `0.63.x` support, use the latest [`5.1.x` release](https://github.com/launchdarkly/react-native-client-sdk/releases/tag/5.1.1).
 
