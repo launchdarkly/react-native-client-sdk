@@ -2,6 +2,10 @@
 
 All notable changes to the LaunchDarkly React Native SDK will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [6.2.1] - 2022-08-02
+### Fixed:
+- Android: Updated Android SDK dependency to [3.1.6](https://github.com/launchdarkly/android-client-sdk/releases/tag/3.1.6).
+
 ## [6.2.0] - 2022-05-17
 ### Changed:
 - iOS: Using "custom" as a private attribute name in `LDConfig.privateAttributeNames` or `LDUser.privateAttributeNames` will no longer set all `LDUser` custom attributes private.
