@@ -45,6 +45,11 @@ jobs:
       - run:
           name: Create CI test application for RN <<parameters.rn-version>>
           command: |
+            pwd
+            ls
+            cd ..
+            mkdir test
+            cd test
             [ -d "CITest" ] || npx react-native@<<parameters.rn-version>> init CITest --version <<parameters.rn-version>> --skip-install
 
       - save_cache:
