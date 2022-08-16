@@ -45,24 +45,27 @@ jobs:
       - run:
           name: Create CI test application for RN <<parameters.rn-version>>
           command: |
-            [ -d "CITest" ] || npx react-native init CITest --version <<parameters.rn-version>> --skip-install
+            cd ..
+            mkdir -p test
+            cd test
+            [ -d "CITest" ] || npx react-native@<<parameters.rn-version>> init CITest --version <<parameters.rn-version>> --skip-install
 
       - save_cache:
           name: Save RN project template to cache
           key: v1-rn-template-cache-<<parameters.rn-version>>
           paths:
-            - CITest
+            - ../test/CITest
 
       # See the `patches` directory
       - run:
           name: Do any necessary patching
           command: |
-            if [ -d ".circleci/patches/<<parameters.rn-version>>" ]; then cp -r .circleci/patches/<<parameters.rn-version>>/* CITest/; fi
-            if [ -x "CITest/patch.sh" ] ; then cd CITest && ./patch.sh; fi
+            if [ -d ".circleci/patches/<<parameters.rn-version>>" ]; then cp -r .circleci/patches/<<parameters.rn-version>>/* ../test/CITest/; fi
+            if [ -x "../test/CITest/patch.sh" ] ; then cd ../test/CITest && ./patch.sh; fi
 
       - run:
           name: Add LaunchDarkly dependency
-          command: cd CITest && npx yarn add file:..
+          command: cd ../test/CITest && npx yarn add file:../../project
 
       - restore_cache:
           name: Restore gem cache
@@ -85,14 +88,14 @@ jobs:
 
       - run:
           name: Install iOS Pods
-          command: cd CITest/ios && pod install
+          command: cd ../test/CITest/ios && pod install
 
       - run:
           name: Build application for iOS (Release)
           command: |
             mkdir -p artifacts
-            cd CITest/ios
-            xcodebuild -workspace CITest.xcworkspace -scheme CITest build -configuration Release -destination "generic/platform=iOS" CODE_SIGNING_ALLOWED=NO GCC_WARN_INHIBIT_ALL_WARNINGS=YES | tee '../../artifacts/xcb-<<parameters.rn-version>>.txt' | xcpretty
+            cd ../test/CITest/ios
+            xcodebuild -workspace CITest.xcworkspace -scheme CITest build -configuration Release -destination "generic/platform=iOS" CODE_SIGNING_ALLOWED=NO GCC_WARN_INHIBIT_ALL_WARNINGS=YES | tee '../../../project/artifacts/xcb-<<parameters.rn-version>>.txt' | xcpretty
 
       - when:
           # We only care to build Android application and debug iOS Build for a single XCode version
@@ -102,11 +105,11 @@ jobs:
             - run:
                 name: Build application for iOS (Debug)
                 command: |
-                  cd CITest/ios
-                  xcodebuild -workspace CITest.xcworkspace -scheme CITest build -configuration Debug -destination "generic/platform=iOS" CODE_SIGNING_ALLOWED=NO GCC_WARN_INHIBIT_ALL_WARNINGS=YES | tee '../../artifacts/xcb-<<parameters.rn-version>>.txt' | xcpretty
+                  cd ../test/CITest/ios
+                  xcodebuild -workspace CITest.xcworkspace -scheme CITest build -configuration Debug -destination "generic/platform=iOS" CODE_SIGNING_ALLOWED=NO GCC_WARN_INHIBIT_ALL_WARNINGS=YES | tee '../../../project/artifacts/xcb-<<parameters.rn-version>>.txt' | xcpretty
             - run:
                 name: Build application for Android
-                command: cd CITest/android && ./gradlew packageRelease
+                command: cd ../test/CITest/android && ./gradlew packageRelease
 
       - store_artifacts:
           path: artifacts
@@ -138,7 +141,12 @@ workflows:
           name: rn<<matrix.rn-version>>-xc<<matrix.xcode-version>>-build-apps-using-template
           matrix:
             parameters:
-              rn-version: ["0.64.3", "0.65.2", "0.66.4", "0.67.3", "0.68.0"]
-              xcode-version: ["12.2.0", "12.5.1", "13.2.1"]
+              rn-version: ["0.64.3", "0.65.2", "0.66.4", "0.67.3", "0.68.0","0.69.4"]
+              xcode-version: ["12.5.1", "13.2.1", "13.4.1"]
+            exclude:
+              - rn-version: "0.64.3"
+                xcode-version: "13.4.1"
+              - rn-version: "0.65.2"
+                xcode-version: "13.4.1"
           requires:
             - test-javascript
