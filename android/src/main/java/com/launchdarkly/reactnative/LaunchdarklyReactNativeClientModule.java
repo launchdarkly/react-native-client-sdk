@@ -495,7 +495,7 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
     public void isInitialized(String environment, Promise promise) {
         try {
             LDClient instance = LDClient.getForMobileKey(environment);
-            if(instance == null) {
+            if (instance == null) {
                 promise.resolve(false);
             } else {
                 boolean result = instance.isInitialized();
