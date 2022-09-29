@@ -494,9 +494,21 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
     @ReactMethod
     public void isInitialized(String environment, Promise promise) {
         try {
-            boolean result = LDClient.getForMobileKey(environment).isInitialized();
-            promise.resolve(result);
+            LDClient instance = LDClient.getForMobileKey(environment);
+            if (instance == null) {
+                promise.resolve(false);
+            } else {
+                boolean result = instance.isInitialized();
+                promise.resolve(result);
+            }
+        } catch (LaunchDarklyException e) {
+            // Any known exception thrown by us means instances map is not there
+            // or the instances map has no key for the environment
+            // which means we should return isInitialized = false instead of promise rejection.
+            Timber.w(e);
+            promise.resolve(false);
         } catch (Exception e) {
+            Timber.w(e);
             promise.reject(ERROR_UNKNOWN, e);
         }
     }
