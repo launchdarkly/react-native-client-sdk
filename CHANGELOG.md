@@ -2,6 +2,15 @@
 
 All notable changes to the LaunchDarkly React Native SDK will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [6.2.3] - 2022-09-29
+### Added:
+- React Native 0.70 Support
+- Xcode 14.0 Support
+
+### Fixed:
+- Android: Updated Android SDK dependency to [3.2.0](https://github.com/launchdarkly/android-client-sdk/releases/tag/3.2.0).
+- Android: Updated `isInitialized` to return false instead of a Promise rejection if the native Android client is not available.
+
 ## [6.2.2] - 2022-08-16
 ### Added:
 - React Native 0.69 Support
