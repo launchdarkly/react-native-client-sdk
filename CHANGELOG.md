@@ -2,6 +2,11 @@
 
 All notable changes to the LaunchDarkly React Native SDK will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [6.2.4] - 2022-10-06
+### Fixed:
+- Reverted the `isInitialized` fix that is not working in 6.2.3 ([#157](https://github.com/launchdarkly/react-native-client-sdk/issues/157))
+- Fixed RN 0.70.x support. ([#158](https://github.com/launchdarkly/react-native-client-sdk/issues/158))
+
 ## [6.2.3] - 2022-09-29
 ### Added:
 - React Native 0.70 Support
