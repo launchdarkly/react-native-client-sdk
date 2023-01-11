@@ -52,3 +52,10 @@ About LaunchDarkly
     * [docs.launchdarkly.com](https://docs.launchdarkly.com/  "LaunchDarkly Documentation") for our documentation and SDK reference guides
     * [apidocs.launchdarkly.com](https://apidocs.launchdarkly.com/  "LaunchDarkly API Documentation") for our API documentation
     * [blog.launchdarkly.com](https://blog.launchdarkly.com/  "LaunchDarkly Blog Documentation") for the latest product updates
+
+Developing this SDK
+-----------
+
+* Run `npx react-native doctor` and make sure everything is green
+* Make sure you have [modd](https://github.com/cortesi/modd#install) installed so native code changes are hot reloaded
+* Run `modd`
