@@ -56,6 +56,7 @@ About LaunchDarkly
 Developing this SDK
 -----------
 
-* Run `npx react-native doctor` and make sure everything is green
+* Run `npx react-native doctor` in both the root and ManualTestApp directories and make sure everything is green
+  * If watchman fails, you can try installing it manually `brew reinstall watchman`
 * Make sure you have [modd](https://github.com/cortesi/modd#install) installed so native code changes are hot reloaded
 * Run `modd`
