@@ -48,6 +48,3 @@ buck-out/
       
 # Auto-generated
 test-types.js
-
-*.lock
-package-lock.json
