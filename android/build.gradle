@@ -16,6 +16,10 @@ android {
     buildToolsVersion = "30.0.3"
 
     defaultConfig {
+        configurations.all {
+            resolutionStrategy { force 'androidx.core:core:1.6.0' }
+        }
+
         minSdkVersion(21)
         targetSdkVersion(31)
         versionCode = 1
