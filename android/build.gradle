@@ -16,10 +16,6 @@ android {
     buildToolsVersion = "30.0.3"
 
     defaultConfig {
-        configurations.all {
-            resolutionStrategy { force 'androidx.core:core:1.6.0' }
-        }
-
         minSdkVersion(21)
         targetSdkVersion(31)
         versionCode = 1
@@ -44,7 +40,6 @@ allprojects {
             // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
             url "$rootDir/../node_modules/react-native/android"
         }
-        jcenter()
     }
 }
 
