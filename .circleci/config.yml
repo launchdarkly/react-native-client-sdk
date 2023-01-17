@@ -54,7 +54,7 @@ jobs:
           name: Save RN project template to cache
           key: v1-rn-template-cache-<<parameters.rn-version>>
           paths:
-            - ../test/CITest
+            - ../test/CITest/template
 
       # See the `patches` directory
       - run:
