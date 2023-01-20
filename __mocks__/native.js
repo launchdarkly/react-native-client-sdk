@@ -1,7 +1,7 @@
 const mockNativeModule = {
-  FLAG_PREFIX: "test-flag-prefix",
-  ALL_FLAGS_PREFIX: "test-all-flags-prefix",
-  CONNECTION_MODE_PREFIX: "test-connection-mode-prefix",
+  FLAG_PREFIX: 'test-flag-prefix',
+  ALL_FLAGS_PREFIX: 'test-all-flags-prefix',
+  CONNECTION_MODE_PREFIX: 'test-connection-mode-prefix',
 
   configure: jest.fn(),
   configureWithTimeout: jest.fn(),
@@ -66,19 +66,20 @@ const mockNativeModule = {
   registerCurrentConnectionModeListener: jest.fn(),
   unregisterCurrentConnectionModeListener: jest.fn(),
   registerAllFlagsListener: jest.fn(),
-  unregisterAllFlagsListener: jest.fn()
+  unregisterAllFlagsListener: jest.fn(),
 };
 
-jest.mock('react-native',
+jest.mock(
+  'react-native',
   () => {
     return {
       NativeModules: {
-        LaunchdarklyReactNativeClient: mockNativeModule
+        LaunchdarklyReactNativeClient: mockNativeModule,
       },
       NativeEventEmitter: jest.fn().mockImplementation(() => {
         return { addListener: jest.fn() };
-      })
-    }
+      }),
+    };
   },
-  { virtual: true }
+  { virtual: true },
 );
