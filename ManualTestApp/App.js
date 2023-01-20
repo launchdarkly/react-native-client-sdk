@@ -29,10 +29,10 @@ const Body = () => {
     async function initializeClient() {
       let ldClient = new LDClient();
       let config = {
-        mobileKey: 'mob-fc8381a0-db6e-41a0-833f-50deb34389e2',
+        mobileKey: 'MOBILE_KEY',
         debugMode: true,
         application: {
-          id: 'rn-dev-app',
+          id: 'rn-manual-test-app',
           version: '0.0.1',
         },
       };
