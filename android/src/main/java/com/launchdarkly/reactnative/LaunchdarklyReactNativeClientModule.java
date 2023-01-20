@@ -52,103 +52,138 @@ import timber.log.Timber;
 
 public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaModule {
 
-    enum ConfigMapping {
-        CONFIG_MOBILE_KEY("mobileKey", ConfigEntryType.String),
-        CONFIG_BASE_URI("pollUri", ConfigEntryType.Uri),
-        CONFIG_EVENTS_URI("eventsUri", ConfigEntryType.Uri),
-        CONFIG_STREAM_URI("streamUri", ConfigEntryType.Uri),
-        CONFIG_EVENTS_CAPACITY("eventsCapacity", ConfigEntryType.Integer),
-        CONFIG_EVENTS_FLUSH_INTERVAL("eventsFlushIntervalMillis", ConfigEntryType.Integer),
-        CONFIG_CONNECTION_TIMEOUT("connectionTimeoutMillis", ConfigEntryType.Integer),
-        CONFIG_POLLING_INTERVAL("pollingIntervalMillis", ConfigEntryType.Integer),
-        CONFIG_BACKGROUND_POLLING_INTERVAL("backgroundPollingIntervalMillis", ConfigEntryType.Integer),
-        CONFIG_USE_REPORT("useReport", ConfigEntryType.Boolean),
-        CONFIG_STREAM("stream", ConfigEntryType.Boolean),
-        CONFIG_DISABLE_BACKGROUND_UPDATING("disableBackgroundUpdating", ConfigEntryType.Boolean),
-        CONFIG_OFFLINE("offline", ConfigEntryType.Boolean),
-        CONFIG_PRIVATE_ATTRIBUTES("privateAttributeNames", ConfigEntryType.UserAttributes, "privateAttributes"),
-        CONFIG_EVALUATION_REASONS("evaluationReasons", ConfigEntryType.Boolean),
-        CONFIG_WRAPPER_NAME("wrapperName", ConfigEntryType.String),
-        CONFIG_WRAPPER_VERSION("wrapperVersion", ConfigEntryType.String),
-        CONFIG_MAX_CACHED_USERS("maxCachedUsers", ConfigEntryType.Integer),
-        CONFIG_DIAGNOSTIC_OPT_OUT("diagnosticOptOut", ConfigEntryType.Boolean),
-        CONFIG_DIAGNOSTIC_RECORDING_INTERVAL("diagnosticRecordingIntervalMillis", ConfigEntryType.Integer),
-        CONFIG_SECONDARY_MOBILE_KEYS("secondaryMobileKeys", ConfigEntryType.Map),
-        CONFIG_AUTO_ALIASING_OPT_OUT("autoAliasingOptOut", ConfigEntryType.Boolean),
-        CONFIG_INLINE_USERS_IN_EVENTS("inlineUsersInEvents", ConfigEntryType.Boolean);
-
-        final String key;
-        final ConfigEntryType type;
-        private final Method setter;
-
-        ConfigMapping(String key, ConfigEntryType type) {
-            this(key, type, key);
-        }
-
-        ConfigMapping(String key, ConfigEntryType type, String setterName) {
-            this.key = key;
-            this.type = type;
-            this.setter = findSetter(LDConfig.Builder.class, setterName);
-        }
-
-        void loadFromMap(ReadableMap map, LDConfig.Builder builder) {
-            if (map.hasKey(key) && map.getType(key).equals(type.getReadableType())) {
-                try {
-                    setter.invoke(builder, type.getFromMap(map, key));
-                } catch (IllegalAccessException | InvocationTargetException e) {
-                    Timber.w(e);
-                }
-            }
-        }
-    }
-
-    enum UserConfigMapping {
-        USER_ANONYMOUS("anonymous", ConfigEntryType.Boolean, "anonymous", null),
-        USER_IP("ip", ConfigEntryType.String, "ip", "privateIp"),
-        USER_EMAIL("email", ConfigEntryType.String, "email", "privateEmail"),
-        USER_FIRST_NAME("firstName", ConfigEntryType.String, "firstName", "privateFirstName"),
-        USER_LAST_NAME("lastName", ConfigEntryType.String, "lastName", "privateLastName"),
-        USER_NAME("name", ConfigEntryType.String, "name", "privateName"),
-        USER_SECONDARY("secondary", ConfigEntryType.String, "secondary", "privateSecondary"),
-        USER_AVATAR("avatar", ConfigEntryType.String, "avatar", "privateAvatar"),
-        USER_COUNTRY("country", ConfigEntryType.String, "country", "privateCountry");
-
-        final String key;
-        final ConfigEntryType type;
-        private final Method setter;
-        private final Method privateSetter;
-
-        UserConfigMapping(String key, ConfigEntryType type, String setterName, String privateSetterName) {
-            this.key = key;
-            this.type = type;
-            this.setter = findSetter(LDUser.Builder.class, setterName);
-            this.privateSetter = findSetter(LDUser.Builder.class, privateSetterName);
-        }
-
-        void loadFromMap(ReadableMap map, LDUser.Builder builder, Set<String> privateAttrs) {
-            if (map.hasKey(key) && map.getType(key).equals(type.getReadableType())) {
-                try {
-                    if (privateAttrs.contains(key) && privateSetter != null) {
-                        privateSetter.invoke(builder, type.getFromMap(map, key));
-                    } else {
-                        setter.invoke(builder, type.getFromMap(map, key));
-                    }
-                } catch (IllegalAccessException | InvocationTargetException e) {
-                    Timber.w(e);
-                }
-            }
-        }
-    }
-
+    private static final Gson gson = new Gson();
+    private static final String ERROR_INIT = "E_INITIALIZE";
+    private static final String ERROR_IDENTIFY = "E_IDENTIFY";
+    private static final String ERROR_CLOSE = "E_CLOSE";
+    private static final String ERROR_UNKNOWN = "E_UNKNOWN";
+    private static final String FLAG_PREFIX = "LaunchDarkly-Flag-";
+    private static final String ALL_FLAGS_PREFIX = "LaunchDarkly-All-Flags-";
+    private static final String CONNECTION_MODE_PREFIX = "LaunchDarkly-Connection-Mode-";
+    private static boolean debugLoggingStarted = false;
     private final Map<String, FeatureFlagChangeListener> listeners = new HashMap<>();
     private final Map<String, LDStatusListener> connectionModeListeners = new HashMap<>();
     private final Map<String, LDAllFlagsListener> allFlagsListeners = new HashMap<>();
-
-    private static final Gson gson = new Gson();
-    private static boolean debugLoggingStarted = false;
-
     public LaunchdarklyReactNativeClientModule(ReactApplicationContext reactContext) {
         super(reactContext);
+    }
+
+    private static LDValue toLDValue(Dynamic data) {
+        if (data == null) {
+            return LDValue.ofNull();
+        }
+        switch (data.getType()) {
+            case Boolean:
+                return LDValue.of(data.asBoolean());
+            case Number:
+                return LDValue.of(data.asDouble());
+            case String:
+                return LDValue.of(data.asString());
+            case Array:
+                return toLDValue(data.asArray());
+            case Map:
+                return toLDValue(data.asMap());
+            default:
+                return LDValue.ofNull();
+        }
+    }
+
+    private static LDValue toLDValue(ReadableArray readableArray) {
+        ArrayBuilder array = LDValue.buildArray();
+        for (int i = 0; i < readableArray.size(); i++) {
+            array.add(toLDValue(readableArray.getDynamic(i)));
+        }
+        return array.build();
+    }
+
+    private static LDValue toLDValue(ReadableMap readableMap) {
+        ObjectBuilder object = LDValue.buildObject();
+        ReadableMapKeySetIterator iter = readableMap.keySetIterator();
+        while (iter.hasNextKey()) {
+            String key = iter.nextKey();
+            object.put(key, toLDValue(readableMap.getDynamic(key)));
+        }
+        return object.build();
+    }
+
+    private static Object ldValueToBridge(LDValue value) {
+        switch (value.getType()) {
+            case BOOLEAN:
+                return value.booleanValue();
+            case NUMBER:
+                return value.doubleValue();
+            case STRING:
+                return value.stringValue();
+            case ARRAY:
+                return ldValueToArray(value);
+            case OBJECT:
+                return ldValueToMap(value);
+            default:
+                return null;
+        }
+    }
+
+    private static WritableArray ldValueToArray(LDValue value) {
+        WritableArray result = new WritableNativeArray();
+        for (LDValue val : value.values()) {
+            switch (val.getType()) {
+                case NULL:
+                    result.pushNull();
+                    break;
+                case BOOLEAN:
+                    result.pushBoolean(val.booleanValue());
+                    break;
+                case NUMBER:
+                    result.pushDouble(val.doubleValue());
+                    break;
+                case STRING:
+                    result.pushString(val.stringValue());
+                    break;
+                case ARRAY:
+                    result.pushArray(ldValueToArray(val));
+                    break;
+                case OBJECT:
+                    result.pushMap(ldValueToMap(val));
+                    break;
+            }
+        }
+        return result;
+    }
+
+    private static WritableMap ldValueToMap(LDValue value) {
+        WritableMap result = new WritableNativeMap();
+        for (String key : value.keys()) {
+            LDValue val = value.get(key);
+            switch (val.getType()) {
+                case NULL:
+                    result.putNull(key);
+                    break;
+                case BOOLEAN:
+                    result.putBoolean(key, val.booleanValue());
+                    break;
+                case NUMBER:
+                    result.putDouble(key, val.doubleValue());
+                    break;
+                case STRING:
+                    result.putString(key, val.stringValue());
+                    break;
+                case ARRAY:
+                    result.putArray(key, ldValueToArray(val));
+                    break;
+                case OBJECT:
+                    result.putMap(key, ldValueToMap(val));
+                    break;
+            }
+        }
+        return result;
+    }
+
+    private static Method findSetter(Class cls, String methodName) {
+        for (Method method : cls.getMethods()) {
+            if (method.getName().equals(methodName) && method.getParameterTypes().length == 1)
+                return method;
+        }
+        return null;
     }
 
     /**
@@ -162,15 +197,6 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
     public @NotNull String getName() {
         return "LaunchdarklyReactNativeClient";
     }
-
-    private static final String ERROR_INIT = "E_INITIALIZE";
-    private static final String ERROR_IDENTIFY = "E_IDENTIFY";
-    private static final String ERROR_CLOSE = "E_CLOSE";
-    private static final String ERROR_UNKNOWN = "E_UNKNOWN";
-
-    private static final String FLAG_PREFIX = "LaunchDarkly-Flag-";
-    private static final String ALL_FLAGS_PREFIX = "LaunchDarkly-All-Flags-";
-    private static final String CONNECTION_MODE_PREFIX = "LaunchDarkly-Connection-Mode-";
 
     /**
      * Called automatically by the React Native bridging layer to associate constants with the
@@ -228,9 +254,9 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
         final LDUser ldUser = userBuild(user).build();
 
         if (config.hasKey("allUserAttributesPrivate")
-            && config.getType("allUserAttributesPrivate").equals(ConfigEntryType.Boolean.getReadableType()) 
-            && config.getBoolean("allUserAttributesPrivate")) {
-                ldConfigBuilder.allAttributesPrivate();
+                && config.getType("allUserAttributesPrivate").equals(ConfigEntryType.Boolean.getReadableType())
+                && config.getBoolean("allUserAttributesPrivate")) {
+            ldConfigBuilder.allAttributesPrivate();
         }
 
         final Application application = (Application) getReactApplicationContext().getApplicationContext();
@@ -326,10 +352,6 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
         variation(LDClient::jsonValueVariation, id -> id, flagKey, toLDValue(defaultValue), environment, promise);
     }
 
-    interface EvalCall<T> {
-        T call(LDClient client, String flagKey, T defaultValue);
-    }
-
     private <T> void variation(EvalCall<T> eval, Function<T, LDValue> transform,
                                String flagKey, T defaultValue, String environment, Promise promise) {
         try {
@@ -357,10 +379,6 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
     @ReactMethod
     public void jsonVariationDetail(String flagKey, Dynamic defaultValue, String environment, Promise promise) {
         detailVariation(LDClient::jsonValueVariationDetail, id -> id, flagKey, toLDValue(defaultValue), environment, promise);
-    }
-
-    interface EvalDetailCall<T> {
-        EvaluationDetail<T> call(LDClient client, String flagKey, T defaultValue);
     }
 
     private <T> void detailVariation(EvalDetailCall<T> eval, Function<T, LDValue> transform,
@@ -402,13 +420,18 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
                     reasonMap.put("inExperiment", true);
                 }
                 break;
-            case PREREQUISITE_FAILED: reasonMap.put("prerequisiteKey", reason.getPrerequisiteKey()); break;
-            case ERROR: reasonMap.put("errorKind", reason.getErrorKind().name()); break;
+            case PREREQUISITE_FAILED:
+                reasonMap.put("prerequisiteKey", reason.getPrerequisiteKey());
+                break;
+            case ERROR:
+                reasonMap.put("errorKind", reason.getErrorKind().name());
+                break;
             case FALLTHROUGH:
                 if (reason.isInExperiment()) {
                     reasonMap.put("inExperiment", true);
                 }
-            default: break;
+            default:
+                break;
         }
         resultMap.put("reason", reasonMap.build());
         return resultMap;
@@ -422,7 +445,7 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
             promise.reject(ERROR_INIT, "SDK has been not configured");
             return;
         }
-        
+
         try {
             ObjectBuilder resultBuilder = LDValue.buildObject();
             for (Map.Entry<String, LDValue> entry : LDClient.getForMobileKey(environment).allFlags().entrySet()) {
@@ -646,7 +669,8 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
             }
 
             @Override
-            public void onInternalFailure(LDFailure ldFailure) {}
+            public void onInternalFailure(LDFailure ldFailure) {
+            }
         };
 
         try {
@@ -707,82 +731,92 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
         }
     }
 
-    private static LDValue toLDValue(Dynamic data) {
-        if (data == null) {
-            return LDValue.ofNull();
-        }
-        switch (data.getType()) {
-            case Boolean: return LDValue.of(data.asBoolean());
-            case Number: return LDValue.of(data.asDouble());
-            case String: return LDValue.of(data.asString());
-            case Array: return toLDValue(data.asArray());
-            case Map: return toLDValue(data.asMap());
-            default: return LDValue.ofNull();
-        }
-    }
+    enum ConfigMapping {
+        CONFIG_MOBILE_KEY("mobileKey", ConfigEntryType.String),
+        CONFIG_BASE_URI("pollUri", ConfigEntryType.Uri),
+        CONFIG_EVENTS_URI("eventsUri", ConfigEntryType.Uri),
+        CONFIG_STREAM_URI("streamUri", ConfigEntryType.Uri),
+        CONFIG_EVENTS_CAPACITY("eventsCapacity", ConfigEntryType.Integer),
+        CONFIG_EVENTS_FLUSH_INTERVAL("eventsFlushIntervalMillis", ConfigEntryType.Integer),
+        CONFIG_CONNECTION_TIMEOUT("connectionTimeoutMillis", ConfigEntryType.Integer),
+        CONFIG_POLLING_INTERVAL("pollingIntervalMillis", ConfigEntryType.Integer),
+        CONFIG_BACKGROUND_POLLING_INTERVAL("backgroundPollingIntervalMillis", ConfigEntryType.Integer),
+        CONFIG_USE_REPORT("useReport", ConfigEntryType.Boolean),
+        CONFIG_STREAM("stream", ConfigEntryType.Boolean),
+        CONFIG_DISABLE_BACKGROUND_UPDATING("disableBackgroundUpdating", ConfigEntryType.Boolean),
+        CONFIG_OFFLINE("offline", ConfigEntryType.Boolean),
+        CONFIG_PRIVATE_ATTRIBUTES("privateAttributeNames", ConfigEntryType.UserAttributes, "privateAttributes"),
+        CONFIG_EVALUATION_REASONS("evaluationReasons", ConfigEntryType.Boolean),
+        CONFIG_WRAPPER_NAME("wrapperName", ConfigEntryType.String),
+        CONFIG_WRAPPER_VERSION("wrapperVersion", ConfigEntryType.String),
+        CONFIG_MAX_CACHED_USERS("maxCachedUsers", ConfigEntryType.Integer),
+        CONFIG_DIAGNOSTIC_OPT_OUT("diagnosticOptOut", ConfigEntryType.Boolean),
+        CONFIG_DIAGNOSTIC_RECORDING_INTERVAL("diagnosticRecordingIntervalMillis", ConfigEntryType.Integer),
+        CONFIG_SECONDARY_MOBILE_KEYS("secondaryMobileKeys", ConfigEntryType.Map),
+        CONFIG_AUTO_ALIASING_OPT_OUT("autoAliasingOptOut", ConfigEntryType.Boolean),
+        CONFIG_INLINE_USERS_IN_EVENTS("inlineUsersInEvents", ConfigEntryType.Boolean);
 
-    private static LDValue toLDValue(ReadableArray readableArray) {
-        ArrayBuilder array = LDValue.buildArray();
-        for (int i = 0; i < readableArray.size(); i++) {
-            array.add(toLDValue(readableArray.getDynamic(i)));
-        }
-        return array.build();
-    }
+        final String key;
+        final ConfigEntryType type;
+        private final Method setter;
 
-    private static LDValue toLDValue(ReadableMap readableMap) {
-        ObjectBuilder object = LDValue.buildObject();
-        ReadableMapKeySetIterator iter = readableMap.keySetIterator();
-        while (iter.hasNextKey()) {
-            String key = iter.nextKey();
-            object.put(key, toLDValue(readableMap.getDynamic(key)));
+        ConfigMapping(String key, ConfigEntryType type) {
+            this(key, type, key);
         }
-        return object.build();
-    }
 
-    private static Object ldValueToBridge(LDValue value) {
-        switch (value.getType()) {
-            case BOOLEAN: return value.booleanValue();
-            case NUMBER: return value.doubleValue();
-            case STRING: return value.stringValue();
-            case ARRAY: return ldValueToArray(value);
-            case OBJECT: return ldValueToMap(value);
-            default: return null;
+        ConfigMapping(String key, ConfigEntryType type, String setterName) {
+            this.key = key;
+            this.type = type;
+            this.setter = findSetter(LDConfig.Builder.class, setterName);
         }
-    }
 
-    private static WritableArray ldValueToArray(LDValue value) {
-        WritableArray result = new WritableNativeArray();
-        for (LDValue val : value.values()) {
-            switch (val.getType()) {
-                case NULL: result.pushNull(); break;
-                case BOOLEAN: result.pushBoolean(val.booleanValue()); break;
-                case NUMBER: result.pushDouble(val.doubleValue()); break;
-                case STRING: result.pushString(val.stringValue()); break;
-                case ARRAY: result.pushArray(ldValueToArray(val)); break;
-                case OBJECT: result.pushMap(ldValueToMap(val)); break;
+        void loadFromMap(ReadableMap map, LDConfig.Builder builder) {
+            if (map.hasKey(key) && map.getType(key).equals(type.getReadableType())) {
+                try {
+                    setter.invoke(builder, type.getFromMap(map, key));
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    Timber.w(e);
+                }
             }
         }
-        return result;
     }
 
-    private static WritableMap ldValueToMap(LDValue value) {
-        WritableMap result = new WritableNativeMap();
-        for (String key : value.keys()) {
-            LDValue val = value.get(key);
-            switch (val.getType()) {
-                case NULL: result.putNull(key); break;
-                case BOOLEAN: result.putBoolean(key, val.booleanValue()); break;
-                case NUMBER: result.putDouble(key, val.doubleValue()); break;
-                case STRING: result.putString(key, val.stringValue()); break;
-                case ARRAY: result.putArray(key, ldValueToArray(val)); break;
-                case OBJECT: result.putMap(key, ldValueToMap(val)); break;
+    enum UserConfigMapping {
+        USER_ANONYMOUS("anonymous", ConfigEntryType.Boolean, "anonymous", null),
+        USER_IP("ip", ConfigEntryType.String, "ip", "privateIp"),
+        USER_EMAIL("email", ConfigEntryType.String, "email", "privateEmail"),
+        USER_FIRST_NAME("firstName", ConfigEntryType.String, "firstName", "privateFirstName"),
+        USER_LAST_NAME("lastName", ConfigEntryType.String, "lastName", "privateLastName"),
+        USER_NAME("name", ConfigEntryType.String, "name", "privateName"),
+        USER_SECONDARY("secondary", ConfigEntryType.String, "secondary", "privateSecondary"),
+        USER_AVATAR("avatar", ConfigEntryType.String, "avatar", "privateAvatar"),
+        USER_COUNTRY("country", ConfigEntryType.String, "country", "privateCountry");
+
+        final String key;
+        final ConfigEntryType type;
+        private final Method setter;
+        private final Method privateSetter;
+
+        UserConfigMapping(String key, ConfigEntryType type, String setterName, String privateSetterName) {
+            this.key = key;
+            this.type = type;
+            this.setter = findSetter(LDUser.Builder.class, setterName);
+            this.privateSetter = findSetter(LDUser.Builder.class, privateSetterName);
+        }
+
+        void loadFromMap(ReadableMap map, LDUser.Builder builder, Set<String> privateAttrs) {
+            if (map.hasKey(key) && map.getType(key).equals(type.getReadableType())) {
+                try {
+                    if (privateAttrs.contains(key) && privateSetter != null) {
+                        privateSetter.invoke(builder, type.getFromMap(map, key));
+                    } else {
+                        setter.invoke(builder, type.getFromMap(map, key));
+                    }
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    Timber.w(e);
+                }
             }
         }
-        return result;
-    }
-
-    interface ConvertFromReadable<T> {
-        T getFromMap(ReadableMap map, String key);
     }
 
     enum ConfigEntryType implements ConvertFromReadable {
@@ -835,11 +869,15 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
         }
     }
 
-    private static Method findSetter(Class cls, String methodName) {
-        for (Method method : cls.getMethods()) {
-            if (method.getName().equals(methodName) && method.getParameterTypes().length == 1)
-                return method;
-        }
-        return null;
+    interface EvalCall<T> {
+        T call(LDClient client, String flagKey, T defaultValue);
+    }
+
+    interface EvalDetailCall<T> {
+        EvaluationDetail<T> call(LDClient client, String flagKey, T defaultValue);
+    }
+
+    interface ConvertFromReadable<T> {
+        T getFromMap(ReadableMap map, String key);
     }
 }
