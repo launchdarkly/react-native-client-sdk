@@ -9,9 +9,13 @@ export default class LDClient {
     this.flagListeners = {};
     this.allFlagsListeners = {};
     this.connectionModeListeners = {};
-    this.eventEmitter.addListener(LaunchdarklyReactNativeClient.FLAG_PREFIX, body => this._flagUpdateListener(body));
-    this.eventEmitter.addListener(LaunchdarklyReactNativeClient.ALL_FLAGS_PREFIX, body => this._allFlagsUpdateListener(body));
-    this.eventEmitter.addListener(LaunchdarklyReactNativeClient.CONNECTION_MODE_PREFIX, body => this._connectionModeUpdateListener(body));
+    this.eventEmitter.addListener(LaunchdarklyReactNativeClient.FLAG_PREFIX, (body) => this._flagUpdateListener(body));
+    this.eventEmitter.addListener(LaunchdarklyReactNativeClient.ALL_FLAGS_PREFIX, (body) =>
+      this._allFlagsUpdateListener(body),
+    );
+    this.eventEmitter.addListener(LaunchdarklyReactNativeClient.CONNECTION_MODE_PREFIX, (body) =>
+      this._connectionModeUpdateListener(body),
+    );
   }
 
   getVersion() {
@@ -19,32 +23,33 @@ export default class LDClient {
   }
 
   configure(config, user, timeout) {
-    return LaunchdarklyReactNativeClient.isInitialized("default")
-      .then(
-        ignored => {
-          throw new Error('LaunchDarkly SDK already initialized');
-        },
-        () => {
-          const configWithOverriddenDefaults = Object.assign({
+    return LaunchdarklyReactNativeClient.isInitialized('default').then(
+      (ignored) => {
+        throw new Error('LaunchDarkly SDK already initialized');
+      },
+      () => {
+        const configWithOverriddenDefaults = Object.assign(
+          {
             backgroundPollingIntervalMillis: 3600000, // the iOS SDK defaults this to 900000
-            disableBackgroundUpdating: false,         // the iOS SDK defaults this to true
+            disableBackgroundUpdating: false, // the iOS SDK defaults this to true
             pollUri: 'https://clientsdk.launchdarkly.com',
             wrapperName: 'react-native-client-sdk',
-            wrapperVersion: this.getVersion()
-          }, config);
+            wrapperVersion: this.getVersion(),
+          },
+          config,
+        );
 
-          if (timeout == undefined) {
-            return LaunchdarklyReactNativeClient.configure(configWithOverriddenDefaults, user);
-          } else {
-            return LaunchdarklyReactNativeClient.configureWithTimeout(configWithOverriddenDefaults, user, timeout);
-          }
+        if (timeout == undefined) {
+          return LaunchdarklyReactNativeClient.configure(configWithOverriddenDefaults, user);
+        } else {
+          return LaunchdarklyReactNativeClient.configureWithTimeout(configWithOverriddenDefaults, user, timeout);
         }
-      );
+      },
+    );
   }
 
   _validateDefault(defaultType, defaultValue, validator) {
-    if (typeof defaultValue !== defaultType ||
-        (typeof validator === 'function' && !validator(defaultValue))) {
+    if (typeof defaultValue !== defaultType || (typeof validator === 'function' && !validator(defaultValue))) {
       return Promise.reject(new Error('Missing or invalid defaultValue for variation call'));
     }
     return Promise.resolve();
@@ -58,13 +63,15 @@ export default class LDClient {
   }
 
   boolVariation(flagKey, defaultValue, environment) {
-    return this._validateDefault('boolean', defaultValue)
-      .then(() => LaunchdarklyReactNativeClient.boolVariation(flagKey, defaultValue, this._normalizeEnv(environment)));
+    return this._validateDefault('boolean', defaultValue).then(() =>
+      LaunchdarklyReactNativeClient.boolVariation(flagKey, defaultValue, this._normalizeEnv(environment)),
+    );
   }
 
   numberVariation(flagKey, defaultValue, environment) {
-    return this._validateDefault('number', defaultValue, val => !isNaN(val))
-      .then(() => LaunchdarklyReactNativeClient.numberVariation(flagKey, defaultValue, this._normalizeEnv(environment)));
+    return this._validateDefault('number', defaultValue, (val) => !isNaN(val)).then(() =>
+      LaunchdarklyReactNativeClient.numberVariation(flagKey, defaultValue, this._normalizeEnv(environment)),
+    );
   }
 
   stringVariation(flagKey, defaultValue, environment) {
@@ -84,13 +91,15 @@ export default class LDClient {
   }
 
   boolVariationDetail(flagKey, defaultValue, environment) {
-    return this._validateDefault('boolean', defaultValue)
-      .then(() => LaunchdarklyReactNativeClient.boolVariationDetail(flagKey, defaultValue, this._normalizeEnv(environment)));
+    return this._validateDefault('boolean', defaultValue).then(() =>
+      LaunchdarklyReactNativeClient.boolVariationDetail(flagKey, defaultValue, this._normalizeEnv(environment)),
+    );
   }
 
   numberVariationDetail(flagKey, defaultValue, environment) {
-    return this._validateDefault('number', defaultValue, val => !isNaN(val))
-      .then(() => LaunchdarklyReactNativeClient.numberVariationDetail(flagKey, defaultValue, this._normalizeEnv(environment)));
+    return this._validateDefault('number', defaultValue, (val) => !isNaN(val)).then(() =>
+      LaunchdarklyReactNativeClient.numberVariationDetail(flagKey, defaultValue, this._normalizeEnv(environment)),
+    );
   }
 
   stringVariationDetail(flagKey, defaultValue, environment) {
@@ -184,11 +193,11 @@ export default class LDClient {
   }
 
   _envConcat(env, flagKey) {
-    return env.concat(";", flagKey);
+    return env.concat(';', flagKey);
   }
 
   registerFeatureFlagListener(flagKey, callback, environment) {
-    if (typeof callback !== "function") {
+    if (typeof callback !== 'function') {
       return;
     }
     const env = this._normalizeEnv(environment);
@@ -210,8 +219,7 @@ export default class LDClient {
       return;
     }
 
-    this.flagListeners[multiFlagKey] =
-      this.flagListeners[multiFlagKey].filter(listener => listener != callback);
+    this.flagListeners[multiFlagKey] = this.flagListeners[multiFlagKey].filter((listener) => listener != callback);
 
     if (this.flagListeners[multiFlagKey].length == 0) {
       LaunchdarklyReactNativeClient.unregisterFeatureFlagListener(flagKey, env);
@@ -220,7 +228,7 @@ export default class LDClient {
   }
 
   registerCurrentConnectionModeListener(listenerId, callback, environment) {
-    if (typeof callback !== "function") {
+    if (typeof callback !== 'function') {
       return;
     }
     const env = this._normalizeEnv(environment);
@@ -242,12 +250,12 @@ export default class LDClient {
   }
 
   registerAllFlagsListener(listenerId, callback, environment) {
-    if (typeof callback !== "function") {
+    if (typeof callback !== 'function') {
       return;
     }
-    const env = this._normalizeEnv(environment)
+    const env = this._normalizeEnv(environment);
     const multiListenerId = this._envConcat(env, listenerId);
-    
+
     this.allFlagsListeners[multiListenerId] = callback;
     LaunchdarklyReactNativeClient.registerAllFlagsListener(listenerId, env);
   }

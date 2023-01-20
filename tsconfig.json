@@ -1,13 +1,8 @@
 {
-    "compilerOptions": {
-      "module": "commonjs",
-      "strict": true,
-      "lib": [
-        "es6"
-      ]
-    },
-    "files": [
-      "index.d.ts",
-      "test-types.ts"
-    ]
-  }
+  "compilerOptions": {
+    "module": "commonjs",
+    "strict": true,
+    "lib": ["es6"]
+  },
+  "files": ["index.d.ts", "test-types.ts"]
+}
