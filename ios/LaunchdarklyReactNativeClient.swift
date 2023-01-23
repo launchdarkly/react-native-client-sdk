@@ -9,11 +9,11 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
     private let ERROR_INIT = "E_INITIALIZE"
     private let ERROR_IDENTIFY = "E_IDENTIFY"
     private let ERROR_UNKNOWN = "E_UNKNOWN"
-
+    
     private var flagListenerOwners: [String: ObserverOwner] = [:]
     private var allFlagsListenerOwners: [String: ObserverOwner] = [:]
     private var connectionModeListenerOwners: [String: ObserverOwner] = [:]
-
+    
     override func supportedEvents() -> [String]! {
         return [FLAG_PREFIX, ALL_FLAGS_PREFIX, CONNECTION_MODE_PREFIX]
     }
@@ -29,14 +29,14 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
     @objc func configure(_ config: NSDictionary, user: NSDictionary, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         internalConfigure(config: config, user: user, timeout: nil, resolve: resolve, reject: reject)
     }
-
+    
     @objc func configureWithTimeout(_ config: NSDictionary, user: NSDictionary, timeout: Int, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         internalConfigure(config: config, user: user, timeout: timeout, resolve: resolve, reject: reject)
     }
-
+    
     private func internalConfigure(config: NSDictionary, user: NSDictionary, timeout: Int?, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         let config = configBuild(config: config)
-
+        
         if let config = config {
             if let timeoutUnwrapped = timeout {
                 let startWaitSeconds: TimeInterval = Double(timeoutUnwrapped)
@@ -54,7 +54,7 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
             }
         }
     }
-
+    
     private func id<T>(_ x: T) -> T { x }
     private func millis(_ x: NSNumber) -> TimeInterval { TimeInterval(x.doubleValue / 1_000) }
     private func url(_ x: String) -> URL { URL.init(string: x)! }
@@ -67,7 +67,7 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
     private func configBuild(config: NSDictionary) -> LDConfig? {
         guard let mobileKey = config["mobileKey"] as? String
         else { return nil }
-
+        
         var ldConfig = LDConfig(mobileKey: mobileKey)
         configField(&ldConfig.baseUrl, config["pollUri"], url)
         configField(&ldConfig.eventsUrl, config["eventsUri"], url)
@@ -92,14 +92,28 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
         configField(&ldConfig.autoAliasingOptOut, config["autoAliasingOptOut"], id)
         configField(&ldConfig.inlineUserInEvents, config["inlineUsersInEvents"], id)
         configField(&ldConfig.privateUserAttributes, config["privateAttributeNames"], { (x: [String]) in x.map { UserAttribute.forName($0) }})
-
+        
         if let val = config["secondaryMobileKeys"] as? [String: String] {
             try! ldConfig.setSecondaryMobileKeys(val)
         }
-
+        
+        if let c = config["application"] as? [String: String] {
+            var applicationInfo = ApplicationInfo()
+            
+            if let applicationId = c["id"] {
+                applicationInfo.applicationIdentifier(applicationId)
+            }
+            
+            if let applicationVersion = c["version"] {
+                applicationInfo.applicationIdentifier(applicationVersion)
+            }
+            
+            ldConfig.applicationInfo = applicationInfo
+        }
+        
         return ldConfig
     }
-
+    
     private func userBuild(_ userDict: NSDictionary) -> LDUser {
         var user = LDUser(key: userDict["key"] as? String)
         if let anon = userDict["anonymous"] as? Bool {
@@ -118,97 +132,97 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
         user.custom = (userDict["custom"] as? [String: Any] ?? [:]).mapValues { LDValue.fromBridge($0) }
         return user
     }
-
+    
     @objc func boolVariation(_ flagKey: String, defaultValue: ObjCBool, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         resolve(LDClient.get(environment: environment)!.boolVariation(forKey: flagKey, defaultValue: defaultValue.boolValue))
     }
-
+    
     @objc func numberVariation(_ flagKey: String, defaultValue: Double, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         resolve(LDClient.get(environment: environment)!.doubleVariation(forKey: flagKey, defaultValue: defaultValue))
     }
-
+    
     @objc func stringVariation(_ flagKey: String, defaultValue: String, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         resolve(LDClient.get(environment: environment)!.stringVariation(forKey: flagKey, defaultValue: defaultValue))
     }
-
+    
     @objc func jsonVariation(_ flagKey: String, defaultValue: Any, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         resolve(LDClient.get(environment: environment)!.jsonVariation(forKey: flagKey, defaultValue: LDValue.fromBridge(defaultValue)).toBridge())
     }
-
+    
     @objc func boolVariationDetail(_ flagKey: String, defaultValue: ObjCBool, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         let detail = LDClient.get(environment: environment)!.boolVariationDetail(forKey: flagKey, defaultValue: defaultValue.boolValue)
         resolve(bridgeDetail(detail, id))
     }
-
+    
     @objc func numberVariationDetail(_ flagKey: String, defaultValue: Double, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         let detail = LDClient.get(environment: environment)!.doubleVariationDetail(forKey: flagKey, defaultValue: defaultValue)
         resolve(bridgeDetail(detail, id))
     }
-
+    
     @objc func stringVariationDetail(_ flagKey: String, defaultValue: String, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         let detail = LDClient.get(environment: environment)!.stringVariationDetail(forKey: flagKey, defaultValue: defaultValue)
         resolve(bridgeDetail(detail, id))
     }
-
+    
     @objc func jsonVariationDetail(_ flagKey: String, defaultValue: Any, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         let detail = LDClient.get(environment: environment)!.jsonVariationDetail(forKey: flagKey, defaultValue: LDValue.fromBridge(defaultValue))
         resolve(bridgeDetail(detail, { $0.toBridge() }))
     }
-
+    
     private func bridgeDetail<T>(_ detail: LDEvaluationDetail<T>, _ converter: ((T) -> Any)) -> NSDictionary {
         [ "value": converter(detail.value)
-        , "variationIndex": (detail.variationIndex as Any)
-        , "reason": ((detail.reason?.mapValues { $0.toBridge() }) as Any)
+          , "variationIndex": (detail.variationIndex as Any)
+          , "reason": ((detail.reason?.mapValues { $0.toBridge() }) as Any)
         ]
     }
-
+    
     @objc func trackData(_ eventName: String, data: Any, environment: String) {
         LDClient.get(environment: environment)!.track(key: eventName, data: LDValue.fromBridge(data))
     }
-
+    
     @objc func trackMetricValue(_ eventName: String, data: Any, metricValue: NSNumber, environment: String) {
         LDClient.get(environment: environment)!.track(key: eventName, data: LDValue.fromBridge(data), metricValue: Double(truncating: metricValue))
     }
-
+    
     @objc func setOffline(_ resolve: @escaping RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         LDClient.get()?.setOnline(false) {
             resolve(true)
         }
     }
-
+    
     @objc func isOffline(_ resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         resolve(!(LDClient.get()?.isOnline ?? false))
     }
-
+    
     @objc func setOnline(_ resolve: @escaping RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         LDClient.get()?.setOnline(true) {
             resolve(true)
         }
     }
-
+    
     @objc func flush() {
         LDClient.get()?.flush()
     }
-
+    
     @objc func close(_ resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         LDClient.get()?.close()
         resolve(true)
     }
-
+    
     @objc func identify(_ options: NSDictionary, resolve: @escaping RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         LDClient.get()?.identify(user: userBuild(options)) {
             resolve(nil)
         }
     }
-
+    
     @objc func alias(_ environment: String, user: NSDictionary, previousUser: NSDictionary) {
         LDClient.get(environment: environment)!.alias(context: userBuild(user), previousContext: userBuild(previousUser))
     }
-
+    
     @objc func allFlags(_ environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         resolve(LDClient.get(environment: environment)!.allFlags?.mapValues { $0.toBridge() } ?? [:] as NSDictionary)
     }
-
+    
     @objc func getConnectionMode(_ environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         let connectionInformation = LDClient.get(environment: environment)!.getConnectionInformation()
         var connectionMode: String
@@ -224,16 +238,16 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
         }
         resolve(connectionMode)
     }
-
+    
     // lastKnownFlagValidity is nil if either no connection has ever been successfully made or if the SDK has an active streaming connection. It will have a value if 1) in polling mode and at least one poll has completed successfully, or 2) if in streaming mode whenever the streaming connection closes.
     @objc func getLastSuccessfulConnection(_ environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         resolve(LDClient.get(environment: environment)!.getConnectionInformation().lastKnownFlagValidity ?? 0)
     }
-
+    
     @objc func getLastFailedConnection(_ environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         resolve(LDClient.get(environment: environment)!.getConnectionInformation().lastFailedConnection ?? 0)
     }
-
+    
     @objc func getLastFailure(_ environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         let connectionInformation = LDClient.get(environment: environment)!.getConnectionInformation()
         var failureReason: String
@@ -249,11 +263,11 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
         }
         resolve(failureReason)
     }
-
+    
     private func envConcat(environment: String, identifier: String) -> String {
         return environment + ";" + identifier
     }
-
+    
     @objc func registerFeatureFlagListener(_ flagKey: String, environment: String) {
         let multiListenerId = envConcat(environment: environment, identifier: flagKey)
         let owner = ObserverOwner()
@@ -264,14 +278,14 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
             }
         }
     }
-
+    
     @objc func unregisterFeatureFlagListener(_ flagKey: String, environment: String) {
         let multiListenerId = envConcat(environment: environment, identifier: flagKey)
         if let owner = flagListenerOwners.removeValue(forKey: multiListenerId) {
             LDClient.get(environment: environment)!.stopObserving(owner: owner)
         }
     }
-
+    
     @objc func registerCurrentConnectionModeListener(_ listenerId: String, environment: String) {
         let multiListenerId = envConcat(environment: environment, identifier: listenerId)
         let owner = ObserverOwner()
@@ -282,14 +296,14 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
             }
         }
     }
-
+    
     @objc func unregisterCurrentConnectionModeListener(_ listenerId: String, environment: String) {
         let multiListenerId = envConcat(environment: environment, identifier: listenerId)
         if let owner = connectionModeListenerOwners.removeValue(forKey: multiListenerId) {
             LDClient.get(environment: environment)!.stopObserving(owner: owner)
         }
     }
-
+    
     @objc func registerAllFlagsListener(_ listenerId: String, environment: String) {
         let multiListenerId = envConcat(environment: environment, identifier: listenerId)
         let owner = ObserverOwner()
@@ -300,14 +314,14 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
             }
         }
     }
-
+    
     @objc func unregisterAllFlagsListener(_ listenerId: String, environment: String) {
         let multiListenerId = envConcat(environment: environment, identifier: listenerId)
         if let owner = allFlagsListenerOwners.removeValue(forKey: multiListenerId) {
             LDClient.get(environment: environment)!.stopObserving(owner: owner)
         }
     }
-
+    
     @objc func isInitialized(_ environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         if LDClient.get() == nil {
             reject(ERROR_UNKNOWN, "SDK has not been configured", nil)
@@ -342,7 +356,7 @@ extension LDValue {
         if let dictValue = value as? [String: Any] { return .object(dictValue.mapValues { fromBridge($0) }) }
         return .null
     }
-
+    
     func toBridge() -> Any {
         switch self {
         case .null: return NSNull()
