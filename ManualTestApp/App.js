@@ -29,7 +29,7 @@ const Body = () => {
     async function initializeClient() {
       let ldClient = new LDClient();
       let config = {
-        mobileKey: 'MOBILE_KEY',
+        mobileKey: 'mob-fc8381a0-db6e-41a0-833f-50deb34389e2',
         debugMode: true,
         application: {
           id: 'rn-manual-test-app',
@@ -104,7 +104,7 @@ const Body = () => {
   return (
     <>
       <Text>Feature Key:</Text>
-      <TextInput style={styles.input} onChangeText={setFlagKey} value={flagKey} autoCapitalize={false} />
+      <TextInput style={styles.input} onChangeText={setFlagKey} value={flagKey} autoCapitalize="none" />
       <View style={styles.row}>
         <Button title="Evaluate Flag" onPress={evalFlag} />
         <Picker style={{ flex: 1 }} selectedValue={flagType} onValueChange={(itemValue, _) => setFlagType(itemValue)}>
