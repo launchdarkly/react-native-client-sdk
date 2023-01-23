@@ -104,7 +104,7 @@ const Body = () => {
   return (
     <>
       <Text>Feature Key:</Text>
-      <TextInput style={styles.input} onChangeText={setFlagKey} value={flagKey} />
+      <TextInput style={styles.input} onChangeText={setFlagKey} value={flagKey} autoCapitalize="none" />
       <View style={styles.row}>
         <Button title="Evaluate Flag" onPress={evalFlag} />
         <Picker style={{ flex: 1 }} selectedValue={flagType} onValueChange={(itemValue, _) => setFlagType(itemValue)}>
