@@ -97,20 +97,6 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
             try! ldConfig.setSecondaryMobileKeys(val)
         }
         
-        if let c = config["application"] as? [String: String] {
-            var applicationInfo = ApplicationInfo()
-            
-            if let applicationId = c["id"] {
-                applicationInfo.applicationIdentifier(applicationId)
-            }
-            
-            if let applicationVersion = c["version"] {
-                applicationInfo.applicationIdentifier(applicationVersion)
-            }
-            
-            ldConfig.applicationInfo = applicationInfo
-        }
-        
         return ldConfig
     }
     
