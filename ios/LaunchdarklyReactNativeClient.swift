@@ -105,7 +105,7 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
             }
             
             if let applicationVersion = c["version"] {
-                applicationInfo.applicationIdentifier(applicationVersion)
+                applicationInfo.applicationVersion(applicationVersion)
             }
             
             ldConfig.applicationInfo = applicationInfo
