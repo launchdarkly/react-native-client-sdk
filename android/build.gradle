@@ -33,18 +33,8 @@ android {
     }
 }
 
-def REACT_NATIVE_VERSION = new File(['node', '--print', "JSON.parse(require('fs').readFileSync(require.resolve('react-native/package.json'), 'utf-8')).version"].execute(null, rootDir).text.trim())
-
 allprojects {
     repositories {
-        mavenLocal()
-        google()
-        mavenCentral()
-        maven {
-            // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
-            url "$rootDir/../node_modules/react-native/android"
-        }
-
         // Ripped from https://stackoverflow.com/questions/74333787/react-native-2-files-found-with-path-lib-arm64-v8a-libfbjni-so-from-inputs
         exclusiveContent {
             // We get React Native's Android binaries exclusively through npm,
@@ -60,12 +50,13 @@ allprojects {
                 }
             }
         }
-
-        configurations.all {
-            resolutionStrategy {
-                // Remove this override in 0.65+, as a proper fix is included in react-native itself.
-                force "com.facebook.react:react-native:" + REACT_NATIVE_VERSION
-            }
+        
+        mavenLocal()
+        google()
+        mavenCentral()
+        maven {
+            // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
+            url "$rootDir/../node_modules/react-native/android"
         }
     }
 }
