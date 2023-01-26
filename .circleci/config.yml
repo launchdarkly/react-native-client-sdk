@@ -49,6 +49,10 @@ jobs:
             mkdir -p test
             cd test
             [ -d "CITest" ] || npx react-native@<<parameters.rn-version>> init CITest --version <<parameters.rn-version>> --skip-install
+            
+            # HACK: rn 0.64.x init the test project targeting ios 10, which is incompatible with the ios SDK which requires
+            # a minimum of ios 11
+            sed -i.bak "s/platform :ios, '10.0'/platform :ios, '11.0'/" CITest/ios/Podfile
 
       - save_cache:
           name: Save RN project template to cache
