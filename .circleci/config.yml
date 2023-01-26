@@ -54,11 +54,7 @@ jobs:
             # a minimum of ios 11
             sed -i.bak "s/platform :ios, '10.0'/platform :ios, '11.0'/" CITest/ios/Podfile
             sed -i.bak "s/IPHONEOS_DEPLOYMENT_TARGET = 10.0;/IPHONEOS_DEPLOYMENT_TARGET = 11.0;/" CITest/ios/CITest.xcodeproj/project.pbxproj
-            sed -i.bak "s/IPHONEOS_DEPLOYMENT_TARGET = 10.0;/IPHONEOS_DEPLOYMENT_TARGET = 11.0;/" CITest/ios/Pods/Pods.xcodeproj/project.pbxproj
-            sed -i.bak "s/IPHONEOS_DEPLOYMENT_TARGET = 9.0;/IPHONEOS_DEPLOYMENT_TARGET = 11.0;/" CITest/ios/Pods/Pods.xcodeproj/project.pbxproj
-            sed -i.bak "s/IPHONEOS_DEPLOYMENT_TARGET = 8.4;/IPHONEOS_DEPLOYMENT_TARGET = 11.0;/" CITest/ios/Pods/Pods.xcodeproj/project.pbxproj
-            sed -i.bak "s/IPHONEOS_DEPLOYMENT_TARGET = 8.0;/IPHONEOS_DEPLOYMENT_TARGET = 11.0;/" CITest/ios/Pods/Pods.xcodeproj/project.pbxproj
-
+          
       - save_cache:
           name: Save RN project template to cache
           key: v1-rn-template-cache-<<parameters.rn-version>>
