@@ -31,11 +31,9 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-
-    packagingOptions {
-        pickFirst '**/*.so'
-    }
 }
+
+def REACT_NATIVE_VERSION = new File(['node', '--print', "JSON.parse(require('fs').readFileSync(require.resolve('react-native/package.json'), 'utf-8')).version"].execute(null, rootDir).text.trim())
 
 allprojects {
     repositories {
@@ -60,6 +58,13 @@ allprojects {
                 maven {
                     url "$rootDir/../node_modules/react-native/android"
                 }
+            }
+        }
+
+        configurations.all {
+            resolutionStrategy {
+                // Remove this override in 0.65+, as a proper fix is included in react-native itself.
+                force "com.facebook.react:react-native:" + REACT_NATIVE_VERSION
             }
         }
     }
