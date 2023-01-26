@@ -154,9 +154,9 @@ workflows:
               rn-version: [ "0.64.4", "0.65.2", "0.66.4", "0.67.3", "0.68.0","0.69.4", "0.70.1" ]
               xcode-version: [ "12.5.1", "13.2.1", "13.4.1", "14.0.1" ]
             exclude:
-              - rn-version: "0.64.3"
+              - rn-version: "0.64.4"
                 xcode-version: "13.4.1"
-              - rn-version: "0.64.3"
+              - rn-version: "0.64.4"
                 xcode-version: "14.0.1"
               - rn-version: "0.65.2"
                 xcode-version: "13.4.1"
