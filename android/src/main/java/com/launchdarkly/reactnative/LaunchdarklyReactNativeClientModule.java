@@ -28,6 +28,7 @@ import com.launchdarkly.sdk.LDUser;
 import com.launchdarkly.sdk.LDValue;
 import com.launchdarkly.sdk.ObjectBuilder;
 import com.launchdarkly.sdk.UserAttribute;
+import com.launchdarkly.sdk.android.Components;
 import com.launchdarkly.sdk.android.ConnectionInformation;
 import com.launchdarkly.sdk.android.FeatureFlagChangeListener;
 import com.launchdarkly.sdk.android.LDAllFlagsListener;
@@ -36,6 +37,7 @@ import com.launchdarkly.sdk.android.LDConfig;
 import com.launchdarkly.sdk.android.LDFailure;
 import com.launchdarkly.sdk.android.LDStatusListener;
 import com.launchdarkly.sdk.android.LaunchDarklyException;
+import com.launchdarkly.sdk.android.integrations.ApplicationInfoBuilder;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -51,7 +53,6 @@ import java.util.concurrent.ExecutionException;
 import timber.log.Timber;
 
 public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaModule {
-
     private static final Gson gson = new Gson();
     private static final String ERROR_INIT = "E_INITIALIZE";
     private static final String ERROR_IDENTIFY = "E_IDENTIFY";
@@ -64,6 +65,7 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
     private final Map<String, FeatureFlagChangeListener> listeners = new HashMap<>();
     private final Map<String, LDStatusListener> connectionModeListeners = new HashMap<>();
     private final Map<String, LDAllFlagsListener> allFlagsListeners = new HashMap<>();
+
     public LaunchdarklyReactNativeClientModule(ReactApplicationContext reactContext) {
         super(reactContext);
     }
@@ -252,13 +254,6 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
 
         final LDConfig.Builder ldConfigBuilder = configBuild(config);
         final LDUser ldUser = userBuild(user).build();
-
-        if (config.hasKey("allUserAttributesPrivate")
-                && config.getType("allUserAttributesPrivate").equals(ConfigEntryType.Boolean.getReadableType())
-                && config.getBoolean("allUserAttributesPrivate")) {
-            ldConfigBuilder.allAttributesPrivate();
-        }
-
         final Application application = (Application) getReactApplicationContext().getApplicationContext();
 
         if (application != null) {
@@ -285,14 +280,37 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
         }
     }
 
-    private LDConfig.Builder configBuild(ReadableMap options) {
-        LDConfig.Builder builder = new LDConfig.Builder();
+    private LDConfig.Builder configBuild(ReadableMap config) {
+        LDConfig.Builder ldConfigBuilder = new LDConfig.Builder();
 
+        // build trivial config options
         for (ConfigMapping entry : ConfigMapping.values()) {
-            entry.loadFromMap(options, builder);
+            entry.loadFromMap(config, ldConfigBuilder);
         }
 
-        return builder;
+        // build application tags
+        if (config.hasKey("application") && config.getType("application") == ReadableType.Map) {
+            ReadableMap application = config.getMap("application");
+            ApplicationInfoBuilder applicationInfoBuilder = Components.applicationInfo();
+
+            if (application.hasKey("id") && application.getType("id") == ReadableType.String) {
+                applicationInfoBuilder.applicationId(application.getString("id"));
+            }
+            if (application.hasKey("version") && application.getType("version") == ReadableType.String) {
+                applicationInfoBuilder.applicationVersion(application.getString("version"));
+            }
+
+            ldConfigBuilder.applicationInfo(applicationInfoBuilder);
+        }
+
+        // build private user attributes
+        if (config.hasKey("allUserAttributesPrivate")
+                && config.getType("allUserAttributesPrivate").equals(ConfigEntryType.Boolean.getReadableType())
+                && config.getBoolean("allUserAttributesPrivate")) {
+            ldConfigBuilder.allAttributesPrivate();
+        }
+
+        return ldConfigBuilder;
     }
 
     private LDUser.Builder userBuild(ReadableMap options) {
