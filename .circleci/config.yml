@@ -57,8 +57,8 @@ jobs:
 
             #HACK: force rn android 0.64.x init to use minSdkVersion 30 to pass the build
             sed -i.bak 's/buildToolsVersion = "29.0.3"/buildToolsVersion = "30.0.2"/' CITest/android/build.gradle
-            sed -i.bak "s/compileSdkVersion = 29/compileSdkVersion = 30/" CITest/android/build.gradle
-            sed -i.bak "s/targetSdkVersion = 29/targetSdkVersion = 30/" CITest/android/build.gradle
+            sed -i.bak "s/compileSdkVersion = 29/compileSdkVersion = 31/" CITest/android/build.gradle
+            sed -i.bak "s/targetSdkVersion = 29/targetSdkVersion = 31/" CITest/android/build.gradle
 
       - save_cache:
           name: Save RN project template to cache
