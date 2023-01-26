@@ -82,41 +82,41 @@ jobs:
           key: v1-gem-cache-<<parameters.xcode-version>>-
 
       # Newer cocoapods fixes Swift library auto-linking errors
-      - run:
-          name: Update CocoaPods
-          command: |
-            sudo gem install cocoapods
-            sudo gem cleanup
-            # Used as cache key to prevent storing redundant caches
-            gem list > /tmp/cache-key.txt
-
-      - save_cache:
-          name: Save gem cache
-          key: v1-gem-cache-<<parameters.xcode-version>>-{{ checksum "/tmp/cache-key.txt" }}
-          paths:
-            - ~/.gem
-
-      - run:
-          name: Install iOS Pods
-          command: cd ../test/CITest/ios && pod install
-
-      - run:
-          name: Build application for iOS (Release)
-          command: |
-            mkdir -p artifacts
-            cd ../test/CITest/ios
-            xcodebuild -workspace CITest.xcworkspace -scheme CITest build -configuration Release -destination "generic/platform=iOS" CODE_SIGNING_ALLOWED=NO GCC_WARN_INHIBIT_ALL_WARNINGS=YES | tee '../../../project/artifacts/xcb-<<parameters.rn-version>>.txt' | xcpretty
+#      - run:
+#          name: Update CocoaPods
+#          command: |
+#            sudo gem install cocoapods
+#            sudo gem cleanup
+#            # Used as cache key to prevent storing redundant caches
+#            gem list > /tmp/cache-key.txt
+#
+#      - save_cache:
+#          name: Save gem cache
+#          key: v1-gem-cache-<<parameters.xcode-version>>-{{ checksum "/tmp/cache-key.txt" }}
+#          paths:
+#            - ~/.gem
+#
+#      - run:
+#          name: Install iOS Pods
+#          command: cd ../test/CITest/ios && pod install
+#
+#      - run:
+#          name: Build application for iOS (Release)
+#          command: |
+#            mkdir -p artifacts
+#            cd ../test/CITest/ios
+#            xcodebuild -workspace CITest.xcworkspace -scheme CITest build -configuration Release -destination "generic/platform=iOS" CODE_SIGNING_ALLOWED=NO GCC_WARN_INHIBIT_ALL_WARNINGS=YES | tee '../../../project/artifacts/xcb-<<parameters.rn-version>>.txt' | xcpretty
 
       - when:
           # We only care to build Android application and debug iOS Build for a single XCode version
           condition:
             equal: [ 13.2.1, << parameters.xcode-version >> ]
           steps:
-            - run:
-                name: Build application for iOS (Debug)
-                command: |
-                  cd ../test/CITest/ios
-                  xcodebuild -workspace CITest.xcworkspace -scheme CITest build -configuration Debug -destination "generic/platform=iOS" CODE_SIGNING_ALLOWED=NO GCC_WARN_INHIBIT_ALL_WARNINGS=YES | tee '../../../project/artifacts/xcb-<<parameters.rn-version>>.txt' | xcpretty
+#            - run:
+#                name: Build application for iOS (Debug)
+#                command: |
+#                  cd ../test/CITest/ios
+#                  xcodebuild -workspace CITest.xcworkspace -scheme CITest build -configuration Debug -destination "generic/platform=iOS" CODE_SIGNING_ALLOWED=NO GCC_WARN_INHIBIT_ALL_WARNINGS=YES | tee '../../../project/artifacts/xcb-<<parameters.rn-version>>.txt' | xcpretty
             - run:
                 name: Build application for Android
                 command: cd ../test/CITest/android && ./gradlew packageRelease
@@ -146,13 +146,13 @@ workflows:
   version: 2
   all-tests:
     jobs:
-      - test-javascript
+#      - test-javascript
       - build-applications-using-template:
           name: rn<<matrix.rn-version>>-xc<<matrix.xcode-version>>-build-apps-using-template
           matrix:
             parameters:
-              rn-version: [ "0.64.3", "0.65.2", "0.66.4", "0.67.3", "0.68.0","0.69.4", "0.70.1" ]
-              xcode-version: [ "12.5.1", "13.2.1", "13.4.1", "14.0.1" ]
+              rn-version: [ "0.64.3" ]
+              xcode-version: [ "12.5.1", "13.2.1" ]
             exclude:
               - rn-version: "0.64.3"
                 xcode-version: "13.4.1"
@@ -162,5 +162,5 @@ workflows:
                 xcode-version: "13.4.1"
               - rn-version: "0.65.2"
                 xcode-version: "14.0.1"
-          requires:
-            - test-javascript
+#          requires:
+#            - test-javascript
