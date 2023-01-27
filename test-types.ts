@@ -27,6 +27,10 @@ async function tests() {
     mobileKey: '',
   };
   const configWithAllOptions: LDConfig = {
+    application: {
+      id: 'rn-unit-test',
+      version: '0.0.1',
+    },
     mobileKey: '',
     pollUri: '',
     streamUri: '',
