@@ -2,6 +2,19 @@
 
 All notable changes to the LaunchDarkly React Native SDK will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [6.3.0] - 2023-01-30
+### Added:
+- Support for application id and version configuration options
+
+### Changed:
+- Updated iOS client SDK to 7.1.0. This requires at minimum iOS 11 so the podspec has been updated to 11
+- Updated android client SDK to 3.6.0
+- Updated gradle version to 7.4.0
+
+### Fixed:
+- Android build failures for RN 0.64.3 due to a [facebook release issue](https://github.com/facebook/react-native/issues/35210)
+- Android local build issues due to outdated gradle version and repository configuration
+
 ## [6.2.4] - 2022-10-06
 ### Fixed:
 - Reverted the `isInitialized` fix that is not working in 6.2.3 ([#157](https://github.com/launchdarkly/react-native-client-sdk/issues/157))
