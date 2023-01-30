@@ -1,6 +1,6 @@
 {
   "name": "launchdarkly-react-native-client-sdk",
-  "version": "6.2.4",
+  "version": "6.3.0",
   "description": "LaunchDarkly Client-side SDK for React Native",
   "main": "index.js",
   "types": "index.d.ts",
