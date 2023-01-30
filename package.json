@@ -7,7 +7,9 @@
   "scripts": {
     "check-typescript": "node_modules/typescript/bin/tsc",
     "test": "jest",
-    "test:junit": "jest --testResultsProcessor jest-junit"
+    "test:junit": "jest --testResultsProcessor jest-junit",
+    "link-dev": "./link-dev.sh",
+    "prettier": "prettier --write '**/*.@(js|ts|tsx|json|css)'"
   },
   "repository": {
     "type": "git",
@@ -28,6 +30,8 @@
   "devDependencies": {
     "jest": "^26.6.3",
     "jest-junit": "^11.1.0",
+    "prettier": "2.8.1",
+    "react-native": ">=0.64.0 <0.71.0",
     "typedoc-plugin-rename-defaults": "^0.4.0",
     "typescript": ">=3.8.3 <4.5.0"
   },

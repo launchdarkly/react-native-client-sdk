@@ -6,11 +6,12 @@
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "start": "react-native start",
+    "postinstall": "cd ../ && yarn link-dev",
     "lint": "eslint ."
   },
   "dependencies": {
     "@react-native-picker/picker": "^2.2.1",
-    "launchdarkly-react-native-client-sdk": "file:..",
+    "launchdarkly-react-native-client-sdk": "^6.2.4",
     "react": "17.0.2",
     "react-native": "0.67.2"
   },

@@ -72,14 +72,14 @@ PODS:
     - FlipperKit/FlipperKitNetworkPlugin
   - fmt (6.2.1)
   - glog (0.3.5)
-  - LaunchDarkly (6.0.0):
-    - LaunchDarkly/Core (= 6.0.0)
-  - launchdarkly-react-native-client-sdk (6.1.3):
-    - LaunchDarkly (= 6.0.0)
+  - LaunchDarkly (7.1.0):
+    - LaunchDarkly/Core (= 7.1.0)
+  - launchdarkly-react-native-client-sdk (6.2.4):
+    - LaunchDarkly (= 7.1.0)
     - React-Core
-  - LaunchDarkly/Core (6.0.0):
-    - LDSwiftEventSource (= 1.3.1)
-  - LDSwiftEventSource (1.3.1)
+  - LaunchDarkly/Core (7.1.0):
+    - LDSwiftEventSource (= 3.0.0)
+  - LDSwiftEventSource (3.0.0)
   - libevent (2.1.12)
   - OpenSSL-Universal (1.1.180)
   - RCT-Folly (2021.06.28.00-v2):
@@ -345,7 +345,7 @@ PODS:
     - React-jsi (= 0.67.2)
     - React-logger (= 0.67.2)
     - React-perflogger (= 0.67.2)
-  - RNCPicker (2.4.1):
+  - RNCPicker (2.4.8):
     - React-Core
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
@@ -510,13 +510,13 @@ SPEC CHECKSUMS:
   Flipper-RSocket: d9d9ade67cbecf6ac10730304bf5607266dd2541
   FlipperKit: d8d346844eca5d9120c17d441a2f38596e8ed2b9
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
-  glog: 85ecdd10ee8d8ec362ef519a6a45ff9aa27b2e85
-  LaunchDarkly: 4f006a4f50a98221ed96f96564610e05662cdc99
-  launchdarkly-react-native-client-sdk: 286fec4e737f40f322100be91b3fc803600e8165
-  LDSwiftEventSource: 1ac1b0986a07c5fe4f2c94d87f1d41f4de6ae727
+  glog: bbaccdf9af7ec106ed6f0eb086217dc2bf37414c
+  LaunchDarkly: 31da8b77e96cb744417208478bb5b24f35fd2491
+  launchdarkly-react-native-client-sdk: d40d2a6c7d6e578c6bc528c403e8f94b2cd02ffa
+  LDSwiftEventSource: 824ce51a4fa8e79498c9b67ae672bfa802bd7464
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   OpenSSL-Universal: 1aa4f6a6ee7256b83db99ec1ccdaa80d10f9af9b
-  RCT-Folly: 803a9cfd78114b2ec0f140cfa6fa2a6bafb2d685
+  RCT-Folly: 19dac003a3f572f05a3b77277df72906a73469f1
   RCTRequired: cd47794163052d2b8318c891a7a14fcfaccc75ab
   RCTTypeSafety: 393bb40b3e357b224cde53d3fec26813c52428b1
   React: dec6476bc27155b250eeadfc11ea779265f53ebf
@@ -540,10 +540,10 @@ SPEC CHECKSUMS:
   React-RCTVibration: 99c7f67fba7a5ade46e98e870c6ff2444484f995
   React-runtimeexecutor: 2450b43df7ffe8e805a0b3dcb2abd4282f1f1836
   ReactCommon: d98c6c96b567f9b3a15f9fd4cc302c1eda8e3cf2
-  RNCPicker: abc646b53a3d28ccfa3232c927a0ca52e0cf024d
+  RNCPicker: 0bf8ef8f7800524f32d2bb2a8bcadd53eda0ecd1
   Yoga: 9b6696970c3289e8dea34b3eda93f23e61fb8121
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
 PODFILE CHECKSUM: 9ed2f1671e477dd4514e541beaed8f012e67294d
 
-COCOAPODS: 1.11.2
+COCOAPODS: 1.11.3
