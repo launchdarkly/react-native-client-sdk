@@ -9,7 +9,8 @@
     "test": "jest",
     "test:junit": "jest --testResultsProcessor jest-junit",
     "link-dev": "./link-dev.sh",
-    "prettier": "prettier --write '**/*.@(js|ts|tsx|json|css)'"
+    "prettier": "prettier --write '**/*.@(js|ts|tsx|json|css)'",
+    "doctor": "react-native doctor"
   },
   "repository": {
     "type": "git",
