@@ -4,12 +4,35 @@
   "description": "LaunchDarkly Client-side SDK for React Native",
   "main": "index.js",
   "types": "index.d.ts",
+  "files": [
+    "android/src/main",
+    "android/build.gradle",
+    "android/gradle.properties",
+    "ios/LaunchdarklyReactNativeClient.xcodeproj",
+    "ios/LaunchdarklyReactNativeClient.swift",
+    "ios/LaunchdarklyReactNativeClient-Bridging-Header.h",
+    "ios/LaunchdarklyReactNativeClientBridge.m",
+    "src",
+    "babel.config.js",
+    "index.d.ts",
+    "index.js",
+    "launchdarkly-react-native-client-sdk.podspec",
+    "test-types.ts",
+    "tsconfig.json"
+  ],
   "scripts": {
     "check-typescript": "node_modules/typescript/bin/tsc",
     "test": "jest",
     "test:junit": "jest --testResultsProcessor jest-junit",
     "link-dev": "./link-dev.sh",
-    "prettier": "prettier --write '**/*.@(js|ts|tsx|json|css)'"
+    "prettier": "prettier --write '**/*.@(js|ts|tsx|json|css)'",
+    "doctor": "react-native doctor",
+    "yarn-all": "yarn && yarn --cwd ManualTestApp",
+    "modd-ios": "modd -f modd-ios.conf",
+    "modd-android": "modd -f modd-android.conf",
+    "modd": "modd",
+    "dev-ios": "yarn yarn-all && yarn modd-ios",
+    "dev-android": "yarn yarn-all && yarn modd-android"
   },
   "repository": {
     "type": "git",

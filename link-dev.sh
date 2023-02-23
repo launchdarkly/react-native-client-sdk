@@ -8,14 +8,19 @@ declare -a examples=(ManualTestApp)
 for example in "${examples[@]}"
 do
   echo "===== Linking to $example"
-  mkdir -p ${example}/node_modules
-  rm -rf ${example}/node_modules/launchdarkly-react-native-client-sdk
-  mkdir -p ${example}/node_modules/launchdarkly-react-native-client-sdk/node_modules
-  cp package.json ${example}/node_modules/launchdarkly-react-native-client-sdk/package.json
-  cp index.js ${example}/node_modules/launchdarkly-react-native-client-sdk/index.js
-  cp launchdarkly-react-native-client-sdk.podspec ${example}/node_modules/launchdarkly-react-native-client-sdk/launchdarkly-react-native-client-sdk.podspec
-  cp LICENSE ${example}/node_modules/launchdarkly-react-native-client-sdk/LICENSE
-  cp -r node_modules/ ${example}/node_modules/launchdarkly-react-native-client-sdk/node_modules/
-  cp -r ios/ ${example}/node_modules/launchdarkly-react-native-client-sdk/ios
-  cp -r android/ ${example}/node_modules/launchdarkly-react-native-client-sdk/android
+  MODULES_DIR=$example/node_modules
+  SDK_DIR=$MODULES_DIR/launchdarkly-react-native-client-sdk
+
+  mkdir -p "$MODULES_DIR"
+  rm -rf "$SDK_DIR"
+  mkdir -p "$SDK_DIR"/node_modules
+
+  rsync -aq package.json "$SDK_DIR"
+  rsync -aq index.js "$SDK_DIR"
+  rsync -aq index.d.ts "$SDK_DIR"
+  rsync -aq launchdarkly-react-native-client-sdk.podspec "$SDK_DIR"
+  rsync -aq LICENSE "$SDK_DIR"
+  rsync -aq node_modules "$SDK_DIR"
+  rsync -av ios "$SDK_DIR" --exclude LaunchdarklyReactNativeClient.xcworkspace --exclude build --exclude Pods --exclude Tests --exclude Podfile --exclude Podfile.lock
+  rsync -av android "$SDK_DIR" --exclude .gradle --exclude build --exclude .idea --exclude gradle --exclude src/test
 done
