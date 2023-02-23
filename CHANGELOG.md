@@ -2,6 +2,13 @@
 
 All notable changes to the LaunchDarkly React Native SDK will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [6.3.1] - 2023-02-23
+### Changed:
+- Update ManualTestApp iOS pod dependency launchdarkly-react-native-client-sdk to 6.3.0.
+
+### Fixed:
+- iOS bug where force unwrapping of nil LDClient cause crashes. [Issue #152](https://github.com/launchdarkly/react-native-client-sdk/issues/152).
+
 ## [6.3.0] - 2023-01-30
 ### Added:
 - Support for application id and version configuration options
