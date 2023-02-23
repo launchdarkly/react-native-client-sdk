@@ -48,9 +48,9 @@ We encourage pull requests and other contributions from the community. Check out
 
 ## Developing this SDK
 
-- Run `npx react-native doctor` in both the root and ManualTestApp directories and make sure everything is green
+- Run `yarn doctor` in both the root and ManualTestApp directories and make sure everything is green
   - If watchman fails, you can try installing it manually `brew reinstall watchman`
 - Make sure you have [modd](https://github.com/cortesi/modd#install) installed so native code changes are hot reloaded
-
-* For ios run `modd -f modd-ios.conf`
-* For android run `modd -f modd-android.conf`
+- `cd ManualTestApp && yarn`
+- For ios run `modd -f modd-ios.conf`
+- For android run `modd -f modd-android.conf`

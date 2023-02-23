@@ -34,6 +34,15 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
         internalConfigure(config: config, user: user, timeout: timeout, resolve: resolve, reject: reject)
     }
     
+    private func getLDClient(environment: String) -> LDClient? {
+        if let client = LDClient.get(environment: environment) {
+            return client
+        } else {
+            NSLog("%@", "WARNING: LDClient is nil for env: '\(environment)'")
+            return nil
+        }
+    }
+    
     private func internalConfigure(config: NSDictionary, user: NSDictionary, timeout: Int?, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         let config = configBuild(config: config)
         
@@ -134,191 +143,225 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
     }
     
     @objc func boolVariation(_ flagKey: String, defaultValue: ObjCBool, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
-        resolve(LDClient.get(environment: environment)!.boolVariation(forKey: flagKey, defaultValue: defaultValue.boolValue))
+        if let ldClient = getLDClient(environment: environment) {
+            resolve(ldClient.boolVariation(forKey: flagKey, defaultValue: defaultValue.boolValue))
+        } else {
+            NSLog("%@", "evaluation failed because LDClient is nil. Returning default value.")
+            resolve(defaultValue.boolValue)
+        }
     }
-    
+
     @objc func numberVariation(_ flagKey: String, defaultValue: Double, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
-        resolve(LDClient.get(environment: environment)!.doubleVariation(forKey: flagKey, defaultValue: defaultValue))
+        if let ldClient = getLDClient(environment: environment) {
+            resolve(ldClient.doubleVariation(forKey: flagKey, defaultValue: defaultValue))
+        } else {
+            NSLog("%@", "evaluation failed because LDClient is nil. Returning default value.")
+            resolve(defaultValue)
+        }
     }
-    
+
     @objc func stringVariation(_ flagKey: String, defaultValue: String, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
-        resolve(LDClient.get(environment: environment)!.stringVariation(forKey: flagKey, defaultValue: defaultValue))
+        if let ldClient = getLDClient(environment: environment) {
+            resolve(ldClient.stringVariation(forKey: flagKey, defaultValue: defaultValue))
+        } else {
+            NSLog("%@", "evaluation failed because LDClient is nil. Returning default value.")
+            resolve(defaultValue)
+        }
     }
-    
+
     @objc func jsonVariation(_ flagKey: String, defaultValue: Any, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
-        resolve(LDClient.get(environment: environment)!.jsonVariation(forKey: flagKey, defaultValue: LDValue.fromBridge(defaultValue)).toBridge())
+        resolve(getLDClient(environment: environment)?.jsonVariation(forKey: flagKey, defaultValue: LDValue.fromBridge(defaultValue)).toBridge())
+        if let ldClient = getLDClient(environment: environment) {
+            resolve(ldClient.jsonVariation(forKey: flagKey, defaultValue: LDValue.fromBridge(defaultValue)).toBridge())
+        } else {
+            NSLog("%@", "evaluation failed because LDClient is nil. Returning default value.")
+            resolve(LDValue.fromBridge(defaultValue))
+        }
     }
-    
+
     @objc func boolVariationDetail(_ flagKey: String, defaultValue: ObjCBool, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
-        let detail = LDClient.get(environment: environment)!.boolVariationDetail(forKey: flagKey, defaultValue: defaultValue.boolValue)
-        resolve(bridgeDetail(detail, id))
+        let detail = LDClient.get(environment: environment)?.boolVariationDetail(forKey: flagKey, defaultValue: defaultValue.boolValue)
+        resolve(bridgeDetail(detail, id, defaultValue.boolValue))
     }
-    
+
     @objc func numberVariationDetail(_ flagKey: String, defaultValue: Double, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
-        let detail = LDClient.get(environment: environment)!.doubleVariationDetail(forKey: flagKey, defaultValue: defaultValue)
-        resolve(bridgeDetail(detail, id))
+        let detail = getLDClient(environment: environment)?.doubleVariationDetail(forKey: flagKey, defaultValue: defaultValue)
+        resolve(bridgeDetail(detail, id, defaultValue))
     }
-    
+
     @objc func stringVariationDetail(_ flagKey: String, defaultValue: String, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
-        let detail = LDClient.get(environment: environment)!.stringVariationDetail(forKey: flagKey, defaultValue: defaultValue)
-        resolve(bridgeDetail(detail, id))
+        let detail = getLDClient(environment: environment)?.stringVariationDetail(forKey: flagKey, defaultValue: defaultValue)
+        resolve(bridgeDetail(detail, id, defaultValue))
     }
-    
+
     @objc func jsonVariationDetail(_ flagKey: String, defaultValue: Any, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
-        let detail = LDClient.get(environment: environment)!.jsonVariationDetail(forKey: flagKey, defaultValue: LDValue.fromBridge(defaultValue))
-        resolve(bridgeDetail(detail, { $0.toBridge() }))
+        let detail = getLDClient(environment: environment)?.jsonVariationDetail(forKey: flagKey, defaultValue: LDValue.fromBridge(defaultValue))
+        resolve(bridgeDetail(detail, { $0.toBridge() }, LDValue.fromBridge(defaultValue)))
     }
-    
-    private func bridgeDetail<T>(_ detail: LDEvaluationDetail<T>, _ converter: ((T) -> Any)) -> NSDictionary {
-        [ "value": converter(detail.value)
-          , "variationIndex": (detail.variationIndex as Any)
-          , "reason": ((detail.reason?.mapValues { $0.toBridge() }) as Any)
+
+    private func bridgeDetail<T>(_ detail: LDEvaluationDetail<T>? = nil, _ converter: ((T) -> Any), _ defaultValue: T) -> NSDictionary {
+        if let detail = detail {
+            return [ "value": converter(detail.value)
+                     , "variationIndex": (detail.variationIndex as Any)
+                     , "reason": ((detail.reason?.mapValues { $0.toBridge() }) as Any)
+            ]
+        }
+
+        NSLog("%@", "WARNING: evaluation failed because LDClient is nil")
+        return [ "value": converter(defaultValue)
+                 , "reason": ["error": LDValue(stringLiteral: "evaluation failed because LDClient is nil. Returning default value.")]
         ]
     }
-    
+
     @objc func trackData(_ eventName: String, data: Any, environment: String) {
-        LDClient.get(environment: environment)!.track(key: eventName, data: LDValue.fromBridge(data))
+        getLDClient(environment: environment)?.track(key: eventName, data: LDValue.fromBridge(data))
     }
-    
+
     @objc func trackMetricValue(_ eventName: String, data: Any, metricValue: NSNumber, environment: String) {
-        LDClient.get(environment: environment)!.track(key: eventName, data: LDValue.fromBridge(data), metricValue: Double(truncating: metricValue))
+        getLDClient(environment: environment)?.track(key: eventName, data: LDValue.fromBridge(data), metricValue: Double(truncating: metricValue))
     }
-    
+
     @objc func setOffline(_ resolve: @escaping RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         LDClient.get()?.setOnline(false) {
             resolve(true)
         }
     }
-    
+
     @objc func isOffline(_ resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         resolve(!(LDClient.get()?.isOnline ?? false))
     }
-    
+
     @objc func setOnline(_ resolve: @escaping RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         LDClient.get()?.setOnline(true) {
             resolve(true)
         }
     }
-    
+
     @objc func flush() {
         LDClient.get()?.flush()
     }
-    
+
     @objc func close(_ resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         LDClient.get()?.close()
         resolve(true)
     }
-    
+
     @objc func identify(_ options: NSDictionary, resolve: @escaping RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         LDClient.get()?.identify(user: userBuild(options)) {
             resolve(nil)
         }
     }
-    
+
     @objc func alias(_ environment: String, user: NSDictionary, previousUser: NSDictionary) {
-        LDClient.get(environment: environment)!.alias(context: userBuild(user), previousContext: userBuild(previousUser))
+        getLDClient(environment: environment)?.alias(context: userBuild(user), previousContext: userBuild(previousUser))
     }
-    
+
     @objc func allFlags(_ environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
-        resolve(LDClient.get(environment: environment)!.allFlags?.mapValues { $0.toBridge() } ?? [:] as NSDictionary)
+        resolve(getLDClient(environment: environment)?.allFlags?.mapValues { $0.toBridge() } ?? [:] as NSDictionary)
     }
-    
+
     @objc func getConnectionMode(_ environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
-        let connectionInformation = LDClient.get(environment: environment)!.getConnectionInformation()
-        var connectionMode: String
-        switch connectionInformation.currentConnectionMode {
-        case .streaming:
-            connectionMode = "STREAMING"
-        case .polling:
-            connectionMode = "POLLING"
-        case .offline:
-            connectionMode = "OFFLINE"
-        case .establishingStreamingConnection:
-            connectionMode = "ESTABLISHING_STREAMING_CONNECTION"
+        if let connectionInformation = getLDClient(environment: environment)?.getConnectionInformation() {
+            var connectionMode: String
+            switch connectionInformation.currentConnectionMode {
+            case .streaming:
+                connectionMode = "STREAMING"
+            case .polling:
+                connectionMode = "POLLING"
+            case .offline:
+                connectionMode = "OFFLINE"
+            case .establishingStreamingConnection:
+                connectionMode = "ESTABLISHING_STREAMING_CONNECTION"
+            }
+            resolve(connectionMode)
+        } else {
+            resolve(nil)
         }
-        resolve(connectionMode)
     }
-    
+
     // lastKnownFlagValidity is nil if either no connection has ever been successfully made or if the SDK has an active streaming connection. It will have a value if 1) in polling mode and at least one poll has completed successfully, or 2) if in streaming mode whenever the streaming connection closes.
     @objc func getLastSuccessfulConnection(_ environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
-        resolve(LDClient.get(environment: environment)!.getConnectionInformation().lastKnownFlagValidity ?? 0)
+        resolve(getLDClient(environment: environment)?.getConnectionInformation().lastKnownFlagValidity ?? 0)
     }
-    
+
     @objc func getLastFailedConnection(_ environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
-        resolve(LDClient.get(environment: environment)!.getConnectionInformation().lastFailedConnection ?? 0)
+        resolve(getLDClient(environment: environment)?.getConnectionInformation().lastFailedConnection ?? 0)
     }
-    
+
     @objc func getLastFailure(_ environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
-        let connectionInformation = LDClient.get(environment: environment)!.getConnectionInformation()
-        var failureReason: String
-        switch connectionInformation.lastConnectionFailureReason {
-        case .unauthorized:
-            failureReason = "UNAUTHORIZED"
-        case .none:
-            failureReason = "NONE"
-        case .httpError:
-            failureReason = "HTTP_ERROR"
-        case .unknownError:
-            failureReason = "UNKNOWN_ERROR"
+        if let connectionInformation = getLDClient(environment: environment)?.getConnectionInformation() {
+            var failureReason: String
+            switch connectionInformation.lastConnectionFailureReason {
+            case .unauthorized:
+                failureReason = "UNAUTHORIZED"
+            case .none:
+                failureReason = "NONE"
+            case .httpError:
+                failureReason = "HTTP_ERROR"
+            case .unknownError:
+                failureReason = "UNKNOWN_ERROR"
+            }
+            resolve(failureReason)
+        } else {
+            resolve(nil)
         }
-        resolve(failureReason)
     }
-    
+
     private func envConcat(environment: String, identifier: String) -> String {
         return environment + ";" + identifier
     }
-    
+
     @objc func registerFeatureFlagListener(_ flagKey: String, environment: String) {
         let multiListenerId = envConcat(environment: environment, identifier: flagKey)
         let owner = ObserverOwner()
         flagListenerOwners[multiListenerId] = owner
-        LDClient.get(environment: environment)!.observe(key: flagKey, owner: owner) { changedFlag in
+        getLDClient(environment: environment)?.observe(key: flagKey, owner: owner) { changedFlag in
             if self.bridge != nil {
                 self.sendEvent(withName: self.FLAG_PREFIX, body: ["flagKey": changedFlag.key, "listenerId": multiListenerId])
             }
         }
     }
-    
+
     @objc func unregisterFeatureFlagListener(_ flagKey: String, environment: String) {
         let multiListenerId = envConcat(environment: environment, identifier: flagKey)
         if let owner = flagListenerOwners.removeValue(forKey: multiListenerId) {
-            LDClient.get(environment: environment)!.stopObserving(owner: owner)
+            getLDClient(environment: environment)?.stopObserving(owner: owner)
         }
     }
-    
+
     @objc func registerCurrentConnectionModeListener(_ listenerId: String, environment: String) {
         let multiListenerId = envConcat(environment: environment, identifier: listenerId)
         let owner = ObserverOwner()
         connectionModeListenerOwners[multiListenerId] = owner
-        LDClient.get(environment: environment)!.observeCurrentConnectionMode(owner: owner) { connectionMode in
+        getLDClient(environment: environment)?.observeCurrentConnectionMode(owner: owner) { connectionMode in
             if self.bridge != nil {
                 self.sendEvent(withName: self.CONNECTION_MODE_PREFIX, body: ["connectionMode": connectionMode, "listenerId": multiListenerId])
             }
         }
     }
-    
+
     @objc func unregisterCurrentConnectionModeListener(_ listenerId: String, environment: String) {
         let multiListenerId = envConcat(environment: environment, identifier: listenerId)
         if let owner = connectionModeListenerOwners.removeValue(forKey: multiListenerId) {
-            LDClient.get(environment: environment)!.stopObserving(owner: owner)
+            getLDClient(environment: environment)?.stopObserving(owner: owner)
         }
     }
-    
+
     @objc func registerAllFlagsListener(_ listenerId: String, environment: String) {
         let multiListenerId = envConcat(environment: environment, identifier: listenerId)
         let owner = ObserverOwner()
         allFlagsListenerOwners[multiListenerId] = owner
-        LDClient.get(environment: environment)!.observeAll(owner: owner) { changedFlags in
+        getLDClient(environment: environment)?.observeAll(owner: owner) { changedFlags in
             if self.bridge != nil {
                 self.sendEvent(withName: self.ALL_FLAGS_PREFIX, body: ["flagKeys": Array(changedFlags.keys), "listenerId": multiListenerId])
             }
         }
     }
-    
+
     @objc func unregisterAllFlagsListener(_ listenerId: String, environment: String) {
         let multiListenerId = envConcat(environment: environment, identifier: listenerId)
         if let owner = allFlagsListenerOwners.removeValue(forKey: multiListenerId) {
-            LDClient.get(environment: environment)!.stopObserving(owner: owner)
+            getLDClient(environment: environment)?.stopObserving(owner: owner)
         }
     }
     

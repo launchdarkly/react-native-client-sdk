@@ -18,7 +18,7 @@ const Wrapper = ({ children }): Node => {
 
 const Body = () => {
   const [client, setClient] = useState(null);
-  const [flagKey, setFlagKey] = useState('flag-key');
+  const [flagKey, setFlagKey] = useState('dev-test-flag');
   const [flagType, setFlagType] = useState('bool');
   const [isOffline, setIsOffline] = useState(false);
   const [userKey, setUserKey] = useState('user key');
@@ -117,14 +117,14 @@ const Body = () => {
         <Switch value={isOffline} onValueChange={setOffline} />
       </View>
       <Text>User Key:</Text>
-      <TextInput style={styles.input} onChangeText={setUserKey} value={userKey} />
+      <TextInput style={styles.input} onChangeText={setUserKey} value={userKey} autoCapitalize="none" />
       <View style={styles.row}>
         <Button title="Identify" onPress={identify} />
         <Button title="Track" onPress={track} />
         <Button title="Flush" onPress={flush} />
       </View>
       <Text>Feature Flag Listener Key:</Text>
-      <TextInput style={styles.input} onChangeText={setListenerKey} value={listenerKey} />
+      <TextInput style={styles.input} onChangeText={setListenerKey} value={listenerKey} autoCapitalize="none" />
       <View style={styles.row}>
         <Button title="Listen" onPress={listen} />
         <Button title="Remove" onPress={removeListener} />
