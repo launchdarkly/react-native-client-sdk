@@ -11,16 +11,22 @@
   },
   "dependencies": {
     "@react-native-picker/picker": "^2.2.1",
-    "launchdarkly-react-native-client-sdk": "^6.2.4",
-    "react": "17.0.2",
-    "react-native": "0.67.2"
+    "launchdarkly-react-native-client-sdk": "^6.3.0",
+    "react": "^18.2.0",
+    "react-native": "0.70.7"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.9",
-    "@babel/runtime": "^7.12.5",
-    "@react-native-community/eslint-config": "^2.0.0",
-    "eslint": "7.14.0",
-    "metro-react-native-babel-preset": "^0.66.2",
-    "react-test-renderer": "17.0.2"
+    "@babel/core": "^7.20.12",
+    "@babel/runtime": "^7.20.13",
+    "@react-native-community/eslint-config": "^3.2.0",
+    "@tsconfig/react-native": "2.0.3",
+    "@types/jest": "29.4.0",
+    "@types/react": "18.0.28",
+    "@types/react-native": "0.71.3",
+    "@types/react-test-renderer": "18.0.0",
+    "eslint": "^8.33.0",
+    "metro-react-native-babel-preset": "^0.75.0",
+    "react-test-renderer": "^18.2.0",
+    "typescript": "4.9.5"
   }
 }

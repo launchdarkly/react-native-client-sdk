@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, ReactNode } from 'react';
 import { SafeAreaView, ScrollView, StyleSheet, Text, View, Button, TextInput, Alert, Switch } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
-import LDClient from 'launchdarkly-react-native-client-sdk';
-import MessageQueue from 'react-native/Libraries/BatchedBridge/MessageQueue.js';
+import LDClient, { LDMultiKindContext } from 'launchdarkly-react-native-client-sdk';
+import MessageQueue from 'react-native/Libraries/BatchedBridge/MessageQueue';
 
-const Wrapper = ({ children }): Node => {
+const Wrapper = ({ children }: { children: ReactNode }) => {
   const styles = {
     scroll: { backgroundColor: '#fff', padding: 10 },
     area: { backgroundColor: '#fff', flex: 1 },
@@ -17,11 +17,11 @@ const Wrapper = ({ children }): Node => {
 };
 
 const Body = () => {
-  const [client, setClient] = useState(null);
+  const [client, setClient] = useState<LDClient | null>(null);
   const [flagKey, setFlagKey] = useState('dev-test-flag');
   const [flagType, setFlagType] = useState('bool');
   const [isOffline, setIsOffline] = useState(false);
-  const [userKey, setUserKey] = useState('user key');
+  const [contextKey, setContextKey] = useState('context-key');
   const [listenerKey, setListenerKey] = useState('');
   const [listeners, setListeners] = useState({});
 
@@ -36,9 +36,33 @@ const Body = () => {
           version: '0.0.1',
         },
       };
-      let user = { key: userKey };
+      const anonymousUserContext = {
+        kind: 'user',
+        key: 'user-key-1',
+        anonymous: true,
+      };
+
+      // A multi-context can contain both anonymous and non-anonymous contexts.
+      // Here, organization is not anonymous.
+      const multiContext: LDMultiKindContext = {
+        kind: 'multi',
+        user: anonymousUserContext,
+        org: {
+          key: 'org-key',
+          name: 'Example organization name',
+          _meta: {
+            privateAttributes: ['address', 'phone'],
+          },
+          address: {
+            street: 'sunset blvd',
+            postcode: 94105,
+          },
+          phone: 5551234,
+        },
+      };
+
       try {
-        await ldClient.configure(config, user);
+        await ldClient.configure(config, multiContext);
       } catch (err) {
         console.error(err);
       }
@@ -46,59 +70,62 @@ const Body = () => {
     }
 
     if (client == null) {
-      initializeClient();
+      initializeClient().then(() => console.log('ld client initialized successfully'));
     }
   });
 
   const evalFlag = async () => {
     let res;
     if (flagType === 'bool') {
-      res = await client.boolVariation(flagKey, false);
+      res = await client?.boolVariation(flagKey, false);
     } else if (flagType === 'string') {
-      res = await client.stringVariation(flagKey, '');
+      res = await client?.stringVariation(flagKey, '');
     } else if (flagType === 'number') {
-      res = await client.numberVariation(flagKey, 0.0);
+      res = await client?.numberVariation(flagKey, 0.0);
     } else if (flagType === 'json') {
-      res = await client.jsonVariation(flagKey, null);
+      res = await client?.jsonVariation(flagKey, null);
     }
 
     Alert.alert('LD Server Response', JSON.stringify(res));
   };
 
   const track = () => {
-    client.track(flagKey, false);
+    client?.track(flagKey, false);
   };
 
   const identify = () => {
-    client.identify({ key: userKey });
+    client?.identify({ kind: 'user', key: contextKey });
   };
 
   const listen = () => {
     if (listeners.hasOwnProperty(listenerKey)) {
       return;
     }
-    let listener = (value) => Alert.alert('Listener Callback', value);
-    client.registerFeatureFlagListener(listenerKey, listener);
+    let listener = (value: string | undefined) => Alert.alert('Listener Callback', value);
+    client?.registerFeatureFlagListener(listenerKey, listener);
     setListeners({ ...listeners, ...{ [listenerKey]: listener } });
   };
 
   const removeListener = () => {
-    client.unregisterFeatureFlagListener(listenerKey, listeners[listenerKey]);
+    // @ts-ignore
+    client?.unregisterFeatureFlagListener(listenerKey, listeners[listenerKey]);
+    // @ts-ignore
     let { [listenerKey]: omit, ...newListeners } = listeners;
     setListeners(newListeners);
   };
 
   const flush = () => {
-    client.flush();
+    client?.flush();
   };
 
-  const setOffline = (newIsOffline) => {
-    if (newIsOffline) {
-      client.setOffline();
+  const setOffline = (offline: boolean) => {
+    if (offline) {
+      client?.setOffline();
     } else {
-      client.setOnline();
+      client?.setOnline();
     }
-    setIsOffline(newIsOffline);
+
+    setIsOffline(offline);
   };
 
   return (
@@ -116,8 +143,8 @@ const Body = () => {
         <Text>Offline</Text>
         <Switch value={isOffline} onValueChange={setOffline} />
       </View>
-      <Text>User Key:</Text>
-      <TextInput style={styles.input} onChangeText={setUserKey} value={userKey} autoCapitalize="none" />
+      <Text>Context key:</Text>
+      <TextInput style={styles.input} onChangeText={setContextKey} value={contextKey} autoCapitalize="none" />
       <View style={styles.row}>
         <Button title="Identify" onPress={identify} />
         <Button title="Track" onPress={track} />
@@ -155,11 +182,17 @@ const App = () => {
 };
 
 MessageQueue.spy((msg) => {
-  if (msg.module != 'LaunchdarklyReactNativeClient' && !msg.method.includes('LaunchdarklyReactNativeClient')) {
+  if (
+    msg.module != 'LaunchdarklyReactNativeClient' &&
+    typeof msg.method !== 'number' &&
+    !msg.method.includes('LaunchdarklyReactNativeClient')
+  ) {
     return;
   }
   let logMsg = msg.type === 0 ? 'N->JS: ' : 'JS->N: ';
-  logMsg += msg.method.replace('LaunchdarklyReactNativeClient.', '');
+  if (typeof msg.method !== 'number') {
+    logMsg += msg.method.replace('LaunchdarklyReactNativeClient.', '');
+  }
 
   let params = [...msg.args];
   if (params.length >= 2) {

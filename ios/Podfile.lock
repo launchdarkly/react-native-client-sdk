@@ -75,9 +75,6 @@ PODS:
   - glog (0.3.5)
   - LaunchDarkly (8.0.0):
     - LaunchDarkly/Core (= 8.0.0)
-  - launchdarkly-react-native-client-sdk (6.3.1):
-    - LaunchDarkly (= 8.0.0)
-    - React-Core
   - LaunchDarkly/Core (8.0.0):
     - LDSwiftEventSource (= 3.0.0)
   - LDSwiftEventSource (3.0.0)
@@ -277,11 +274,6 @@ PODS:
     - glog
     - RCT-Folly (= 2021.07.22.00)
     - React-jsi/Default (= 0.70.7)
-  - React-jsi/Default (0.70.7):
-    - boost (= 1.76.0)
-    - DoubleConversion
-    - glog
-    - RCT-Folly (= 2021.07.22.00)
   - React-jsiexecutor (0.70.7):
     - DoubleConversion
     - glog
@@ -358,8 +350,6 @@ PODS:
     - React-jsi (= 0.70.7)
     - React-logger (= 0.70.7)
     - React-perflogger (= 0.70.7)
-  - RNCPicker (2.4.8):
-    - React-Core
   - SocketRocket (0.6.0)
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
@@ -392,7 +382,7 @@ DEPENDENCIES:
   - FlipperKit/FlipperKitUserDefaultsPlugin (= 0.125.0)
   - FlipperKit/SKIOSNetworkPlugin (= 0.125.0)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
-  - launchdarkly-react-native-client-sdk (from `../node_modules/launchdarkly-react-native-client-sdk`)
+  - LaunchDarkly (= 8.0.0)
   - OpenSSL-Universal (= 1.1.1100)
   - RCT-Folly (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCTRequired (from `../node_modules/react-native/Libraries/RCTRequired`)
@@ -421,7 +411,6 @@ DEPENDENCIES:
   - React-RCTVibration (from `../node_modules/react-native/Libraries/Vibration`)
   - React-runtimeexecutor (from `../node_modules/react-native/ReactCommon/runtimeexecutor`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
-  - "RNCPicker (from `../node_modules/@react-native-picker/picker`)"
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -455,8 +444,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/React/FBReactNativeSpec"
   glog:
     :podspec: "../node_modules/react-native/third-party-podspecs/glog.podspec"
-  launchdarkly-react-native-client-sdk:
-    :path: "../node_modules/launchdarkly-react-native-client-sdk"
   RCT-Folly:
     :podspec: "../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec"
   RCTRequired:
@@ -509,15 +496,13 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/runtimeexecutor"
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
-  RNCPicker:
-    :path: "../node_modules/@react-native-picker/picker"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
   boost: a7c83b31436843459a1961bfd74b96033dc77234
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
-  DoubleConversion: 831926d9b8bf8166fd87886c4abab286c2422662
+  DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
   FBLazyVector: a6454570f573a0f6f1d397e5a95c13e8e45d1700
   FBReactNativeSpec: 09e8dfba44487e5dc4882a9f5318cde67549549c
   Flipper: 26fc4b7382499f1281eb8cb921e5c3ad6de91fe0
@@ -530,9 +515,8 @@ SPEC CHECKSUMS:
   Flipper-RSocket: d9d9ade67cbecf6ac10730304bf5607266dd2541
   FlipperKit: cbdee19bdd4e7f05472a66ce290f1b729ba3cb86
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
-  glog: 85ecdd10ee8d8ec362ef519a6a45ff9aa27b2e85
+  glog: 04b94705f318337d7ead9e6d17c019bd9b1f6b1b
   LaunchDarkly: e73c26ce2fc2b719730e0dd38c9abe761e33287a
-  launchdarkly-react-native-client-sdk: 131312d0c459daf0db0f7cf1f4e76ff41ca72c58
   LDSwiftEventSource: 824ce51a4fa8e79498c9b67ae672bfa802bd7464
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   OpenSSL-Universal: ebc357f1e6bc71fa463ccb2fe676756aff50e88c
@@ -562,11 +546,10 @@ SPEC CHECKSUMS:
   React-RCTVibration: eb7837d55b87c7a4ead3ab7632ad70dca87c65dc
   React-runtimeexecutor: 7cec9ed92ebde8309902530bb566819645c84ee5
   ReactCommon: 0253d197eaa7f6689dcd3e7d5360449ab93e10df
-  RNCPicker: 0bf8ef8f7800524f32d2bb2a8bcadd53eda0ecd1
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
   Yoga: 92d086bb705a41cc588599b51db726ba7b1d341c
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 741d1103a57ae690e5c569aa60527fb577cb2f91
+PODFILE CHECKSUM: 36a96e8c81c41acfa78ca88aa940393a899b7e05
 
 COCOAPODS: 1.11.3

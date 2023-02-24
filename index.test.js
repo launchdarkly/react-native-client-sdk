@@ -224,21 +224,10 @@ test('close', () => {
 
 test('identify', () => {
   nativeMock.identify.mockReturnValueOnce('pass1');
-  expect(client.identify({ name: 'John Smith' })).toBe('pass1');
+  const testContext = { kind: 'user', key: 'j-smith-key', name: 'John Smith' };
+  expect(client.identify(testContext)).toBe('pass1');
   expect(nativeMock.identify).toHaveBeenCalledTimes(1);
-  expect(nativeMock.identify).toHaveBeenNthCalledWith(1, {
-    name: 'John Smith',
-  });
-});
-
-test('alias', () => {
-  client.alias({ key: 'anon', anonymous: true }, { key: 'abc' });
-  expect(nativeMock.alias).toHaveBeenCalledTimes(1);
-  expect(nativeMock.alias).toHaveBeenNthCalledWith(1, 'default', { key: 'anon', anonymous: true }, { key: 'abc' });
-
-  client.alias({ key: 'abc' }, { key: 'def' }, 'alt');
-  expect(nativeMock.alias).toHaveBeenCalledTimes(2);
-  expect(nativeMock.alias).toHaveBeenNthCalledWith(2, 'alt', { key: 'abc' }, { key: 'def' });
+  expect(nativeMock.identify).toHaveBeenNthCalledWith(1, testContext, true);
 });
 
 test('featureFlagListener', () => {

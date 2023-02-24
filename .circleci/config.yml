@@ -14,10 +14,10 @@ jobs:
 
     macos:
       xcode: <<parameters.xcode-version>>
-    resource_class: macos.x86.medium.gen2
+    resource_class: large
 
     environment:
-      ANDROID_SDK_ROOT: "/tmp/Android"
+      ANDROID_SDK_ROOT: '/tmp/Android'
 
     steps:
       - checkout
@@ -49,16 +49,6 @@ jobs:
             mkdir -p test
             cd test
             [ -d "CITest" ] || npx react-native@<<parameters.rn-version>> init CITest --version <<parameters.rn-version>> --skip-install
-            
-            # HACK: rn 0.64.x init the test project targeting ios 10, which is incompatible with the ios SDK which requires
-            # a minimum of ios 11
-            sed -i.bak "s/platform :ios, '10.0'/platform :ios, '11.0'/" CITest/ios/Podfile
-            sed -i.bak "s/IPHONEOS_DEPLOYMENT_TARGET = 10.0;/IPHONEOS_DEPLOYMENT_TARGET = 11.0;/" CITest/ios/CITest.xcodeproj/project.pbxproj
-
-            #HACK: force rn android 0.64.x init to use minSdkVersion 30 to pass the build
-            sed -i.bak 's/buildToolsVersion = "29.0.3"/buildToolsVersion = "30.0.2"/' CITest/android/build.gradle
-            sed -i.bak "s/compileSdkVersion = 29/compileSdkVersion = 31/" CITest/android/build.gradle
-            sed -i.bak "s/targetSdkVersion = 29/targetSdkVersion = 31/" CITest/android/build.gradle
 
       - save_cache:
           name: Save RN project template to cache
@@ -75,7 +65,15 @@ jobs:
 
       - run:
           name: Add LaunchDarkly dependency
-          command: cd ../test/CITest && npx yarn add file:../../project
+          command: |
+            cd ../test/CITest && npx yarn add file:../../project
+            cd node_modules/launchdarkly-react-native-client-sdk/ios
+            rm -rf LaunchdarklyReactNativeClient.xcworkspace
+            rm -rf build
+            rm -rf Pods
+            rm -rf Tests
+            rm -rf Podfile
+            rm -rf Podfile.lock
 
       - restore_cache:
           name: Restore gem cache
@@ -110,7 +108,7 @@ jobs:
       - when:
           # We only care to build Android application and debug iOS Build for a single XCode version
           condition:
-            equal: [ 13.2.1, << parameters.xcode-version >> ]
+            equal: [13.2.1, << parameters.xcode-version >>]
           steps:
             - run:
                 name: Build application for iOS (Debug)
@@ -124,43 +122,22 @@ jobs:
       - store_artifacts:
           path: artifacts
 
-  test-javascript:
-    docker:
-      - image: cimg/node:current
-    steps:
-      - checkout
-
-      - run: npm install
-      - run: mkdir -p reports/jest
-      - run:
-          command: npm run test:junit
-          environment:
-            JEST_JUNIT_OUTPUT_DIR: "./reports/jest"
-
-      - run: npm run check-typescript
-
-      - store_test_results:
-          path: reports
-
 workflows:
   version: 2
-  all-tests:
+  install-sdk-build-app:
     jobs:
-      - test-javascript
       - build-applications-using-template:
           name: rn<<matrix.rn-version>>-xc<<matrix.xcode-version>>-build-apps-using-template
           matrix:
             parameters:
-              rn-version: [ "0.64.4", "0.65.2", "0.66.4", "0.67.3", "0.68.0","0.69.4", "0.70.1" ]
-              xcode-version: [ "12.5.1", "13.2.1", "13.4.1", "14.0.1" ]
+              rn-version: ['0.69.4', '0.70.1']
+              xcode-version: ['12.5.1', '13.2.1', '13.4.1', '14.0.1']
             exclude:
-              - rn-version: "0.64.4"
-                xcode-version: "13.4.1"
-              - rn-version: "0.64.4"
-                xcode-version: "14.0.1"
-              - rn-version: "0.65.2"
-                xcode-version: "13.4.1"
-              - rn-version: "0.65.2"
-                xcode-version: "14.0.1"
-          requires:
-            - test-javascript
+              - rn-version: '0.69.4'
+                xcode-version: '13.4.1'
+              - rn-version: '0.69.4'
+                xcode-version: '14.0.1'
+              - rn-version: '0.70.1'
+                xcode-version: '13.4.1'
+              - rn-version: '0.70.1'
+                xcode-version: '14.0.1'
