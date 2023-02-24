@@ -8,6 +8,9 @@
  * @module
  */
 declare module 'launchdarkly-react-native-client-sdk' {
+  import type { LDContext } from 'launchdarkly-js-sdk-common';
+  export type { LDUser, LDContext, LDMultiKindContext } from 'launchdarkly-js-sdk-common';
+
   /**
    * Configuration options for the LaunchDarkly React Native SDK.
    */
@@ -48,23 +51,23 @@ declare module 'launchdarkly-react-native-client-sdk' {
     /**
      * The base URI for the LaunchDarkly polling server.
      *
-     * Most users should use the default value.
+     * Most customers should use the default value.
      */
-    pollUri?: string;
+    pollUrl?: string;
 
     /**
      * The base URI for the LaunchDarkly streaming server.
      *
-     * Most users should use the default value.
+     * Most customers should use the default value.
      */
-    streamUri?: string;
+    streamUrl?: string;
 
     /**
      * The base URI for the LaunchDarkly events server.
      *
-     * Most users should use the default value.
+     * Most customers should use the default value.
      */
-    eventsUri?: string;
+    eventsUrl?: string;
 
     /**
      * The capacity of the analytics events queue.
@@ -78,21 +81,21 @@ declare module 'launchdarkly-react-native-client-sdk' {
      *
      * The default value is 100.
      */
-    eventsCapacity?: number;
+    eventCapacity?: number;
 
     /**
      * The interval in between flushes of the analytics events queue, in milliseconds.
      *
      * The default value is 30000ms (30 seconds).
      */
-    eventsFlushIntervalMillis?: number;
+    flushInterval?: number;
 
     /**
      * The timeout interval for connecting to LaunchDarkly for flag requests and event reports.
      *
      * The default value is 10000ms (10 seconds).
      */
-    connectionTimeoutMillis?: number;
+    connectionTimeout?: number;
 
     /**
      * The interval by which the SDK polls for flag updates when the application is in the foreground. This
@@ -100,22 +103,22 @@ declare module 'launchdarkly-react-native-client-sdk' {
      *
      * The default value is 300000ms (5 min).
      */
-    pollingIntervalMillis?: number;
+    pollingInterval?: number;
 
     /**
      * The interval by which the SDK polls for flag updates when the application is in the background.
      *
      * The default value is 3600000ms (1 hour).
      */
-    backgroundPollingIntervalMillis?: number;
+    backgroundPollingInterval?: number;
 
     /**
      * Whether or not to use the REPORT verb to fetch flag settings.
      *
      * If this is true, flag settings will be fetched with a REPORT request
-     * including a JSON entity body with the user object.
+     * including a JSON entity body with the context.
      *
-     * Otherwise (by default) a GET request will be issued with the user passed as
+     * Otherwise (by default) a GET request will be issued with the context passed as
      * a base64 URL-encoded path parameter.
      *
      * Do not use unless advised by LaunchDarkly.
@@ -172,9 +175,9 @@ declare module 'launchdarkly-react-native-client-sdk' {
     evaluationReasons?: boolean;
 
     /**
-     * Setting for the maximum number of locally cached users. Default is 5 users.
+     * Setting for the maximum number of locally cached contexts. Default is 5 contexts.
      */
-    maxCachedUsers?: number;
+    maxCachedContexts?: number;
 
     /**
      * Setting for whether sending diagnostic data about the SDK is disabled. The default is false.
@@ -182,9 +185,9 @@ declare module 'launchdarkly-react-native-client-sdk' {
     diagnosticOptOut?: boolean;
 
     /**
-     * The time interval between sending periodic diagnostic data. The default is 900000 (15 minutes).
+     * The time interval between sending periodic diagnostic data. The default is 900000ms (15 minutes).
      */
-    diagnosticRecordingIntervalMillis?: number;
+    diagnosticRecordingInterval?: number;
 
     /**
      * The mapping of environment names as keys to mobile keys for each environment as values.
@@ -192,114 +195,19 @@ declare module 'launchdarkly-react-native-client-sdk' {
     secondaryMobileKeys?: Record<string, string>;
 
     /**
-     * Whether to treat all user attributes as private for event reporting for all users.
+     * Whether to treat all context attributes as private for event reporting for all contexts.
      * The SDK will not include private attribute values in analytics events, but private attribute names will be sent.
      * The default is false.
      */
-    allUserAttributesPrivate?: boolean;
+    allAttributesPrivate?: boolean;
 
     /**
-     * Whether to disable the automatic sending of an alias event when [[LDClient.identify]] is
-     * called with a non-anonymous user when the previous user is anonymous.
-     *
-     * The default value is `false`.
-     */
-    autoAliasingOptOut?: boolean;
-
-    /**
-     * Whether to include full user details in every analytics event.
-     *
-     * The default is `false`: events will only include the user key, except for one "identify" event
-     * that provides the full details for the user.
-     */
-    inlineUsersInEvents?: boolean;
-
-    /**
-     * The names of user attributes that should be marked as private, and not sent to
+     * The names of context attributes that should be marked as private, and not sent to
      * LaunchDarkly in analytics events.
      *
-     * You can also specify this on a per-user basis with [[LDUser.privateAttributeNames]].
+     * You can also specify this on a per-context basis with {@link LDContextMeta.privateAttributes}
      */
-    privateAttributeNames?: string[];
-  };
-
-  /**
-   * A LaunchDarkly user object.
-   */
-  export type LDUser = {
-    /**
-     * A unique string identifying a user.
-     *
-     * If this value is not provided, a key will be generated automatically and the `anonymous`
-     * property of the user will be set to `true`. The SDK will provide a key value that is
-     * non-identifying, unique between devices, but usually stable between launches of the
-     * application on a specific device. The SDK cannot guarantee the value will not change
-     * between launches as the platform may change identifiers provided to the application or
-     * remove the locally stored application data.
-     */
-    key?: string;
-
-    /**
-     * The secondary key for the user. See the
-     * [documentation](https://docs.launchdarkly.com/home/flags/targeting-users#percentage-rollouts)
-     * for more information on it's use for percentage rollout bucketing.
-     */
-    secondary?: string;
-
-    /**
-     * The user's name.
-     *
-     * You can search for users on the User page by name.
-     */
-    name?: string;
-
-    /**
-     * The user's first name.
-     */
-    firstName?: string;
-
-    /**
-     * The user's last name.
-     */
-    lastName?: string;
-
-    /**
-     * The user's email address.
-     */
-    email?: string;
-
-    /**
-     * Whether to show the user on the Users page in LaunchDarkly.
-     *
-     * The default value is false.
-     */
-    anonymous?: boolean;
-
-    /**
-     * The country associated with the user.
-     */
-    country?: string;
-
-    /**
-     * Specifies a list of attribute names (either built-in or custom) which should be
-     * marked as private, and not sent to LaunchDarkly in analytics events.
-     */
-    privateAttributeNames?: string[];
-
-    /**
-     * Any additional attributes associated with the user.
-     */
-    custom?: { [key: string]: any };
-
-    /**
-     * The IP address associated with the user.
-     */
-    ip?: string;
-
-    /**
-     * The avatar associated with the user.
-     */
-    avatar?: string;
+    privateAttributes?: string[];
   };
 
   /**
@@ -342,7 +250,7 @@ declare module 'launchdarkly-react-native-client-sdk' {
   };
 
   /**
-   * The flag is on, but the user did not match any targets or rules, so it returned the value that appears
+   * The flag is on, but the context did not match any targets or rules, so it returned the value that appears
    * on the dashboard under "Default rule."
    */
   export type LDEvaluationReasonFallthrough = {
@@ -350,14 +258,14 @@ declare module 'launchdarkly-react-native-client-sdk' {
   };
 
   /**
-   * The user key was specifically targeted for this flag in the "Target individual users" section.
+   * The context key was specifically targeted for this flag in the "Target individual contexts" section.
    */
   export type LDEvaluationReasonTargetMatch = {
     kind: 'TARGET_MATCH';
   };
 
   /**
-   * The user who encountered the flag matched one of the flag's rules.
+   * The context who encountered the flag matched one of the flag's rules.
    */
   export type LDEvaluationReasonRuleMatch = {
     kind: 'RULE_MATCH';
@@ -475,7 +383,7 @@ declare module 'launchdarkly-react-native-client-sdk' {
     getVersion(): string;
 
     /**
-     * Initialize the SDK to work with the specified client configuration options and on behalf of the specified user.
+     * Initialize the SDK to work with the specified client configuration options and on behalf of the specified context.
      * Will block for a number of seconds represented until flags are received from LaunchDarkly if the timeout parameter
      * is passed.
      *
@@ -483,15 +391,15 @@ declare module 'launchdarkly-react-native-client-sdk' {
      *
      * @param config
      *   the client configuration options
-     * @param user
-     *   the user
+     * @param context
+     *   the LDContext object
      * @param timeout
      *   (Optional) A number representing how long to wait for flags
      */
-    configure(config: LDConfig, user: LDUser, timeout?: number): Promise<null>;
+    configure(config: LDConfig, context: LDContext, timeout?: number): Promise<null>;
 
     /**
-     * Determines the variation of a boolean feature flag for the current user.
+     * Determines the variation of a boolean feature flag for the current context.
      *
      * @param flagKey
      *   The unique key of the feature flag.
@@ -505,7 +413,7 @@ declare module 'launchdarkly-react-native-client-sdk' {
     boolVariation(flagKey: string, defaultValue: boolean, environment?: string): Promise<boolean>;
 
     /**
-     * Determines the variation of a numeric feature flag for the current user.
+     * Determines the variation of a numeric feature flag for the current context.
      *
      * @param flagKey
      *   The unique key of the feature flag.
@@ -519,7 +427,7 @@ declare module 'launchdarkly-react-native-client-sdk' {
     numberVariation(flagKey: string, defaultValue: number, environment?: string): Promise<number>;
 
     /**
-     * Determines the variation of a string feature flag for the current user.
+     * Determines the variation of a string feature flag for the current context.
      *
      * @param flagKey
      *   The unique key of the feature flag.
@@ -533,7 +441,7 @@ declare module 'launchdarkly-react-native-client-sdk' {
     stringVariation(flagKey: string, defaultValue: string, environment?: string): Promise<string>;
 
     /**
-     * Determines the variation of a JSON feature flag for the current user.
+     * Determines the variation of a JSON feature flag for the current context.
      *
      * @param flagKey
      *   The unique key of the feature flag.
@@ -547,7 +455,7 @@ declare module 'launchdarkly-react-native-client-sdk' {
     jsonVariation(flagKey: string, defaultValue: any, environment?: string): Promise<any>;
 
     /**
-     * Determines the variation of a boolean feature flag for a user, along with information about how it was
+     * Determines the variation of a boolean feature flag for a context, along with information about how it was
      * calculated.
      *
      * Note that this will only work if you have set `evaluationReasons` to true in [[LDConfig]].
@@ -571,7 +479,7 @@ declare module 'launchdarkly-react-native-client-sdk' {
     ): Promise<LDEvaluationDetail<boolean>>;
 
     /**
-     * Determines the variation of a numeric feature flag for a user, along with information about how it was
+     * Determines the variation of a numeric feature flag for a context, along with information about how it was
      * calculated.
      *
      * Note that this will only work if you have set `evaluationReasons` to true in [[LDConfig]].
@@ -595,7 +503,7 @@ declare module 'launchdarkly-react-native-client-sdk' {
     ): Promise<LDEvaluationDetail<number>>;
 
     /**
-     * Determines the variation of a string feature flag for a user, along with information about how it was
+     * Determines the variation of a string feature flag for a context, along with information about how it was
      * calculated.
      *
      * Note that this will only work if you have set `evaluationReasons` to true in [[LDConfig]].
@@ -619,7 +527,7 @@ declare module 'launchdarkly-react-native-client-sdk' {
     ): Promise<LDEvaluationDetail<string>>;
 
     /**
-     * Determines the variation of a JSON feature flag for a user, along with information about how it was
+     * Determines the variation of a JSON feature flag for a context, along with information about how it was
      * calculated.
      *
      * Note that this will only work if you have set `evaluationReasons` to true in [[LDConfig]].
@@ -639,7 +547,7 @@ declare module 'launchdarkly-react-native-client-sdk' {
     jsonVariationDetail(flagKey: string, defaultValue: any, environment?: string): Promise<LDEvaluationDetail<any>>;
 
     /**
-     * Returns a map of all available flags to the current user's values.
+     * Returns a map of all available flags to the current context's values.
      *
      * @param environment
      *   Optional environment name to obtain the result from the corresponding secondary environment
@@ -716,7 +624,7 @@ declare module 'launchdarkly-react-native-client-sdk' {
      * Flushes all pending analytics events.
      *
      * Normally, batches of events are delivered in the background at intervals determined by the
-     * `eventsFlushIntervalMillis` property of [[LDConfig]]. Calling `flush` triggers an
+     * `flushInterval` property of [[LDConfig]]. Calling `flush` triggers an
      * immediate delivery.
      */
     flush(): void;
@@ -729,31 +637,14 @@ declare module 'launchdarkly-react-native-client-sdk' {
     close(): Promise<void>;
 
     /**
-     * Sets the current user, retrieves flags for that user, then sends an Identify Event to LaunchDarkly.
+     * Sets the current context, retrieves flags for that context, then sends an Identify Event to LaunchDarkly.
      *
-     * @param user
-     *   The user for evaluation and event reporting
+     * @param context
+     *   The LDContext for evaluation and event reporting
      * @returns
      *   A promise indicating when this operation is complete (meaning that flags are ready for evaluation).
      */
-    identify(user: LDUser): Promise<null>;
-
-    /**
-     * Alias associates two users for analytics purposes by generating an alias event.
-     *
-     * This can be helpful in the situation where a person is represented by multiple
-     * LaunchDarkly users. This may happen, for example, when a person initially logs into
-     * an application-- the person might be represented by an anonymous user prior to logging
-     * in and a different user after logging in, as denoted by a different user key.
-     *
-     * @param user
-     *   The new user context
-     * @param previousUser
-     *   The original user context
-     * @param environment
-     *   Optional string to execute the function in a different environment than the default.
-     */
-    alias(user: LDUser, previousUser: LDUser, environment?: string): void;
+    identify(context: LDContext): Promise<null>;
 
     /**
      * Registers a callback to be called when the flag with key `flagKey` changes from its current value.

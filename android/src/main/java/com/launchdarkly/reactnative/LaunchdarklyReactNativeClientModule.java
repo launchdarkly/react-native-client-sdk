@@ -1,5 +1,12 @@
 package com.launchdarkly.reactnative;
 
+import static com.launchdarkly.reactnative.utils.LDUtil.configureContext;
+import static com.launchdarkly.reactnative.utils.LDUtil.findSetter;
+import static com.launchdarkly.reactnative.utils.LDUtil.getPrivateAttributesArray;
+import static com.launchdarkly.reactnative.utils.LDUtil.ldValueToBridge;
+import static com.launchdarkly.reactnative.utils.LDUtil.toLDValue;
+import static com.launchdarkly.reactnative.utils.LDUtil.validateConfig;
+
 import android.app.Application;
 import android.net.Uri;
 
@@ -13,17 +20,13 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
-import com.facebook.react.bridge.ReadableMapKeySetIterator;
 import com.facebook.react.bridge.ReadableType;
-import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
-import com.facebook.react.bridge.WritableNativeArray;
-import com.facebook.react.bridge.WritableNativeMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.google.gson.Gson;
-import com.launchdarkly.sdk.ArrayBuilder;
 import com.launchdarkly.sdk.EvaluationDetail;
 import com.launchdarkly.sdk.EvaluationReason;
+import com.launchdarkly.sdk.LDContext;
 import com.launchdarkly.sdk.LDUser;
 import com.launchdarkly.sdk.LDValue;
 import com.launchdarkly.sdk.ObjectBuilder;
@@ -38,6 +41,11 @@ import com.launchdarkly.sdk.android.LDFailure;
 import com.launchdarkly.sdk.android.LDStatusListener;
 import com.launchdarkly.sdk.android.LaunchDarklyException;
 import com.launchdarkly.sdk.android.integrations.ApplicationInfoBuilder;
+import com.launchdarkly.sdk.android.integrations.EventProcessorBuilder;
+import com.launchdarkly.sdk.android.integrations.HttpConfigurationBuilder;
+import com.launchdarkly.sdk.android.integrations.PollingDataSourceBuilder;
+import com.launchdarkly.sdk.android.integrations.ServiceEndpointsBuilder;
+import com.launchdarkly.sdk.android.integrations.StreamingDataSourceBuilder;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -68,124 +76,6 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
 
     public LaunchdarklyReactNativeClientModule(ReactApplicationContext reactContext) {
         super(reactContext);
-    }
-
-    private static LDValue toLDValue(Dynamic data) {
-        if (data == null) {
-            return LDValue.ofNull();
-        }
-        switch (data.getType()) {
-            case Boolean:
-                return LDValue.of(data.asBoolean());
-            case Number:
-                return LDValue.of(data.asDouble());
-            case String:
-                return LDValue.of(data.asString());
-            case Array:
-                return toLDValue(data.asArray());
-            case Map:
-                return toLDValue(data.asMap());
-            default:
-                return LDValue.ofNull();
-        }
-    }
-
-    private static LDValue toLDValue(ReadableArray readableArray) {
-        ArrayBuilder array = LDValue.buildArray();
-        for (int i = 0; i < readableArray.size(); i++) {
-            array.add(toLDValue(readableArray.getDynamic(i)));
-        }
-        return array.build();
-    }
-
-    private static LDValue toLDValue(ReadableMap readableMap) {
-        ObjectBuilder object = LDValue.buildObject();
-        ReadableMapKeySetIterator iter = readableMap.keySetIterator();
-        while (iter.hasNextKey()) {
-            String key = iter.nextKey();
-            object.put(key, toLDValue(readableMap.getDynamic(key)));
-        }
-        return object.build();
-    }
-
-    private static Object ldValueToBridge(LDValue value) {
-        switch (value.getType()) {
-            case BOOLEAN:
-                return value.booleanValue();
-            case NUMBER:
-                return value.doubleValue();
-            case STRING:
-                return value.stringValue();
-            case ARRAY:
-                return ldValueToArray(value);
-            case OBJECT:
-                return ldValueToMap(value);
-            default:
-                return null;
-        }
-    }
-
-    private static WritableArray ldValueToArray(LDValue value) {
-        WritableArray result = new WritableNativeArray();
-        for (LDValue val : value.values()) {
-            switch (val.getType()) {
-                case NULL:
-                    result.pushNull();
-                    break;
-                case BOOLEAN:
-                    result.pushBoolean(val.booleanValue());
-                    break;
-                case NUMBER:
-                    result.pushDouble(val.doubleValue());
-                    break;
-                case STRING:
-                    result.pushString(val.stringValue());
-                    break;
-                case ARRAY:
-                    result.pushArray(ldValueToArray(val));
-                    break;
-                case OBJECT:
-                    result.pushMap(ldValueToMap(val));
-                    break;
-            }
-        }
-        return result;
-    }
-
-    private static WritableMap ldValueToMap(LDValue value) {
-        WritableMap result = new WritableNativeMap();
-        for (String key : value.keys()) {
-            LDValue val = value.get(key);
-            switch (val.getType()) {
-                case NULL:
-                    result.putNull(key);
-                    break;
-                case BOOLEAN:
-                    result.putBoolean(key, val.booleanValue());
-                    break;
-                case NUMBER:
-                    result.putDouble(key, val.doubleValue());
-                    break;
-                case STRING:
-                    result.putString(key, val.stringValue());
-                    break;
-                case ARRAY:
-                    result.putArray(key, ldValueToArray(val));
-                    break;
-                case OBJECT:
-                    result.putMap(key, ldValueToMap(val));
-                    break;
-            }
-        }
-        return result;
-    }
-
-    private static Method findSetter(Class cls, String methodName) {
-        for (Method method : cls.getMethods()) {
-            if (method.getName().equals(methodName) && method.getParameterTypes().length == 1)
-                return method;
-        }
-        return null;
     }
 
     /**
@@ -226,20 +116,19 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
     }
 
     @ReactMethod
-    public void configure(ReadableMap config, ReadableMap user, final Promise promise) {
-        internalConfigure(config, user, null, promise);
+    public void configure(ReadableMap config, ReadableMap context, boolean isContext, final Promise promise) {
+        internalConfigure(config, context, null, isContext, promise);
     }
 
     @ReactMethod
-    public void configureWithTimeout(ReadableMap config, ReadableMap user, Integer timeout, final Promise promise) {
-        internalConfigure(config, user, timeout, promise);
+    public void configureWithTimeout(ReadableMap config, ReadableMap context, boolean isContext, Integer timeout, final Promise promise) {
+        internalConfigure(config, context, timeout, isContext, promise);
     }
 
-    private void internalConfigure(ReadableMap config, ReadableMap user, final Integer timeout, final Promise promise) {
+    private void internalConfigure(ReadableMap configMap, ReadableMap contextMap, final Integer timeout, boolean isContext, final Promise promise) {
         if (!debugLoggingStarted
-                && config.hasKey("debugMode")
-                && config.getType("debugMode").equals(ReadableType.Boolean)
-                && config.getBoolean("debugMode")) {
+                && validateConfig("debugMode", configMap, ReadableType.Boolean)
+                && configMap.getBoolean("debugMode")) {
             Timber.plant(new Timber.DebugTree());
             LaunchdarklyReactNativeClientModule.debugLoggingStarted = true;
         }
@@ -252,23 +141,33 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
             // This exception indicates that the SDK has not been initialized yet
         }
 
-        final LDConfig.Builder ldConfigBuilder = configBuild(config);
-        final LDUser ldUser = userBuild(user).build();
         final Application application = (Application) getReactApplicationContext().getApplicationContext();
 
         if (application != null) {
             Thread background = new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    if (timeout != null) {
-                        LDClient.init(application, ldConfigBuilder.build(), ldUser, timeout);
-                    } else {
-                        try {
-                            LDClient.init(application, ldConfigBuilder.build(), ldUser).get();
-                        } catch (ExecutionException | InterruptedException e) {
-                            Timber.e(e, "Exception during Client initialization");
+                    final LDConfig config = buildConfiguration(configMap).build();
+                    boolean isLegacyUser = !isContext;
+
+                    try {
+                        if (timeout != null) {
+                            if (isLegacyUser) {
+                                LDClient.init(application, config, configureLegacyUser(contextMap), timeout);
+                            } else {
+                                LDClient.init(application, config, configureContext(contextMap), timeout);
+                            }
+                        } else {
+                            if (isLegacyUser) {
+                                LDClient.init(application, config, configureLegacyUser(contextMap)).get();
+                            } else {
+                                LDClient.init(application, config, configureContext(contextMap)).get();
+                            }
                         }
+                    } catch (Exception e) {
+                        Timber.e(e, "Exception during Client initialization");
                     }
+
                     promise.resolve(null);
                 }
             });
@@ -276,44 +175,183 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
             background.start();
         } else {
             Timber.e("Couldn't initialize the LaunchDarkly module because the application was null");
-            promise.reject(ERROR_INIT, "Couldn't acquire application context");
+            promise.reject(ERROR_INIT, "Couldn't acquire ReactApplicationContext");
         }
     }
 
-    private LDConfig.Builder configBuild(ReadableMap config) {
-        LDConfig.Builder ldConfigBuilder = new LDConfig.Builder();
+    /**
+     * StreamingDataSourceBuilder and PollingDataSourceBuilder
+     * backgroundPollingIntervalMillis, pollingIntervalMillis, stream
+     *
+     * @param config  The js config object
+     * @param builder LDConfig.Builder
+     */
+    private void configureDataSource(ReadableMap config, LDConfig.Builder builder) {
+        boolean stream = true;
 
-        // build trivial config options
-        for (ConfigMapping entry : ConfigMapping.values()) {
-            entry.loadFromMap(config, ldConfigBuilder);
+        if (validateConfig("stream", config, ReadableType.Boolean)) {
+            stream = config.getBoolean("stream");
         }
 
+        if (stream) {
+            StreamingDataSourceBuilder b = Components.streamingDataSource();
+
+            if (validateConfig("backgroundPollingInterval", config, ReadableType.Number)) {
+                b.backgroundPollIntervalMillis(config.getInt("backgroundPollingInterval"));
+            }
+
+            builder.dataSource(b);
+        } else {
+            PollingDataSourceBuilder b = Components.pollingDataSource();
+
+            if (validateConfig("backgroundPollingInterval", config, ReadableType.Number)) {
+                b.backgroundPollIntervalMillis(config.getInt("backgroundPollingInterval"));
+            }
+
+            if (validateConfig("pollingInterval", config, ReadableType.Number)) {
+                b.pollIntervalMillis(config.getInt("pollingInterval"));
+            }
+
+            builder.dataSource(b);
+        }
+    }
+
+    /**
+     * EventProcessorBuilder (inlineUsersInEvents deprecated)
+     * allAttributesPrivate, diagnosticRecordingIntervalMillis, eventsCapacity, eventsFlushIntervalMillis, privateAttributes
+     *
+     * @param config  The js config object
+     * @param builder LDConfig.Builder
+     */
+    private void configureEvents(ReadableMap config, LDConfig.Builder builder) {
+        EventProcessorBuilder b = Components.sendEvents();
+
+        // Changed: allUserAttributesPrivate => allAttributesPrivate
+        if (validateConfig("allAttributesPrivate", config, ReadableType.Boolean)) {
+            b.allAttributesPrivate(config.getBoolean("allAttributesPrivate"));
+        }
+
+        // Changed: diagnosticRecordingIntervalMillis => diagnosticRecordingInterval
+        if (validateConfig("diagnosticRecordingInterval", config, ReadableType.Number)) {
+            b.diagnosticRecordingIntervalMillis(config.getInt("diagnosticRecordingInterval"));
+        }
+
+        // Changed: eventsCapacity => eventCapacity
+        if (validateConfig("eventCapacity", config, ReadableType.Number)) {
+            b.capacity(config.getInt("eventCapacity"));
+        }
+
+        // Changed: eventsFlushIntervalMillis => flushInterval
+        if (validateConfig("flushInterval", config, ReadableType.Number)) {
+            b.flushIntervalMillis(config.getInt("flushInterval"));
+        }
+
+        // Changed: privateAttributeNames => privateAttributes
+        b.privateAttributes(getPrivateAttributesArray(config));
+
+        builder.events(b);
+    }
+
+    /**
+     * HttpConfigurationBuilder
+     * connectionTimeoutMillis, useReport, wrapperName, wrapperVersion
+     *
+     * @param config  The js config object
+     * @param builder LDConfig.Builder
+     */
+    private void configureHttp(ReadableMap config, LDConfig.Builder builder) {
+        HttpConfigurationBuilder b = Components.httpConfiguration();
+
+        if (validateConfig("connectionTimeout", config, ReadableType.Boolean)) {
+            b.connectTimeoutMillis(config.getInt("connectionTimeout"));
+        }
+
+        if (validateConfig("useReport", config, ReadableType.Boolean)) {
+            b.useReport(config.getBoolean("useReport"));
+        }
+
+        String wrapperName = "react-native-client-sdk";
+        String wrapperVersion = "7.0.0";
+        if (validateConfig("wrapperName", config, ReadableType.String)) {
+            wrapperName = config.getString("wrapperName");
+        }
+        if (validateConfig("wrapperVersion", config, ReadableType.String)) {
+            wrapperVersion = config.getString("wrapperVersion");
+        }
+        b.wrapper(wrapperName, wrapperVersion);
+
+        builder.http(b);
+    }
+
+    /**
+     * ServiceEndpointsBuilder
+     * streamUrl, pollUrl, eventsUrl
+     *
+     * @param config
+     * @param builder
+     */
+    private void configureEndpoints(ReadableMap config, LDConfig.Builder builder) {
+        ServiceEndpointsBuilder b = Components.serviceEndpoints();
+
+        if (validateConfig("streamUrl", config, ReadableType.String)) {
+            b.streaming(config.getString("streamUrl"));
+        }
+
+        if (validateConfig("pollUrl", config, ReadableType.String)) {
+            b.polling(config.getString("pollUrl"));
+        }
+
+        if (validateConfig("eventsUrl", config, ReadableType.String)) {
+            b.events(config.getString("eventsUrl"));
+        }
+
+        builder.serviceEndpoints(b);
+    }
+
+    /**
+     * ApplicationInfoBuilder
+     * application: { id, version }
+     *
+     * @param config  The js config object
+     * @param builder LDConfig.Builder
+     */
+    private void configureApplicationInfo(ReadableMap config, LDConfig.Builder builder) {
         // build application tags
-        if (config.hasKey("application") && config.getType("application") == ReadableType.Map) {
+        if (validateConfig("application", config, ReadableType.Map)) {
             ReadableMap application = config.getMap("application");
-            ApplicationInfoBuilder applicationInfoBuilder = Components.applicationInfo();
+            ApplicationInfoBuilder b = Components.applicationInfo();
 
-            if (application.hasKey("id") && application.getType("id") == ReadableType.String) {
-                applicationInfoBuilder.applicationId(application.getString("id"));
+            if (validateConfig("id", config, ReadableType.String)) {
+                b.applicationId(application.getString("id"));
             }
-            if (application.hasKey("version") && application.getType("version") == ReadableType.String) {
-                applicationInfoBuilder.applicationVersion(application.getString("version"));
+            if (validateConfig("version", config, ReadableType.String)) {
+                b.applicationVersion(application.getString("version"));
             }
 
-            ldConfigBuilder.applicationInfo(applicationInfoBuilder);
+            builder.applicationInfo(b);
         }
-
-        // build private user attributes
-        if (config.hasKey("allUserAttributesPrivate")
-                && config.getType("allUserAttributesPrivate").equals(ConfigEntryType.Boolean.getReadableType())
-                && config.getBoolean("allUserAttributesPrivate")) {
-            ldConfigBuilder.allAttributesPrivate();
-        }
-
-        return ldConfigBuilder;
     }
 
-    private LDUser.Builder userBuild(ReadableMap options) {
+    private LDConfig.Builder buildConfiguration(ReadableMap config) {
+        LDConfig.Builder builder = new LDConfig.Builder();
+        builder.generateAnonymousKeys(true);
+
+        // configure trivial options
+        for (ConfigMapping entry : ConfigMapping.values()) {
+            entry.loadFromMap(config, builder);
+        }
+
+        configureDataSource(config, builder);
+        configureEvents(config, builder);
+        configureHttp(config, builder);
+        configureEndpoints(config, builder);
+        configureApplicationInfo(config, builder);
+
+        return builder;
+    }
+
+
+    private LDUser configureLegacyUser(ReadableMap options) {
         String userKey = null;
         if (options.hasKey("key") && options.getType("key") == ReadableType.String) {
             userKey = options.getString("key");
@@ -347,7 +385,7 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
             }
         }
 
-        return userBuilder;
+        return userBuilder.build();
     }
 
     @ReactMethod
@@ -562,35 +600,50 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
     }
 
     @ReactMethod
-    public void identify(ReadableMap options, final Promise promise) {
-        final LDUser user = userBuild(options).build();
-        Thread background = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    LDClient.get().identify(user).get();
-                    promise.resolve(null);
-                } catch (InterruptedException e) {
-                    Timber.w(e);
-                    promise.reject(ERROR_IDENTIFY, "Identify Interrupted");
-                } catch (ExecutionException e) {
-                    Timber.w(e);
-                    promise.reject(ERROR_IDENTIFY, "Exception while executing identify");
-                } catch (Exception e) {
-                    Timber.w(e);
-                    promise.reject(ERROR_UNKNOWN, e);
-                }
-            }
-        });
-        background.start();
-    }
+    public void identify(ReadableMap contextMap, boolean isContext, final Promise promise) {
+        if (isContext) {
+            LDContext context = configureContext(contextMap);
 
-    @ReactMethod
-    public void alias(String environment, ReadableMap user, ReadableMap previousUser) {
-        try {
-            LDClient.getForMobileKey(environment).alias(userBuild(user).build(), userBuild(previousUser).build());
-        } catch (LaunchDarklyException e) {
-            Timber.w("LaunchDarkly alias called with invalid environment");
+            Thread background = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        LDClient.get().identify(context).get();
+                        promise.resolve(null);
+                    } catch (InterruptedException e) {
+                        Timber.w(e);
+                        promise.reject(ERROR_IDENTIFY, "Identify Interrupted");
+                    } catch (ExecutionException e) {
+                        Timber.w(e);
+                        promise.reject(ERROR_IDENTIFY, "Exception while executing identify");
+                    } catch (Exception e) {
+                        Timber.w(e);
+                        promise.reject(ERROR_UNKNOWN, e);
+                    }
+                }
+            });
+            background.start();
+        } else {
+            final LDUser user = configureLegacyUser(contextMap);
+            Thread background = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        LDClient.get().identify(user).get();
+                        promise.resolve(null);
+                    } catch (InterruptedException e) {
+                        Timber.w(e);
+                        promise.reject(ERROR_IDENTIFY, "Identify Interrupted");
+                    } catch (ExecutionException e) {
+                        Timber.w(e);
+                        promise.reject(ERROR_IDENTIFY, "Exception while executing identify");
+                    } catch (Exception e) {
+                        Timber.w(e);
+                        promise.reject(ERROR_UNKNOWN, e);
+                    }
+                }
+            });
+            background.start();
         }
     }
 
@@ -751,28 +804,12 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
 
     enum ConfigMapping {
         CONFIG_MOBILE_KEY("mobileKey", ConfigEntryType.String),
-        CONFIG_BASE_URI("pollUri", ConfigEntryType.Uri),
-        CONFIG_EVENTS_URI("eventsUri", ConfigEntryType.Uri),
-        CONFIG_STREAM_URI("streamUri", ConfigEntryType.Uri),
-        CONFIG_EVENTS_CAPACITY("eventsCapacity", ConfigEntryType.Integer),
-        CONFIG_EVENTS_FLUSH_INTERVAL("eventsFlushIntervalMillis", ConfigEntryType.Integer),
-        CONFIG_CONNECTION_TIMEOUT("connectionTimeoutMillis", ConfigEntryType.Integer),
-        CONFIG_POLLING_INTERVAL("pollingIntervalMillis", ConfigEntryType.Integer),
-        CONFIG_BACKGROUND_POLLING_INTERVAL("backgroundPollingIntervalMillis", ConfigEntryType.Integer),
-        CONFIG_USE_REPORT("useReport", ConfigEntryType.Boolean),
-        CONFIG_STREAM("stream", ConfigEntryType.Boolean),
         CONFIG_DISABLE_BACKGROUND_UPDATING("disableBackgroundUpdating", ConfigEntryType.Boolean),
         CONFIG_OFFLINE("offline", ConfigEntryType.Boolean),
-        CONFIG_PRIVATE_ATTRIBUTES("privateAttributeNames", ConfigEntryType.UserAttributes, "privateAttributes"),
         CONFIG_EVALUATION_REASONS("evaluationReasons", ConfigEntryType.Boolean),
-        CONFIG_WRAPPER_NAME("wrapperName", ConfigEntryType.String),
-        CONFIG_WRAPPER_VERSION("wrapperVersion", ConfigEntryType.String),
-        CONFIG_MAX_CACHED_USERS("maxCachedUsers", ConfigEntryType.Integer),
+        CONFIG_MAX_CACHED_USERS("maxCachedContexts", ConfigEntryType.Integer),
         CONFIG_DIAGNOSTIC_OPT_OUT("diagnosticOptOut", ConfigEntryType.Boolean),
-        CONFIG_DIAGNOSTIC_RECORDING_INTERVAL("diagnosticRecordingIntervalMillis", ConfigEntryType.Integer),
-        CONFIG_SECONDARY_MOBILE_KEYS("secondaryMobileKeys", ConfigEntryType.Map),
-        CONFIG_AUTO_ALIASING_OPT_OUT("autoAliasingOptOut", ConfigEntryType.Boolean),
-        CONFIG_INLINE_USERS_IN_EVENTS("inlineUsersInEvents", ConfigEntryType.Boolean);
+        CONFIG_SECONDARY_MOBILE_KEYS("secondaryMobileKeys", ConfigEntryType.Map);
 
         final String key;
         final ConfigEntryType type;
@@ -806,7 +843,6 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
         USER_FIRST_NAME("firstName", ConfigEntryType.String, "firstName", "privateFirstName"),
         USER_LAST_NAME("lastName", ConfigEntryType.String, "lastName", "privateLastName"),
         USER_NAME("name", ConfigEntryType.String, "name", "privateName"),
-        USER_SECONDARY("secondary", ConfigEntryType.String, "secondary", "privateSecondary"),
         USER_AVATAR("avatar", ConfigEntryType.String, "avatar", "privateAvatar"),
         USER_COUNTRY("country", ConfigEntryType.String, "country", "privateCountry");
 

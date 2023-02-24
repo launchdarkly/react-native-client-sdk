@@ -1,8 +1,8 @@
 {
+  "extends": "@tsconfig/react-native/tsconfig.json",
   "compilerOptions": {
-    "module": "commonjs",
-    "strict": true,
     "lib": ["es6"]
   },
+  "include": ["src/**/*"],
   "files": ["index.d.ts", "test-types.ts"]
 }

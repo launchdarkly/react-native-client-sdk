@@ -55,7 +55,6 @@ const mockNativeModule = {
   flush: jest.fn(),
   close: jest.fn(),
   identify: jest.fn(),
-  alias: jest.fn(),
   getConnectionMode: jest.fn(),
   getLastSuccessfulConnection: jest.fn(),
   getLastFailedConnection: jest.fn(),

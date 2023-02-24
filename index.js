@@ -1,5 +1,8 @@
 import { NativeModules, NativeEventEmitter } from 'react-native';
 import { version } from './package.json';
+import { isContext, validateContext } from './src/contextUtils';
+import { LDInvalidUserError } from 'launchdarkly-js-sdk-common/src/errors';
+import { invalidContext } from 'launchdarkly-js-sdk-common/src/messages';
 
 let LaunchdarklyReactNativeClient = NativeModules.LaunchdarklyReactNativeClient;
 
@@ -22,30 +25,38 @@ export default class LDClient {
     return String(version);
   }
 
-  configure(config, user, timeout) {
-    return LaunchdarklyReactNativeClient.isInitialized('default').then(
-      (ignored) => {
-        throw new Error('LaunchDarkly SDK already initialized');
-      },
-      () => {
-        const configWithOverriddenDefaults = Object.assign(
-          {
-            backgroundPollingIntervalMillis: 3600000, // the iOS SDK defaults this to 900000
-            disableBackgroundUpdating: false, // the iOS SDK defaults this to true
-            pollUri: 'https://clientsdk.launchdarkly.com',
-            wrapperName: 'react-native-client-sdk',
-            wrapperVersion: this.getVersion(),
-          },
-          config,
-        );
+  configure(config, context, timeout) {
+    if (validateContext(context)) {
+      return LaunchdarklyReactNativeClient.isInitialized('default').then(
+        (ignored) => {
+          throw new Error('LaunchDarkly SDK already initialized');
+        },
+        () => {
+          const configWithOverriddenDefaults = Object.assign(
+            {
+              backgroundPollingInterval: 3600000, // the iOS SDK defaults this to 900000
+              disableBackgroundUpdating: false, // the iOS SDK defaults this to true
+              wrapperName: 'react-native-client-sdk',
+              wrapperVersion: this.getVersion(),
+            },
+            config,
+          );
 
-        if (timeout == undefined) {
-          return LaunchdarklyReactNativeClient.configure(configWithOverriddenDefaults, user);
-        } else {
-          return LaunchdarklyReactNativeClient.configureWithTimeout(configWithOverriddenDefaults, user, timeout);
-        }
-      },
-    );
+          if (timeout == undefined) {
+            return LaunchdarklyReactNativeClient.configure(configWithOverriddenDefaults, context, isContext(context));
+          } else {
+            return LaunchdarklyReactNativeClient.configureWithTimeout(
+              configWithOverriddenDefaults,
+              context,
+              timeout,
+              isContext(context),
+            );
+          }
+        },
+      );
+    } else {
+      return Promise.reject(new LDInvalidUserError(invalidContext(), null));
+    }
   }
 
   _validateDefault(defaultType, defaultValue, validator) {
@@ -157,12 +168,12 @@ export default class LDClient {
     LaunchdarklyReactNativeClient.close();
   }
 
-  identify(user) {
-    return LaunchdarklyReactNativeClient.identify(user);
-  }
-
-  alias(user, previousUser, environment) {
-    LaunchdarklyReactNativeClient.alias(this._normalizeEnv(environment), user, previousUser);
+  identify(context) {
+    if (validateContext(context, true)) {
+      return LaunchdarklyReactNativeClient.identify(context, isContext(context));
+    } else {
+      return Promise.reject(new LDInvalidUserError(invalidContext(), null));
+    }
   }
 
   _flagUpdateListener(changedFlag) {

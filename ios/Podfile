@@ -1,9 +1,9 @@
 require_relative '../node_modules/react-native/scripts/react_native_pods'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 
-platform :ios, '12.4'
+platform :ios, '11'
 
-target 'ManualTestApp' do
+target 'LaunchdarklyReactNativeClient' do
   config = use_native_modules!
 
   use_react_native!(
@@ -22,4 +22,11 @@ target 'ManualTestApp' do
     react_native_post_install(installer)
     __apply_Xcode_12_5_M1_post_install_workaround(installer)
   end
+  
+  pod 'LaunchDarkly', '8.0.0'
+  
+  target 'Tests' do
+     inherit! :complete
+   end
 end
+

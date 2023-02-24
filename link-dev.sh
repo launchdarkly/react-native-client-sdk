@@ -23,4 +23,5 @@ do
   rsync -aq node_modules "$SDK_DIR"
   rsync -av ios "$SDK_DIR" --exclude LaunchdarklyReactNativeClient.xcworkspace --exclude build --exclude Pods --exclude Tests --exclude Podfile --exclude Podfile.lock
   rsync -av android "$SDK_DIR" --exclude .gradle --exclude build --exclude .idea --exclude gradle --exclude src/test
+  rsync -av src "$SDK_DIR"
 done
