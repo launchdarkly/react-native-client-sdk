@@ -2,6 +2,44 @@
 
 All notable changes to the LaunchDarkly React Native SDK will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [7.0.0] - 2023-02-24
+The latest version of this SDK supports LaunchDarkly's new custom contexts feature. Contexts are an evolution of a previously-existing concept, "users." Contexts let you create targeting rules for feature flags based on a variety of different information, including attributes pertaining to users, organizations, devices, and more. You can even combine contexts to create "multi-contexts."
+
+This feature is only available to members of LaunchDarkly's Early Access Program (EAP). If you're in the EAP, you can use contexts by updating your SDK to the latest version and, if applicable, updating your Relay Proxy. Outdated SDK versions do not support contexts, and will cause unpredictable flag evaluation behavior.
+
+If you are not in the EAP, only use single contexts of kind "user", or continue to use the user type if available. If you try to create contexts, the context will be sent to LaunchDarkly, but any data not related to the user object will be ignored.
+
+For detailed information about this version, please refer to the list below. For information on how to upgrade from the previous version, please read the [migration guide](https://docs.launchdarkly.com/sdk/client-side/react/react-native-migration-6-to-7).
+
+### Added:
+
+- The types `LDContext`, `LDSingleKindContext`, and `LDMultiKindContext` define the new "context" model.
+
+### Changed:
+
+- `LDConfig` changes to be consistent with the Javascript SDK:
+
+  - `pollUri`, `streamUri`, `eventsUri` are now `pollUrl`, `streamUrl` and `eventsUrl`.
+  - `eventsCapacity` is now `eventCapacity`
+  - `eventsFlushIntervalMillis`, `connectionTimeoutMillis`, `pollingIntervalMillis`, `backgroundPollingIntervalMillis` are now `flushInterval`, `connectionTimeout`, `pollingInterval`, `backgroundPollingInterval`.
+  - `diagnosticRecordingIntervalMillis` is now `diagnosticRecordingInterval`
+  - `maxCachedUsers` is now `maxCachedContexts`
+  - `allUserAttributesPrivate`, `privateAttributeNames` are now `allAttributesPrivate` and `privateAttributes`
+
+- `LDUser` type is now imported from the Javascript sdk common package.
+- All SDK methods that took an `LDUser` parameter now take an `LDContext`. `LDUser` is now a subset of `LDContext`, so existing code based on users will still work.
+
+### Removed:
+
+- Support for React Native versions < 0.69 have been removed. The LaunchDarkly React Native SDK now supports only React Native versions >=0.69.0 <0.71.0.
+- Removed the `secondary` meta-attribute in `LDUser`.
+- The `alias` method no longer exists because alias events are not needed in the new context model.
+- The `autoAliasingOptOut` and `inlineUsersInEvents` options no longer exist because they are not relevant in the new context model.
+
+### Deprecated:
+
+- The `LDUser` object has been deprecated. Support for `LDUser` is maintained to simplify the upgrade process, but it is recommended to use `LDContext` in the shape of either `LDSingleKindContext` or `LDMultiKindContext`.
+
 ## [6.3.1] - 2023-02-23
 ### Changed:
 - Update ManualTestApp iOS pod dependency launchdarkly-react-native-client-sdk to 6.3.0.
