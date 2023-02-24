@@ -75,5 +75,11 @@
       "<rootDir>/example/node_modules",
       "<rootDir>/lib/"
     ]
+  },
+  "overrides": {
+    "typescript": "4.9.5"
+  },
+  "resolutions": {
+    "typescript": "4.9.5"
   }
 }
