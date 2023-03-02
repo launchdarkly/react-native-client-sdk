@@ -56,7 +56,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ExecutionException;
 
 import timber.log.Timber;
 
@@ -131,14 +130,6 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
                 && configMap.getBoolean("debugMode")) {
             Timber.plant(new Timber.DebugTree());
             LaunchdarklyReactNativeClientModule.debugLoggingStarted = true;
-        }
-
-        try {
-            LDClient.get();
-            promise.reject(ERROR_INIT, "Client was already initialized");
-            return;
-        } catch (LaunchDarklyException e) {
-            // This exception indicates that the SDK has not been initialized yet
         }
 
         final Application application = (Application) getReactApplicationContext().getApplicationContext();
@@ -495,25 +486,16 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
 
     @ReactMethod
     public void allFlags(String environment, Promise promise) {
-        try {
-            LDClient.get();
-        } catch (LaunchDarklyException e) {
-            promise.reject(ERROR_INIT, "SDK has been not configured");
-            return;
-        }
+        ObjectBuilder resultBuilder = LDValue.buildObject();
 
         try {
-            ObjectBuilder resultBuilder = LDValue.buildObject();
             for (Map.Entry<String, LDValue> entry : LDClient.getForMobileKey(environment).allFlags().entrySet()) {
                 resultBuilder.put(entry.getKey(), entry.getValue());
             }
             promise.resolve(ldValueToBridge(resultBuilder.build()));
-        } catch (LaunchDarklyException e) {
-            // Since we confirmed the SDK has been configured, this exception should only be thrown if the env doesn't exist
-            promise.reject(ERROR_UNKNOWN, "SDK not configured with requested environment");
         } catch (Exception e) {
-            promise.reject(ERROR_UNKNOWN, "Unknown exception in allFlags");
-            Timber.w(e);
+            Timber.w(e, "Warning: exception caught in allFlags");
+            promise.resolve(ldValueToBridge(resultBuilder.build()));
         }
     }
 
@@ -546,7 +528,8 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
             LDClient.get().setOffline();
             promise.resolve(true);
         } catch (Exception e) {
-            promise.reject(ERROR_UNKNOWN, e);
+            Timber.w(e, "Warning: exception caught in setOffline");
+            promise.resolve(null);
         }
     }
 
@@ -556,7 +539,8 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
             boolean result = LDClient.get().isOffline();
             promise.resolve(result);
         } catch (Exception e) {
-            promise.reject(ERROR_UNKNOWN, e);
+            Timber.w(e, "Warning: exception caught in isOffline");
+            promise.resolve(null);
         }
     }
 
@@ -566,7 +550,8 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
             LDClient.get().setOnline();
             promise.resolve(true);
         } catch (Exception e) {
-            promise.reject(ERROR_UNKNOWN, e);
+            Timber.w(e, "Warning: exception caught in setOnline");
+            promise.resolve(null);
         }
     }
 
@@ -585,7 +570,7 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
         try {
             LDClient.get().flush();
         } catch (Exception e) {
-            Timber.w(e);
+            Timber.w(e, "Warning: exception caught in flush");
         }
     }
 
@@ -595,7 +580,8 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
             LDClient.get().close();
             promise.resolve(true);
         } catch (Exception e) {
-            promise.reject(ERROR_CLOSE, e);
+            Timber.w(e, "Warning: exception caught in close");
+            promise.resolve(null);
         }
     }
 
@@ -609,19 +595,14 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
                 public void run() {
                     try {
                         LDClient.get().identify(context).get();
-                        promise.resolve(null);
-                    } catch (InterruptedException e) {
-                        Timber.w(e);
-                        promise.reject(ERROR_IDENTIFY, "Identify Interrupted");
-                    } catch (ExecutionException e) {
-                        Timber.w(e);
-                        promise.reject(ERROR_IDENTIFY, "Exception while executing identify");
                     } catch (Exception e) {
-                        Timber.w(e);
-                        promise.reject(ERROR_UNKNOWN, e);
+                        Timber.w(e, "Warning: exception caught in identify");
                     }
+
+                    promise.resolve(null);
                 }
             });
+
             background.start();
         } else {
             final LDUser user = configureLegacyUser(contextMap);
@@ -630,19 +611,14 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
                 public void run() {
                     try {
                         LDClient.get().identify(user).get();
-                        promise.resolve(null);
-                    } catch (InterruptedException e) {
-                        Timber.w(e);
-                        promise.reject(ERROR_IDENTIFY, "Identify Interrupted");
-                    } catch (ExecutionException e) {
-                        Timber.w(e);
-                        promise.reject(ERROR_IDENTIFY, "Exception while executing identify");
                     } catch (Exception e) {
-                        Timber.w(e);
-                        promise.reject(ERROR_UNKNOWN, e);
+                        Timber.w(e, "Warning: exception caught in identify");
                     }
+
+                    promise.resolve(null);
                 }
             });
+
             background.start();
         }
     }
@@ -652,7 +628,8 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
         try {
             promise.resolve(LDClient.getForMobileKey(environment).getConnectionInformation().getConnectionMode().name());
         } catch (Exception e) {
-            promise.reject(ERROR_UNKNOWN, e);
+            Timber.w(e, "Warning: exception caught in getConnectionMode");
+            promise.resolve(null);
         }
     }
 
@@ -661,7 +638,8 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
         try {
             promise.resolve(LDClient.getForMobileKey(environment).getConnectionInformation().getLastSuccessfulConnection().intValue());
         } catch (Exception e) {
-            promise.reject(ERROR_UNKNOWN, e);
+            Timber.w(e, "Warning: exception caught in getLastSuccessfulConnection");
+            promise.resolve(0);
         }
     }
 
@@ -670,7 +648,8 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
         try {
             promise.resolve(LDClient.getForMobileKey(environment).getConnectionInformation().getLastFailedConnection().intValue());
         } catch (Exception e) {
-            promise.reject(ERROR_UNKNOWN, e);
+            Timber.w(e, "Warning: exception caught in getLastFailedConnection");
+            promise.resolve(0);
         }
     }
 
@@ -679,7 +658,8 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
         try {
             promise.resolve(LDClient.getForMobileKey(environment).getConnectionInformation().getLastFailure().getFailureType().name());
         } catch (Exception e) {
-            promise.reject(ERROR_UNKNOWN, e);
+            Timber.w(e, "Warning: exception caught in getLastSuccessfulConnection");
+            promise.resolve(null);
         }
     }
 
@@ -707,7 +687,7 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
             LDClient.getForMobileKey(environment).registerFeatureFlagListener(flagKey, listener);
             listeners.put(flagKey, listener);
         } catch (Exception e) {
-            Timber.w(e);
+            Timber.w(e, "Warning: exception caught in registerFeatureFlagListener");
         }
     }
 
@@ -720,7 +700,7 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
                 listeners.remove(multiListenerId);
             }
         } catch (Exception e) {
-            Timber.w(e);
+            Timber.w(e, "Warning: exception caught in unregisterFeatureFlagListener");
         }
     }
 
@@ -748,7 +728,7 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
             LDClient.getForMobileKey(environment).registerStatusListener(listener);
             connectionModeListeners.put(multiListenerId, listener);
         } catch (Exception e) {
-            Timber.w(e);
+            Timber.w(e, "Warning: exception caught in registerCurrentConnectionModeListener");
         }
     }
 
@@ -761,7 +741,7 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
                 connectionModeListeners.remove(multiListenerId);
             }
         } catch (Exception e) {
-            Timber.w(e);
+            Timber.w(e, "Warning: exception caught in unregisterCurrentConnectionModeListener");
         }
     }
 
@@ -785,7 +765,7 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
             LDClient.getForMobileKey(environment).registerAllFlagsListener(listener);
             allFlagsListeners.put(multiListenerId, listener);
         } catch (Exception e) {
-            Timber.w(e);
+            Timber.w(e, "Warning: exception caught in registerAllFlagsListener");
         }
     }
 
@@ -798,7 +778,7 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
                 allFlagsListeners.remove(multiListenerId);
             }
         } catch (Exception e) {
-            Timber.w(e);
+            Timber.w(e, "Warning: exception caught in unregisterAllFlagsListener");
         }
     }
 
