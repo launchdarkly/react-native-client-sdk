@@ -238,7 +238,6 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
     }
 
     @objc func jsonVariation(_ flagKey: String, defaultValue: Any, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
-        resolve(getLDClient(environment: environment)?.jsonVariation(forKey: flagKey, defaultValue: LDValue.fromBridge(defaultValue)).toBridge())
         if let ldClient = getLDClient(environment: environment) {
             resolve(ldClient.jsonVariation(forKey: flagKey, defaultValue: LDValue.fromBridge(defaultValue)).toBridge())
         } else {
