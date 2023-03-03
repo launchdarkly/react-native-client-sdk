@@ -2,6 +2,10 @@
 
 All notable changes to the LaunchDarkly React Native SDK will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [7.0.4] - 2023-03-03
+### Fixed:
+- Fixed wrong parameter order in configureWithTimeout function on Android. Thank you for your contributions again [adamivancza](https://github.com/launchdarkly/react-native-client-sdk/pull/193)!
+
 ## [7.0.3] - 2023-03-02
 ### Fixed:
 - Remove extra resolve in the jsonVariation call. (Thanks, [adamivancza](https://github.com/launchdarkly/react-native-client-sdk/pull/191)!)
