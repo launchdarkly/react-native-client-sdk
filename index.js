@@ -48,8 +48,8 @@ export default class LDClient {
             return LaunchdarklyReactNativeClient.configureWithTimeout(
               configWithOverriddenDefaults,
               context,
-              timeout,
               isContext(context),
+              timeout,
             );
           }
         },
