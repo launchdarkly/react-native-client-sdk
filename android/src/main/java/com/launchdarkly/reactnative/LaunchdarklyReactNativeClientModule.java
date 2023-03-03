@@ -120,7 +120,7 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
     }
 
     @ReactMethod
-    public void configureWithTimeout(ReadableMap config, ReadableMap context, boolean isContext, Integer timeout, final Promise promise) {
+    public void configureWithTimeout(ReadableMap config, ReadableMap context, Integer timeout, boolean isContext, final Promise promise) {
         internalConfigure(config, context, timeout, isContext, promise);
     }
 
