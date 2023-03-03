@@ -2,6 +2,17 @@
 
 All notable changes to the LaunchDarkly React Native SDK will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [7.0.3] - 2023-03-02
+### Fixed:
+- Remove extra resolve in the jsonVariation call. (Thanks, [adamivancza](https://github.com/launchdarkly/react-native-client-sdk/pull/191)!)
+
+## [7.0.2] - 2023-03-01
+### Changed:
+
+- In Android, most promise rejects have been replaced with warning log and a promise resolve of default values. This behavior is now consistent with iOS.
+
+- In Android `allFlags` will never reject. If an exception occurs the sdk logs a warning and resolves an empty Map. This behavior is also now consistent with iOS.
+
 ## [7.0.1] - 2023-02-27
 ### Changed:
 

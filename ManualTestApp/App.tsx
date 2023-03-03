@@ -1,5 +1,6 @@
 import { useState, useEffect, ReactNode } from 'react';
 import { SafeAreaView, ScrollView, StyleSheet, Text, View, Button, TextInput, Alert, Switch } from 'react-native';
+import { MOBILE_KEY } from '@env';
 import { Picker } from '@react-native-picker/picker';
 import LDClient, { LDMultiKindContext } from 'launchdarkly-react-native-client-sdk';
 import MessageQueue from 'react-native/Libraries/BatchedBridge/MessageQueue';
@@ -29,7 +30,7 @@ const Body = () => {
     async function initializeClient() {
       let ldClient = new LDClient();
       let config = {
-        mobileKey: 'MOBILE_KEY',
+        mobileKey: MOBILE_KEY,
         debugMode: true,
         application: {
           id: 'rn-manual-test-app',

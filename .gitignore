@@ -47,3 +47,5 @@ buck-out/
 
 # Auto-generated
 test-types.js
+
+.env
