@@ -2504,7 +2504,7 @@ fs.realpath@^1.0.0:
 
 fsevents@^2.1.2, fsevents@^2.3.2:
   version "2.3.2"
-  resolved "https://registry.yarnpkg.com/fsevents/-/fsevents-2.3.2.tgz#8a526f78b8fdf4623b709e0b975c52c24c02fd1a"
+  resolved "https://registry.npmjs.org/fsevents/-/fsevents-2.3.2.tgz"
   integrity sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA==
 
 function-bind@^1.1.1:
@@ -4393,7 +4393,7 @@ react-native-gradle-plugin@^0.70.3:
   resolved "https://registry.npmjs.org/react-native-gradle-plugin/-/react-native-gradle-plugin-0.70.3.tgz"
   integrity sha512-oOanj84fJEXUg9FoEAQomA8ISG+DVIrTZ3qF7m69VQUJyOGYyDZmPqKcjvRku4KXlEH6hWO9i4ACLzNBh8gC0A==
 
-"react-native@>=0.69.0 <0.71.0":
+"react-native@>=0.69.0 <0.72.0":
   version "0.70.7"
   resolved "https://registry.npmjs.org/react-native/-/react-native-0.70.7.tgz"
   integrity sha512-MvnJJXiEPuOBbf1VPY5WXIUR/n6QB/DAk5XtBz3bzinpy9YBXiiQkhGIrTpVdVt37JeHOzafhfxAMf+Rs8jpvA==
