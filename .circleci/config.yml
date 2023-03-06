@@ -50,18 +50,15 @@ jobs:
             cd test
             [ -d "CITest" ] || npx react-native@<<parameters.rn-version>> init CITest --version <<parameters.rn-version>> --skip-install
 
+            # use macos default ruby version
+            cd CITest
+            rm -rf .ruby-version
+
       - save_cache:
           name: Save RN project template to cache
           key: v1-rn-template-cache-<<parameters.rn-version>>
           paths:
             - ../test/CITest
-
-      # See the `patches` directory
-      - run:
-          name: Do any necessary patching
-          command: |
-            if [ -d ".circleci/patches/<<parameters.rn-version>>" ]; then cp -r .circleci/patches/<<parameters.rn-version>>/* ../test/CITest/; fi
-            if [ -x "../test/CITest/patch.sh" ] ; then cd ../test/CITest && ./patch.sh; fi
 
       - run:
           name: Add LaunchDarkly dependency
@@ -106,15 +103,10 @@ jobs:
             xcodebuild -workspace CITest.xcworkspace -scheme CITest build -configuration Release -destination "generic/platform=iOS" CODE_SIGNING_ALLOWED=NO GCC_WARN_INHIBIT_ALL_WARNINGS=YES | tee '../../../project/artifacts/xcb-<<parameters.rn-version>>.txt' | xcpretty
 
       - when:
-          # We only care to build Android application and debug iOS Build for a single XCode version
+          # only build android once
           condition:
-            equal: [13.2.1, << parameters.xcode-version >>]
+            equal: [14.2, << parameters.xcode-version >>]
           steps:
-            - run:
-                name: Build application for iOS (Debug)
-                command: |
-                  cd ../test/CITest/ios
-                  xcodebuild -workspace CITest.xcworkspace -scheme CITest build -configuration Debug -destination "generic/platform=iOS" CODE_SIGNING_ALLOWED=NO GCC_WARN_INHIBIT_ALL_WARNINGS=YES | tee '../../../project/artifacts/xcb-<<parameters.rn-version>>.txt' | xcpretty
             - run:
                 name: Build application for Android
                 command: cd ../test/CITest/android && ./gradlew packageRelease
@@ -130,14 +122,10 @@ workflows:
           name: rn<<matrix.rn-version>>-xc<<matrix.xcode-version>>-build-apps-using-template
           matrix:
             parameters:
-              rn-version: ['0.69.4', '0.70.1']
-              xcode-version: ['12.5.1', '13.2.1', '13.4.1', '14.0.1']
+              rn-version: ['0.69.8', '0.70.7', '0.71.3']
+              xcode-version: ['12.5.1', '14.2']
             exclude:
-              - rn-version: '0.69.4'
-                xcode-version: '13.4.1'
-              - rn-version: '0.69.4'
-                xcode-version: '14.0.1'
-              - rn-version: '0.70.1'
-                xcode-version: '13.4.1'
-              - rn-version: '0.70.1'
-                xcode-version: '14.0.1'
+              - rn-version: '0.69.8'
+                xcode-version: '12.5.1'
+              - rn-version: '0.70.7'
+                xcode-version: '12.5.1'

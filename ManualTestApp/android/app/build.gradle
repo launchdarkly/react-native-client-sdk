@@ -1,4 +1,5 @@
 apply plugin: "com.android.application"
+apply plugin: "com.facebook.react"
 
 import com.android.build.OutputFile
 
@@ -130,6 +131,7 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
+    namespace "com.manualtestapp"
     defaultConfig {
         applicationId "com.manualtestapp"
         minSdkVersion rootProject.ext.minSdkVersion

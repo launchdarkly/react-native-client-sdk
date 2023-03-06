@@ -5,16 +5,17 @@
   "scripts": {
     "cc": "rimraf node_modules/.cache/babel-loader/*,",
     "android": "yarn run cc && react-native run-android",
-    "ios": "yarn run cc && react-native run-ios",
+    "ios": "yarn run cc && react-native run-ios --udid='3413F5DE-BC64-4264-9CC7-5FB4E2B99782'",
     "start": "yarn run cc && react-native start --reset-cache",
     "postinstall": "cd ../ && yarn link-dev",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "doctor": "react-native doctor"
   },
   "dependencies": {
     "@react-native-picker/picker": "^2.2.1",
     "launchdarkly-react-native-client-sdk": "^7.0.1",
     "react": "^18.2.0",
-    "react-native": "0.70.7"
+    "react-native": "^0.71.3"
   },
   "devDependencies": {
     "@babel/core": "^7.21.0",

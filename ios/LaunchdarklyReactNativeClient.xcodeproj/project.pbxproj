@@ -7,13 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		8183654B47F72C2310CF2851 /* libPods-LaunchdarklyReactNativeClient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A9499A581A5E9004AB999EC /* libPods-LaunchdarklyReactNativeClient.a */; };
+		5C7FFDFC172169CD2DA50827 /* libPods-LaunchdarklyReactNativeClient-Tests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CCC5AA2415328D6F932DD85 /* libPods-LaunchdarklyReactNativeClient-Tests.a */; };
 		8CCA3CD5299D656F00DA0E21 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CCA3CD4299D656F00DA0E21 /* Tests.swift */; };
 		8CCA3CD6299D656F00DA0E21 /* libLaunchdarklyReactNativeClient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E371682721B88E9C00136B19 /* libLaunchdarklyReactNativeClient.a */; };
 		B3E7B58A1CC2AC0600A0062D /* LaunchdarklyReactNativeClientBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = B3E7B5891CC2AC0600A0062D /* LaunchdarklyReactNativeClientBridge.m */; };
 		E37168AA21B8A83A00136B19 /* LaunchdarklyReactNativeClient-Bridging-Header.h in Sources */ = {isa = PBXBuildFile; fileRef = E392B3342199F9F6008024E9 /* LaunchdarklyReactNativeClient-Bridging-Header.h */; };
 		E37654422199FCB300627B66 /* LaunchdarklyReactNativeClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = E37654412199FCB300627B66 /* LaunchdarklyReactNativeClient.swift */; };
-		E536BCD6A73755524DA77661 /* libPods-LaunchdarklyReactNativeClient-Tests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 10BC4D36A0A557B3B558985D /* libPods-LaunchdarklyReactNativeClient-Tests.a */; };
+		F2C2D6E44B964C4B44D5FF2B /* libPods-LaunchdarklyReactNativeClient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 249DF0F912A7E8A90D1CC35D /* libPods-LaunchdarklyReactNativeClient.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -39,15 +39,15 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		10BC4D36A0A557B3B558985D /* libPods-LaunchdarklyReactNativeClient-Tests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-LaunchdarklyReactNativeClient-Tests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		5A9499A581A5E9004AB999EC /* libPods-LaunchdarklyReactNativeClient.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-LaunchdarklyReactNativeClient.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		5E7F7AA6D24C144A58103CD0 /* Pods-LaunchdarklyReactNativeClient-Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LaunchdarklyReactNativeClient-Tests.release.xcconfig"; path = "Target Support Files/Pods-LaunchdarklyReactNativeClient-Tests/Pods-LaunchdarklyReactNativeClient-Tests.release.xcconfig"; sourceTree = "<group>"; };
+		249DF0F912A7E8A90D1CC35D /* libPods-LaunchdarklyReactNativeClient.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-LaunchdarklyReactNativeClient.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4CCC5AA2415328D6F932DD85 /* libPods-LaunchdarklyReactNativeClient-Tests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-LaunchdarklyReactNativeClient-Tests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4E35321D04E8F4A55E347D20 /* Pods-LaunchdarklyReactNativeClient.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LaunchdarklyReactNativeClient.debug.xcconfig"; path = "Target Support Files/Pods-LaunchdarklyReactNativeClient/Pods-LaunchdarklyReactNativeClient.debug.xcconfig"; sourceTree = "<group>"; };
+		52194E1BFCF2B26F964CF0E6 /* Pods-LaunchdarklyReactNativeClient.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LaunchdarklyReactNativeClient.release.xcconfig"; path = "Target Support Files/Pods-LaunchdarklyReactNativeClient/Pods-LaunchdarklyReactNativeClient.release.xcconfig"; sourceTree = "<group>"; };
+		5ACD019E1C211D0E4841FBC8 /* Pods-LaunchdarklyReactNativeClient-Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LaunchdarklyReactNativeClient-Tests.release.xcconfig"; path = "Target Support Files/Pods-LaunchdarklyReactNativeClient-Tests/Pods-LaunchdarklyReactNativeClient-Tests.release.xcconfig"; sourceTree = "<group>"; };
 		8CCA3CD2299D656F00DA0E21 /* Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		8CCA3CD4299D656F00DA0E21 /* Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests.swift; sourceTree = "<group>"; };
-		9766FEDE02203090060B4F37 /* Pods-LaunchdarklyReactNativeClient.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LaunchdarklyReactNativeClient.release.xcconfig"; path = "Target Support Files/Pods-LaunchdarklyReactNativeClient/Pods-LaunchdarklyReactNativeClient.release.xcconfig"; sourceTree = "<group>"; };
 		B3E7B5891CC2AC0600A0062D /* LaunchdarklyReactNativeClientBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LaunchdarklyReactNativeClientBridge.m; sourceTree = "<group>"; };
-		B49A231A76361A202E09A590 /* Pods-LaunchdarklyReactNativeClient-Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LaunchdarklyReactNativeClient-Tests.debug.xcconfig"; path = "Target Support Files/Pods-LaunchdarklyReactNativeClient-Tests/Pods-LaunchdarklyReactNativeClient-Tests.debug.xcconfig"; sourceTree = "<group>"; };
-		C6B7B7A91173CB1DDA6C6A9D /* Pods-LaunchdarklyReactNativeClient.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LaunchdarklyReactNativeClient.debug.xcconfig"; path = "Target Support Files/Pods-LaunchdarklyReactNativeClient/Pods-LaunchdarklyReactNativeClient.debug.xcconfig"; sourceTree = "<group>"; };
+		CE6AA8DA6DD1AE89CC29DFB0 /* Pods-LaunchdarklyReactNativeClient-Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LaunchdarklyReactNativeClient-Tests.debug.xcconfig"; path = "Target Support Files/Pods-LaunchdarklyReactNativeClient-Tests/Pods-LaunchdarklyReactNativeClient-Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		E371682721B88E9C00136B19 /* libLaunchdarklyReactNativeClient.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libLaunchdarklyReactNativeClient.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		E37654412199FCB300627B66 /* LaunchdarklyReactNativeClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LaunchdarklyReactNativeClient.swift; sourceTree = "<group>"; };
 		E392B3342199F9F6008024E9 /* LaunchdarklyReactNativeClient-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "LaunchdarklyReactNativeClient-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -58,7 +58,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8183654B47F72C2310CF2851 /* libPods-LaunchdarklyReactNativeClient.a in Frameworks */,
+				F2C2D6E44B964C4B44D5FF2B /* libPods-LaunchdarklyReactNativeClient.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -67,7 +67,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8CCA3CD6299D656F00DA0E21 /* libLaunchdarklyReactNativeClient.a in Frameworks */,
-				E536BCD6A73755524DA77661 /* libPods-LaunchdarklyReactNativeClient-Tests.a in Frameworks */,
+				5C7FFDFC172169CD2DA50827 /* libPods-LaunchdarklyReactNativeClient-Tests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -77,10 +77,10 @@
 		3F3E499E65255D6A36F1FC6E /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				C6B7B7A91173CB1DDA6C6A9D /* Pods-LaunchdarklyReactNativeClient.debug.xcconfig */,
-				9766FEDE02203090060B4F37 /* Pods-LaunchdarklyReactNativeClient.release.xcconfig */,
-				B49A231A76361A202E09A590 /* Pods-LaunchdarklyReactNativeClient-Tests.debug.xcconfig */,
-				5E7F7AA6D24C144A58103CD0 /* Pods-LaunchdarklyReactNativeClient-Tests.release.xcconfig */,
+				4E35321D04E8F4A55E347D20 /* Pods-LaunchdarklyReactNativeClient.debug.xcconfig */,
+				52194E1BFCF2B26F964CF0E6 /* Pods-LaunchdarklyReactNativeClient.release.xcconfig */,
+				CE6AA8DA6DD1AE89CC29DFB0 /* Pods-LaunchdarklyReactNativeClient-Tests.debug.xcconfig */,
+				5ACD019E1C211D0E4841FBC8 /* Pods-LaunchdarklyReactNativeClient-Tests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -95,7 +95,7 @@
 				3F3E499E65255D6A36F1FC6E /* Pods */,
 				8CCA3CD3299D656F00DA0E21 /* Tests */,
 				8CCA3CD2299D656F00DA0E21 /* Tests.xctest */,
-				BC55AA2C662C066CD76AE6CD /* Frameworks */,
+				E944B844BA4D0AC54CC145EE /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -107,11 +107,11 @@
 			path = Tests;
 			sourceTree = "<group>";
 		};
-		BC55AA2C662C066CD76AE6CD /* Frameworks */ = {
+		E944B844BA4D0AC54CC145EE /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				5A9499A581A5E9004AB999EC /* libPods-LaunchdarklyReactNativeClient.a */,
-				10BC4D36A0A557B3B558985D /* libPods-LaunchdarklyReactNativeClient-Tests.a */,
+				249DF0F912A7E8A90D1CC35D /* libPods-LaunchdarklyReactNativeClient.a */,
+				4CCC5AA2415328D6F932DD85 /* libPods-LaunchdarklyReactNativeClient-Tests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -123,7 +123,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 58B511EF1A9E6C8500147676 /* Build configuration list for PBXNativeTarget "LaunchdarklyReactNativeClient" */;
 			buildPhases = (
-				1A302D447508AFC9C27C4C4B /* [CP] Check Pods Manifest.lock */,
+				10CE1996C747707FEEAC35CC /* [CP] Check Pods Manifest.lock */,
 				58B511D71A9E6C8500147676 /* Sources */,
 				58B511D81A9E6C8500147676 /* Frameworks */,
 				58B511D91A9E6C8500147676 /* CopyFiles */,
@@ -141,12 +141,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 8CCA3CDB299D656F00DA0E21 /* Build configuration list for PBXNativeTarget "Tests" */;
 			buildPhases = (
-				5F42E4F66ADD6983A9831F29 /* [CP] Check Pods Manifest.lock */,
+				BE4B68D06E7D162BC56FCCFC /* [CP] Check Pods Manifest.lock */,
 				8CCA3CCE299D656F00DA0E21 /* Sources */,
 				8CCA3CCF299D656F00DA0E21 /* Frameworks */,
 				8CCA3CD0299D656F00DA0E21 /* Resources */,
-				4ED92059AAF312F786BA880D /* [CP] Embed Pods Frameworks */,
-				040F6A61F724E1953B431096 /* [CP] Copy Pods Resources */,
+				F9EC1391FA9A454A05D0E4B4 /* [CP] Embed Pods Frameworks */,
+				C3B9EC900EB3D0EC21E9030D /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -208,25 +208,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		040F6A61F724E1953B431096 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-LaunchdarklyReactNativeClient-Tests/Pods-LaunchdarklyReactNativeClient-Tests-resources.sh",
-				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/AccessibilityResources.bundle",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AccessibilityResources.bundle",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-LaunchdarklyReactNativeClient-Tests/Pods-LaunchdarklyReactNativeClient-Tests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		1A302D447508AFC9C27C4C4B /* [CP] Check Pods Manifest.lock */ = {
+		10CE1996C747707FEEAC35CC /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -248,29 +230,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		4ED92059AAF312F786BA880D /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-LaunchdarklyReactNativeClient-Tests/Pods-LaunchdarklyReactNativeClient-Tests-frameworks.sh",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/Flipper-DoubleConversion/double-conversion.framework/double-conversion",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/Flipper-Glog/glog.framework/glog",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/OpenSSL-Universal/OpenSSL.framework/OpenSSL",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/double-conversion.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/glog.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/OpenSSL.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-LaunchdarklyReactNativeClient-Tests/Pods-LaunchdarklyReactNativeClient-Tests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		5F42E4F66ADD6983A9831F29 /* [CP] Check Pods Manifest.lock */ = {
+		BE4B68D06E7D162BC56FCCFC /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -290,6 +250,46 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C3B9EC900EB3D0EC21E9030D /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-LaunchdarklyReactNativeClient-Tests/Pods-LaunchdarklyReactNativeClient-Tests-resources.sh",
+				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/AccessibilityResources.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AccessibilityResources.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-LaunchdarklyReactNativeClient-Tests/Pods-LaunchdarklyReactNativeClient-Tests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		F9EC1391FA9A454A05D0E4B4 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-LaunchdarklyReactNativeClient-Tests/Pods-LaunchdarklyReactNativeClient-Tests-frameworks.sh",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/Flipper-DoubleConversion/double-conversion.framework/double-conversion",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/Flipper-Glog/glog.framework/glog",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/OpenSSL-Universal/OpenSSL.framework/OpenSSL",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/double-conversion.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/glog.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/OpenSSL.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-LaunchdarklyReactNativeClient-Tests/Pods-LaunchdarklyReactNativeClient-Tests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -440,7 +440,7 @@
 		};
 		58B511F01A9E6C8500147676 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C6B7B7A91173CB1DDA6C6A9D /* Pods-LaunchdarklyReactNativeClient.debug.xcconfig */;
+			baseConfigurationReference = 4E35321D04E8F4A55E347D20 /* Pods-LaunchdarklyReactNativeClient.debug.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				DEAD_CODE_STRIPPING = NO;
@@ -471,7 +471,7 @@
 		};
 		58B511F11A9E6C8500147676 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9766FEDE02203090060B4F37 /* Pods-LaunchdarklyReactNativeClient.release.xcconfig */;
+			baseConfigurationReference = 52194E1BFCF2B26F964CF0E6 /* Pods-LaunchdarklyReactNativeClient.release.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				DEAD_CODE_STRIPPING = YES;
@@ -501,7 +501,7 @@
 		};
 		8CCA3CD9299D656F00DA0E21 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B49A231A76361A202E09A590 /* Pods-LaunchdarklyReactNativeClient-Tests.debug.xcconfig */;
+			baseConfigurationReference = CE6AA8DA6DD1AE89CC29DFB0 /* Pods-LaunchdarklyReactNativeClient-Tests.debug.xcconfig */;
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -531,7 +531,7 @@
 		};
 		8CCA3CDA299D656F00DA0E21 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5E7F7AA6D24C144A58103CD0 /* Pods-LaunchdarklyReactNativeClient-Tests.release.xcconfig */;
+			baseConfigurationReference = 5ACD019E1C211D0E4841FBC8 /* Pods-LaunchdarklyReactNativeClient-Tests.release.xcconfig */;
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
