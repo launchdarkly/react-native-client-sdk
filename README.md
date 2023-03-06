@@ -12,7 +12,7 @@
 
 ## Supported versions
 
-This SDK is currently compatible with React Native versions >=0.69 <0.71, the minimum iOS deployment target is 11.0, and the minimum Android SDK version is 21. Builds are tested with XCode 12.5+. Please look at the CircleCI test build to see which combination of React Native and XCode works together.
+This SDK is currently compatible with React Native versions >=0.69 <0.72, the minimum iOS deployment target is 11.0, and the minimum Android SDK version is 21. Builds are tested with XCode 12.5+.
 
 For React Native 0.64.x - 0.68.x support, use the latest 6.3.x release.
 
