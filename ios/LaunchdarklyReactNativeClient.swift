@@ -9,31 +9,31 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
     private let ERROR_INIT = "E_INITIALIZE"
     private let ERROR_IDENTIFY = "E_IDENTIFY"
     private let ERROR_UNKNOWN = "E_UNKNOWN"
-    
+
     private var flagListenerOwners: [String: ObserverOwner] = [:]
     private var allFlagsListenerOwners: [String: ObserverOwner] = [:]
     private var connectionModeListenerOwners: [String: ObserverOwner] = [:]
-    
+
     override func supportedEvents() -> [String]! {
         return [FLAG_PREFIX, ALL_FLAGS_PREFIX, CONNECTION_MODE_PREFIX]
     }
-    
+
     override func constantsToExport() -> [AnyHashable: Any] {
         return ["FLAG_PREFIX": FLAG_PREFIX, "ALL_FLAGS_PREFIX": ALL_FLAGS_PREFIX, "CONNECTION_MODE_PREFIX": CONNECTION_MODE_PREFIX]
     }
-    
+
     override static func requiresMainQueueSetup() -> Bool {
         return false
     }
-    
+
     @objc func configure(_ config: NSDictionary, user: NSDictionary, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         internalConfigure(config: config, user: user, timeout: nil, resolve: resolve, reject: reject)
     }
-    
+
     @objc func configureWithTimeout(_ config: NSDictionary, user: NSDictionary, timeout: Int, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         internalConfigure(config: config, user: user, timeout: timeout, resolve: resolve, reject: reject)
     }
-    
+
     private func getLDClient(environment: String) -> LDClient? {
         if let client = LDClient.get(environment: environment) {
             return client
@@ -42,10 +42,10 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
             return nil
         }
     }
-    
+
     private func internalConfigure(config: NSDictionary, user: NSDictionary, timeout: Int?, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         let config = configBuild(config: config)
-        
+
         if let config = config {
             if let timeoutUnwrapped = timeout {
                 let startWaitSeconds: TimeInterval = Double(timeoutUnwrapped)
@@ -63,7 +63,7 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
             }
         }
     }
-    
+
     private func id<T>(_ x: T) -> T { x }
     private func millis(_ x: NSNumber) -> TimeInterval { TimeInterval(x.doubleValue / 1_000) }
     private func url(_ x: String) -> URL { URL.init(string: x)! }
@@ -72,11 +72,11 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
             field = res
         }
     }
-    
+
     private func configBuild(config: NSDictionary) -> LDConfig? {
         guard let mobileKey = config["mobileKey"] as? String
         else { return nil }
-        
+
         var ldConfig = LDConfig(mobileKey: mobileKey)
         configField(&ldConfig.baseUrl, config["pollUri"], url)
         configField(&ldConfig.eventsUrl, config["eventsUri"], url)
@@ -101,28 +101,28 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
         configField(&ldConfig.autoAliasingOptOut, config["autoAliasingOptOut"], id)
         configField(&ldConfig.inlineUserInEvents, config["inlineUsersInEvents"], id)
         configField(&ldConfig.privateUserAttributes, config["privateAttributeNames"], { (x: [String]) in x.map { UserAttribute.forName($0) }})
-        
+
         if let val = config["secondaryMobileKeys"] as? [String: String] {
             try! ldConfig.setSecondaryMobileKeys(val)
         }
-        
+
         if let c = config["application"] as? [String: String] {
             var applicationInfo = ApplicationInfo()
-            
+
             if let applicationId = c["id"] {
                 applicationInfo.applicationIdentifier(applicationId)
             }
-            
+
             if let applicationVersion = c["version"] {
                 applicationInfo.applicationVersion(applicationVersion)
             }
-            
+
             ldConfig.applicationInfo = applicationInfo
         }
-        
+
         return ldConfig
     }
-    
+
     private func userBuild(_ userDict: NSDictionary) -> LDUser {
         var user = LDUser(key: userDict["key"] as? String)
         if let anon = userDict["anonymous"] as? Bool {
@@ -141,7 +141,7 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
         user.custom = (userDict["custom"] as? [String: Any] ?? [:]).mapValues { LDValue.fromBridge($0) }
         return user
     }
-    
+
     @objc func boolVariation(_ flagKey: String, defaultValue: ObjCBool, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         if let ldClient = getLDClient(environment: environment) {
             resolve(ldClient.boolVariation(forKey: flagKey, defaultValue: defaultValue.boolValue))
@@ -170,7 +170,6 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
     }
 
     @objc func jsonVariation(_ flagKey: String, defaultValue: Any, environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
-        resolve(getLDClient(environment: environment)?.jsonVariation(forKey: flagKey, defaultValue: LDValue.fromBridge(defaultValue)).toBridge())
         if let ldClient = getLDClient(environment: environment) {
             resolve(ldClient.jsonVariation(forKey: flagKey, defaultValue: LDValue.fromBridge(defaultValue)).toBridge())
         } else {
@@ -364,7 +363,7 @@ class LaunchdarklyReactNativeClient: RCTEventEmitter {
             getLDClient(environment: environment)?.stopObserving(owner: owner)
         }
     }
-    
+
     @objc func isInitialized(_ environment: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         if LDClient.get() == nil {
             reject(ERROR_UNKNOWN, "SDK has not been configured", nil)
@@ -399,7 +398,7 @@ extension LDValue {
         if let dictValue = value as? [String: Any] { return .object(dictValue.mapValues { fromBridge($0) }) }
         return .null
     }
-    
+
     func toBridge() -> Any {
         switch self {
         case .null: return NSNull()
