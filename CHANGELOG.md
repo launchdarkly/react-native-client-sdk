@@ -2,6 +2,10 @@
 
 All notable changes to the LaunchDarkly React Native SDK will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [7.1.2] - 2023-03-15
+### Fixed:
+- On Android if proguard is enabled, the sdk crashes on init because the consumer-proguard-rules.pro file is missing.
+
 ## [7.1.1] - 2023-03-06
 ### Added:
 - Added react-native 0.71.x to the list of supported versions in README.
