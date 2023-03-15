@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "android": "react-native run-android",
+    "android-release": "react-native run-android --variant release",
     "ios": "react-native run-ios",
     "start": "react-native start",
     "postinstall": "cd ../ && yarn link-dev",
@@ -11,7 +12,7 @@
   },
   "dependencies": {
     "@react-native-picker/picker": "^2.2.1",
-    "launchdarkly-react-native-client-sdk": "^6.2.4",
+    "launchdarkly-react-native-client-sdk": "^6.3.2",
     "react": "17.0.2",
     "react-native": "0.67.2"
   },
