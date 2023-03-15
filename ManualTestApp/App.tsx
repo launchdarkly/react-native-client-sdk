@@ -183,11 +183,7 @@ const App = () => {
 };
 
 MessageQueue.spy((msg) => {
-  if (
-    msg.module != 'LaunchdarklyReactNativeClient' &&
-    typeof msg.method !== 'number' &&
-    !msg.method.includes('LaunchdarklyReactNativeClient')
-  ) {
+  if (msg.module != 'LaunchdarklyReactNativeClient' && !msg.method.includes?.('LaunchdarklyReactNativeClient')) {
     return;
   }
   let logMsg = msg.type === 0 ? 'N->JS: ' : 'JS->N: ';
