@@ -74,7 +74,7 @@ PODS:
   - glog (0.3.5)
   - LaunchDarkly (7.1.0):
     - LaunchDarkly/Core (= 7.1.0)
-  - launchdarkly-react-native-client-sdk (6.3.0):
+  - launchdarkly-react-native-client-sdk (6.3.2):
     - LaunchDarkly (= 7.1.0)
     - React-Core
   - LaunchDarkly/Core (7.1.0):
@@ -512,7 +512,7 @@ SPEC CHECKSUMS:
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
   glog: 85ecdd10ee8d8ec362ef519a6a45ff9aa27b2e85
   LaunchDarkly: 31da8b77e96cb744417208478bb5b24f35fd2491
-  launchdarkly-react-native-client-sdk: ddc05ffeba2a99393cec290528f044025a1d12c9
+  launchdarkly-react-native-client-sdk: 8831d9860f68d56b60c3fc2c81b97b7bac2a92fa
   LDSwiftEventSource: 824ce51a4fa8e79498c9b67ae672bfa802bd7464
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   OpenSSL-Universal: 1aa4f6a6ee7256b83db99ec1ccdaa80d10f9af9b
