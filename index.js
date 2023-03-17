@@ -1,10 +1,11 @@
 import { NativeModules, NativeEventEmitter } from 'react-native';
-import { version } from './package.json';
+import packageJson from './package.json';
 import { isContext, validateContext } from './src/contextUtils';
 import { LDInvalidUserError } from 'launchdarkly-js-sdk-common/src/errors';
 import { invalidContext } from 'launchdarkly-js-sdk-common/src/messages';
 
 let LaunchdarklyReactNativeClient = NativeModules.LaunchdarklyReactNativeClient;
+const { version } = packageJson
 
 export default class LDClient {
   constructor() {
