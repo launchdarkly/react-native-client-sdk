@@ -2,6 +2,10 @@
 
 All notable changes to the LaunchDarkly React Native SDK will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [7.1.4] - 2023-04-06
+### Changed:
+- Bumped js-sdk-common to [5.0.3](https://github.com/launchdarkly/js-sdk-common/releases/tag/5.0.3) to allow context key to be optional.
+
 ## [7.1.3] - 2023-03-21
 ### Fixed:
 - Updating underlying Android dependency to include fix for allFlagsChangeListener.
