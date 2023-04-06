@@ -1,4 +1,5 @@
-import { useState, useEffect, ReactNode } from 'react';
+/* eslint-disable no-bitwise */
+import React, { useState, useEffect, ReactNode } from 'react';
 import { SafeAreaView, ScrollView, StyleSheet, Text, View, Button, TextInput, Alert, Switch } from 'react-native';
 import { MOBILE_KEY } from '@env';
 import { Picker } from '@react-native-picker/picker';
@@ -135,7 +136,7 @@ const Body = () => {
       <TextInput style={styles.input} onChangeText={setFlagKey} value={flagKey} autoCapitalize="none" />
       <View style={styles.row}>
         <Button title="Evaluate Flag" onPress={evalFlag} />
-        <Picker style={{ flex: 1 }} selectedValue={flagType} onValueChange={(itemValue, _) => setFlagType(itemValue)}>
+        <Picker style={{ flex: 1 }} selectedValue={flagType} onValueChange={(itemValue) => setFlagType(itemValue)}>
           <Picker.Item label="Bool" value="bool" />
           <Picker.Item label="String" value="string" />
           <Picker.Item label="Number" value="number" />
@@ -183,7 +184,11 @@ const App = () => {
 };
 
 MessageQueue.spy((msg) => {
-  if (msg.module != 'LaunchdarklyReactNativeClient' && !msg.method.includes?.('LaunchdarklyReactNativeClient')) {
+  if (
+    msg.module !== 'LaunchdarklyReactNativeClient' &&
+    typeof msg.method === 'string' &&
+    !msg.method.includes('LaunchdarklyReactNativeClient')
+  ) {
     return;
   }
   let logMsg = msg.type === 0 ? 'N->JS: ' : 'JS->N: ';
