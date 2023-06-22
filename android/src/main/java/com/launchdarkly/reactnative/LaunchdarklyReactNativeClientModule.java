@@ -39,7 +39,6 @@ import com.launchdarkly.sdk.android.LDClient;
 import com.launchdarkly.sdk.android.LDConfig;
 import com.launchdarkly.sdk.android.LDFailure;
 import com.launchdarkly.sdk.android.LDStatusListener;
-import com.launchdarkly.sdk.android.LaunchDarklyException;
 import com.launchdarkly.sdk.android.integrations.ApplicationInfoBuilder;
 import com.launchdarkly.sdk.android.integrations.EventProcessorBuilder;
 import com.launchdarkly.sdk.android.integrations.HttpConfigurationBuilder;
@@ -636,7 +635,12 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
     @ReactMethod
     public void getLastSuccessfulConnection(String environment, Promise promise) {
         try {
-            promise.resolve(LDClient.getForMobileKey(environment).getConnectionInformation().getLastSuccessfulConnection().intValue());
+            Long lastSuccessfulConnection = LDClient.getForMobileKey(environment).getConnectionInformation().getLastSuccessfulConnection();
+            if (lastSuccessfulConnection != null) {
+                promise.resolve(lastSuccessfulConnection.doubleValue());
+            } else {
+                promise.resolve(null);
+            }
         } catch (Exception e) {
             Timber.w(e, "Warning: exception caught in getLastSuccessfulConnection");
             promise.resolve(0);
@@ -646,7 +650,13 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
     @ReactMethod
     public void getLastFailedConnection(String environment, Promise promise) {
         try {
-            promise.resolve(LDClient.getForMobileKey(environment).getConnectionInformation().getLastFailedConnection().intValue());
+            Long lastFailedConnection = LDClient.getForMobileKey(environment).getConnectionInformation().getLastFailedConnection();
+            if (lastFailedConnection != null) {
+                promise.resolve(lastFailedConnection.doubleValue());
+            } else {
+                promise.resolve(null);
+            }
+
         } catch (Exception e) {
             Timber.w(e, "Warning: exception caught in getLastFailedConnection");
             promise.resolve(0);
