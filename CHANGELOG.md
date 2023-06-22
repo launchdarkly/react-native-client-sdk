@@ -2,6 +2,10 @@
 
 All notable changes to the LaunchDarkly React Native SDK will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [7.1.6] - 2023-06-22
+### Fixed:
+- Fix #160 null pointer exceptions on `getLastSuccessfulConnection` and `getLastFailedConnection`
+
 ## [7.1.5] - 2023-06-07
 ### Fixed:
 - Flag listeners are now called correctly after identify results in flag value changes.
