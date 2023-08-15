@@ -311,10 +311,10 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
             ReadableMap application = config.getMap("application");
             ApplicationInfoBuilder b = Components.applicationInfo();
 
-            if (validateConfig("id", config, ReadableType.String)) {
+            if (validateConfig("id", application, ReadableType.String)) {
                 b.applicationId(application.getString("id"));
             }
-            if (validateConfig("version", config, ReadableType.String)) {
+            if (validateConfig("version", application, ReadableType.String)) {
                 b.applicationVersion(application.getString("version"));
             }
 
