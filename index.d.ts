@@ -559,10 +559,10 @@ declare module 'launchdarkly-react-native-client-sdk' {
     allFlags(environment?: string): Promise<LDFlagSet>;
 
     /**
-     * Track events to use in goals or A/B tests.
+     * Track events to use in metrics or Experimentation.
      *
      * @param eventName
-     *   The name of the event, which may correspond to a goal in A/B tests.
+     *   The name of the event, which may correspond to a metric in experiments.
      * @param data
      *   Optional additional information to associate with the event.
      * @param metricValue
