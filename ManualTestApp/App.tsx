@@ -20,8 +20,8 @@ const Wrapper = ({ children }: { children: ReactNode }) => {
 
 const Body = () => {
   const [client, setClient] = useState<LDClient | null>(null);
-  const [flagKey, setFlagKey] = useState('dev-test-flag');
-  const [flagType, setFlagType] = useState('bool');
+  const [flagKey, setFlagKey] = useState('dev-test-flag1');
+  const [flagType, setFlagType] = useState('number');
   const [isOffline, setIsOffline] = useState(false);
   const [contextKey, setContextKey] = useState('context-key');
   const [listenerKey, setListenerKey] = useState('');
@@ -83,7 +83,7 @@ const Body = () => {
     } else if (flagType === 'string') {
       res = await client?.stringVariation(flagKey, '');
     } else if (flagType === 'number') {
-      res = await client?.numberVariation(flagKey, 0.0);
+      res = await client?.numberVariationDetail(flagKey, 33);
     } else if (flagType === 'json') {
       res = await client?.jsonVariation(flagKey, null);
     }
@@ -137,9 +137,9 @@ const Body = () => {
       <View style={styles.row}>
         <Button title="Evaluate Flag" onPress={evalFlag} />
         <Picker style={{ flex: 1 }} selectedValue={flagType} onValueChange={(itemValue) => setFlagType(itemValue)}>
+          <Picker.Item label="Number" value="number" />
           <Picker.Item label="Bool" value="bool" />
           <Picker.Item label="String" value="string" />
-          <Picker.Item label="Number" value="number" />
           <Picker.Item label="JSON" value="json" />
         </Picker>
         <Text>Offline</Text>
