@@ -2,6 +2,10 @@
 
 All notable changes to the LaunchDarkly React Native SDK will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [7.1.8] - 2023-08-21
+### Fixed:
+- In iOS the `defaultValue` argument types for `numberVariation` and `numberVariationDetail` were incorrect so defaultValues were not being passed correctly to the iOS SDK. This affected only iOS the Android counterpart is unaffected.
+
 ## [7.1.7] - 2023-08-15
 ### Fixed:
 - On Android there was a bug where application tags are not being passed correctly to the Android SDK. This affected only Android, the iOS counterpart is unaffected.
