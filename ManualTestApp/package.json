@@ -10,13 +10,14 @@
     "start": "yarn run cc && react-native start --reset-cache",
     "postinstall": "cd ../ && yarn link-dev",
     "lint": "eslint .",
-    "doctor": "react-native doctor"
+    "doctor": "react-native doctor",
+    "clean-all": "./clean-all.sh"
   },
   "dependencies": {
     "@react-native-picker/picker": "^2.2.1",
     "launchdarkly-react-native-client-sdk": "^7.1.1",
     "react": "^18.2.0",
-    "react-native": "^0.71.4"
+    "react-native": "^0.72.4"
   },
   "devDependencies": {
     "@babel/core": "^7.21.0",

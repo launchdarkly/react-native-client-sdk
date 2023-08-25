@@ -27,7 +27,6 @@ import com.google.gson.Gson;
 import com.launchdarkly.sdk.EvaluationDetail;
 import com.launchdarkly.sdk.EvaluationReason;
 import com.launchdarkly.sdk.LDContext;
-import com.launchdarkly.sdk.LDUser;
 import com.launchdarkly.sdk.LDValue;
 import com.launchdarkly.sdk.ObjectBuilder;
 import com.launchdarkly.sdk.UserAttribute;
@@ -114,16 +113,16 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
     }
 
     @ReactMethod
-    public void configure(ReadableMap config, ReadableMap context, boolean isContext, final Promise promise) {
-        internalConfigure(config, context, null, isContext, promise);
+    public void configure(ReadableMap config, ReadableMap context, final Promise promise) {
+        internalConfigure(config, context, null, promise);
     }
 
     @ReactMethod
-    public void configureWithTimeout(ReadableMap config, ReadableMap context, Integer timeout, boolean isContext, final Promise promise) {
-        internalConfigure(config, context, timeout, isContext, promise);
+    public void configureWithTimeout(ReadableMap config, ReadableMap context, Integer timeout, final Promise promise) {
+        internalConfigure(config, context, timeout, promise);
     }
 
-    private void internalConfigure(ReadableMap configMap, ReadableMap contextMap, final Integer timeout, boolean isContext, final Promise promise) {
+    private void internalConfigure(ReadableMap configMap, ReadableMap contextMap, final Integer timeout, final Promise promise) {
         if (!debugLoggingStarted
                 && validateConfig("debugMode", configMap, ReadableType.Boolean)
                 && configMap.getBoolean("debugMode")) {
@@ -138,21 +137,12 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
                 @Override
                 public void run() {
                     final LDConfig config = buildConfiguration(configMap).build();
-                    boolean isLegacyUser = !isContext;
 
                     try {
                         if (timeout != null) {
-                            if (isLegacyUser) {
-                                LDClient.init(application, config, configureLegacyUser(contextMap), timeout);
-                            } else {
-                                LDClient.init(application, config, configureContext(contextMap), timeout);
-                            }
+                            LDClient.init(application, config, configureContext(contextMap), timeout);
                         } else {
-                            if (isLegacyUser) {
-                                LDClient.init(application, config, configureLegacyUser(contextMap)).get();
-                            } else {
-                                LDClient.init(application, config, configureContext(contextMap)).get();
-                            }
+                            LDClient.init(application, config, configureContext(contextMap)).get();
                         }
                     } catch (Exception e) {
                         Timber.e(e, "Exception during Client initialization");
@@ -314,8 +304,17 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
             if (validateConfig("id", application, ReadableType.String)) {
                 b.applicationId(application.getString("id"));
             }
+
             if (validateConfig("version", application, ReadableType.String)) {
                 b.applicationVersion(application.getString("version"));
+            }
+
+            if (validateConfig("name", application, ReadableType.String)) {
+                b.applicationName(application.getString("name"));
+            }
+
+            if (validateConfig("versionName", application, ReadableType.String)) {
+                b.applicationVersionName(application.getString("versionName"));
             }
 
             builder.applicationInfo(b);
@@ -323,7 +322,14 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
     }
 
     private LDConfig.Builder buildConfiguration(ReadableMap config) {
-        LDConfig.Builder builder = new LDConfig.Builder();
+        LDConfig.Builder.AutoEnvAttributes autoEnvAttributes = LDConfig.Builder.AutoEnvAttributes.Disabled;
+        if (validateConfig("enableAutoEnvAttributes", config, ReadableType.Boolean)) {
+            if (config.getBoolean("enableAutoEnvAttributes")) {
+                autoEnvAttributes = LDConfig.Builder.AutoEnvAttributes.Enabled;
+            }
+        }
+
+        LDConfig.Builder builder = new LDConfig.Builder(autoEnvAttributes);
         builder.generateAnonymousKeys(true);
 
         // configure trivial options
@@ -340,43 +346,6 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
         return builder;
     }
 
-
-    private LDUser configureLegacyUser(ReadableMap options) {
-        String userKey = null;
-        if (options.hasKey("key") && options.getType("key") == ReadableType.String) {
-            userKey = options.getString("key");
-        }
-
-        LDUser.Builder userBuilder = new LDUser.Builder(userKey);
-        Set<String> privateAttrs = new HashSet<>();
-
-        if (options.hasKey("privateAttributeNames") &&
-                options.getType("privateAttributeNames") == ReadableType.Array) {
-            ReadableArray privateAttrsArray = options.getArray("privateAttributeNames");
-            for (int i = 0; i < privateAttrsArray.size(); i++) {
-                if (privateAttrsArray.getType(i) == ReadableType.String) {
-                    privateAttrs.add(privateAttrsArray.getString(i));
-                }
-            }
-        }
-
-        for (UserConfigMapping entry : UserConfigMapping.values()) {
-            entry.loadFromMap(options, userBuilder, privateAttrs);
-        }
-
-        if (options.hasKey("custom") && options.getType("custom") == ReadableType.Map) {
-            LDValue custom = toLDValue(options.getMap("custom"));
-            for (String customKey : custom.keys()) {
-                if (privateAttrs.contains(customKey)) {
-                    userBuilder.privateCustom(customKey, custom.get(customKey));
-                } else {
-                    userBuilder.custom(customKey, custom.get(customKey));
-                }
-            }
-        }
-
-        return userBuilder.build();
-    }
 
     @ReactMethod
     public void boolVariation(String flagKey, boolean defaultValue, String environment, Promise promise) {
@@ -585,41 +554,23 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
     }
 
     @ReactMethod
-    public void identify(ReadableMap contextMap, boolean isContext, final Promise promise) {
-        if (isContext) {
-            LDContext context = configureContext(contextMap);
+    public void identify(ReadableMap contextMap, final Promise promise) {
+        LDContext context = configureContext(contextMap);
 
-            Thread background = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        LDClient.get().identify(context).get();
-                    } catch (Exception e) {
-                        Timber.w(e, "Warning: exception caught in identify");
-                    }
-
-                    promise.resolve(null);
+        Thread background = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    LDClient.get().identify(context).get();
+                } catch (Exception e) {
+                    Timber.w(e, "Warning: exception caught in identify");
                 }
-            });
 
-            background.start();
-        } else {
-            final LDUser user = configureLegacyUser(contextMap);
-            Thread background = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        LDClient.get().identify(user).get();
-                    } catch (Exception e) {
-                        Timber.w(e, "Warning: exception caught in identify");
-                    }
+                promise.resolve(null);
+            }
+        });
 
-                    promise.resolve(null);
-                }
-            });
-
-            background.start();
-        }
+        background.start();
     }
 
     @ReactMethod
@@ -819,43 +770,6 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
             if (map.hasKey(key) && map.getType(key).equals(type.getReadableType())) {
                 try {
                     setter.invoke(builder, type.getFromMap(map, key));
-                } catch (IllegalAccessException | InvocationTargetException e) {
-                    Timber.w(e);
-                }
-            }
-        }
-    }
-
-    enum UserConfigMapping {
-        USER_ANONYMOUS("anonymous", ConfigEntryType.Boolean, "anonymous", null),
-        USER_IP("ip", ConfigEntryType.String, "ip", "privateIp"),
-        USER_EMAIL("email", ConfigEntryType.String, "email", "privateEmail"),
-        USER_FIRST_NAME("firstName", ConfigEntryType.String, "firstName", "privateFirstName"),
-        USER_LAST_NAME("lastName", ConfigEntryType.String, "lastName", "privateLastName"),
-        USER_NAME("name", ConfigEntryType.String, "name", "privateName"),
-        USER_AVATAR("avatar", ConfigEntryType.String, "avatar", "privateAvatar"),
-        USER_COUNTRY("country", ConfigEntryType.String, "country", "privateCountry");
-
-        final String key;
-        final ConfigEntryType type;
-        private final Method setter;
-        private final Method privateSetter;
-
-        UserConfigMapping(String key, ConfigEntryType type, String setterName, String privateSetterName) {
-            this.key = key;
-            this.type = type;
-            this.setter = findSetter(LDUser.Builder.class, setterName);
-            this.privateSetter = findSetter(LDUser.Builder.class, privateSetterName);
-        }
-
-        void loadFromMap(ReadableMap map, LDUser.Builder builder, Set<String> privateAttrs) {
-            if (map.hasKey(key) && map.getType(key).equals(type.getReadableType())) {
-                try {
-                    if (privateAttrs.contains(key) && privateSetter != null) {
-                        privateSetter.invoke(builder, type.getFromMap(map, key));
-                    } else {
-                        setter.invoke(builder, type.getFromMap(map, key));
-                    }
                 } catch (IllegalAccessException | InvocationTargetException e) {
                     Timber.w(e);
                 }

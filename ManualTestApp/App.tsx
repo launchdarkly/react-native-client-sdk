@@ -3,7 +3,7 @@ import React, { useState, useEffect, ReactNode } from 'react';
 import { SafeAreaView, ScrollView, StyleSheet, Text, View, Button, TextInput, Alert, Switch } from 'react-native';
 import { MOBILE_KEY } from '@env';
 import { Picker } from '@react-native-picker/picker';
-import LDClient, { LDMultiKindContext } from 'launchdarkly-react-native-client-sdk';
+import LDClient, { LDConfig, LDMultiKindContext } from 'launchdarkly-react-native-client-sdk';
 import MessageQueue from 'react-native/Libraries/BatchedBridge/MessageQueue';
 
 const Wrapper = ({ children }: { children: ReactNode }) => {
@@ -30,8 +30,9 @@ const Body = () => {
   useEffect(() => {
     async function initializeClient() {
       let ldClient = new LDClient();
-      let config = {
+      let config: LDConfig = {
         mobileKey: MOBILE_KEY,
+        enableAutoEnvAttributes: true,
         debugMode: true,
         application: {
           id: 'rn-manual-test-app',

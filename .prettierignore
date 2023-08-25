@@ -1,1 +1,7 @@
 CHANGELOG.md
+**/android/app/build
+**/ios/build
+**/ios/Pods
+**/Images.xcassets
+package-lock.json
+yarn.lock
