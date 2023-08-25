@@ -70,9 +70,9 @@ PODS:
     - FlipperKit/FlipperKitNetworkPlugin
   - fmt (6.2.1)
   - glog (0.3.5)
-  - LaunchDarkly (9.0.0):
-    - LaunchDarkly/Core (= 9.0.0)
-  - LaunchDarkly/Core (9.0.0):
+  - LaunchDarkly (9.0.2):
+    - LaunchDarkly/Core (= 9.0.2)
+  - LaunchDarkly/Core (9.0.2):
     - LDSwiftEventSource (= 3.1.1)
   - LDSwiftEventSource (3.1.1)
   - libevent (2.1.12)
@@ -484,7 +484,7 @@ DEPENDENCIES:
   - FlipperKit/FlipperKitUserDefaultsPlugin (= 0.182.0)
   - FlipperKit/SKIOSNetworkPlugin (= 0.182.0)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
-  - LaunchDarkly (= 9.0.0)
+  - LaunchDarkly (= 9.0.2)
   - OpenSSL-Universal (= 1.1.1100)
   - RCT-Folly (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCTRequired (from `../node_modules/react-native/Libraries/RCTRequired`)
@@ -634,7 +634,7 @@ SPEC CHECKSUMS:
   FlipperKit: 2efad7007d6745a3f95e4034d547be637f89d3f6
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
   glog: 04b94705f318337d7ead9e6d17c019bd9b1f6b1b
-  LaunchDarkly: a79f87a6a88403a634f4e0dc3705923da48d35c8
+  LaunchDarkly: 8f517dee5c26972440a3f1488ca47194137a5eaa
   LDSwiftEventSource: 3f9ff84ca80677f9a4f8596757dcb50026e4a13c
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   OpenSSL-Universal: ebc357f1e6bc71fa463ccb2fe676756aff50e88c
@@ -674,6 +674,6 @@ SPEC CHECKSUMS:
   Yoga: 3efc43e0d48686ce2e8c60f99d4e6bd349aff981
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: b3283cfd20e5b576f1d0a3f3b288d63364584c38
+PODFILE CHECKSUM: a84ac19ad2f77cd6ace9fd56bcf5ea810b400ecb
 
-COCOAPODS: 1.12.1
+COCOAPODS: 1.11.3
