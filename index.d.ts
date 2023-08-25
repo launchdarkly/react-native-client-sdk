@@ -9,7 +9,7 @@
  */
 declare module 'launchdarkly-react-native-client-sdk' {
   import type { LDContext } from 'launchdarkly-js-sdk-common';
-  export type { LDUser, LDContext, LDMultiKindContext } from 'launchdarkly-js-sdk-common';
+  export type { LDContext, LDMultiKindContext } from 'launchdarkly-js-sdk-common';
 
   /**
    * Configuration options for the LaunchDarkly React Native SDK.
@@ -38,6 +38,16 @@ declare module 'launchdarkly-react-native-client-sdk' {
        * Example: `1.0.0` (standard version string) or `abcdef` (sha prefix)
        */
       version?: string;
+
+      /**
+       * Sets a human friendly name for the application in which the LaunchDarkly SDK is running.
+       */
+      name?: string;
+
+      /**
+       * Sets a human friendly name for the version of the application in which the LaunchDarkly SDK is running.
+       */
+      versionName?: string;
     };
 
     /**
@@ -47,6 +57,14 @@ declare module 'launchdarkly-react-native-client-sdk' {
      * identify your LaunchDarkly account.
      */
     mobileKey: string;
+
+    /**
+     * When enabled the SDK will automatically send data about the mobile
+     * environment to LaunchDarkly.
+     *
+     * The default value is false (the SDK will not send mobile environment data).
+     */
+    enableAutoEnvAttributes?: boolean;
 
     /**
      * The base URI for the LaunchDarkly polling server.
@@ -559,10 +577,10 @@ declare module 'launchdarkly-react-native-client-sdk' {
     allFlags(environment?: string): Promise<LDFlagSet>;
 
     /**
-     * Track events to use in goals or A/B tests.
+     * Track events to use in metrics or Experimentation.
      *
      * @param eventName
-     *   The name of the event, which may correspond to a goal in A/B tests.
+     *   The name of the event, which may correspond to a metric in experiments.
      * @param data
      *   Optional additional information to associate with the event.
      * @param metricValue

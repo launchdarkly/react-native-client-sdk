@@ -9,5 +9,4 @@
 
 # Add any project specific keep options here:
 
--keep class com.launchdarkly.sdk.LDUser$Builder { public <methods>; }
 -keep class com.launchdarkly.sdk.android.LDConfig$Builder { public <methods>; }

@@ -1,35 +1,7 @@
 import { LDContext, LDMultiKindContext, LDSingleKindContext } from 'launchdarkly-js-sdk-common';
-import { isAnonymousAndNoKey, isContext, validateContext } from './contextUtils';
-import { LDUser } from 'launchdarkly-react-native-client-sdk';
+import { isAnonymousAndNoKey, validateContext } from './contextUtils';
 
 describe('contextUtils', () => {
-  describe('isContext', () => {
-    test('single context', () => {
-      const c: LDSingleKindContext = { kind: 'car', key: 'blr34F', color: 'red' };
-      expect(isContext(c)).toBeTruthy();
-    });
-
-    test('multi context', () => {
-      const c: LDMultiKindContext = { kind: 'multi' };
-      expect(isContext(c)).toBeTruthy();
-    });
-
-    test('anonymous context', () => {
-      const c = { kind: 'car', key: 'blr34F', color: 'red', anonymous: true };
-      expect(isContext(c)).toBeTruthy();
-    });
-
-    test('legacy user', () => {
-      const c = { key: 'yus', custom: { country: 'Australia' } };
-      expect(isContext(c)).toBeFalsy();
-    });
-
-    test('anonymous legacy user', () => {
-      const c = { anonymous: true };
-      expect(isContext(c)).toBeFalsy();
-    });
-  });
-
   describe('isAnonymousAndNoKey', () => {
     test('anonymous no key', () => {
       const c = { kind: 'car', anonymous: true };
@@ -52,13 +24,6 @@ describe('contextUtils', () => {
       expect(validateContext(undefined as any as LDContext)).toBeFalsy();
       expect(validateContext(null as any as LDContext)).toBeFalsy();
       expect(validateContext({})).toBeFalsy();
-    });
-
-    test('inject key for legacy anonymous user', () => {
-      const legacyUser: LDUser = { anonymous: true };
-      const isValid = validateContext(legacyUser);
-
-      expect(isValid).toBeTruthy();
     });
 
     test('inject key for anonymous single context', () => {

@@ -1,6 +1,6 @@
 import { NativeModules, NativeEventEmitter } from 'react-native';
 import { version } from './package.json';
-import { isContext, validateContext } from './src/contextUtils';
+import { validateContext } from './src/contextUtils';
 import { LDInvalidUserError } from 'launchdarkly-js-sdk-common/src/errors';
 import { invalidContext } from 'launchdarkly-js-sdk-common/src/messages';
 
@@ -34,6 +34,7 @@ export default class LDClient {
         () => {
           const configWithOverriddenDefaults = Object.assign(
             {
+              enableAutoEnvAttributes: false,
               backgroundPollingInterval: 3600000, // the iOS SDK defaults this to 900000
               disableBackgroundUpdating: false, // the iOS SDK defaults this to true
               wrapperName: 'react-native-client-sdk',
@@ -43,14 +44,9 @@ export default class LDClient {
           );
 
           if (timeout == undefined) {
-            return LaunchdarklyReactNativeClient.configure(configWithOverriddenDefaults, context, isContext(context));
+            return LaunchdarklyReactNativeClient.configure(configWithOverriddenDefaults, context);
           } else {
-            return LaunchdarklyReactNativeClient.configureWithTimeout(
-              configWithOverriddenDefaults,
-              context,
-              timeout,
-              isContext(context),
-            );
+            return LaunchdarklyReactNativeClient.configureWithTimeout(configWithOverriddenDefaults, context, timeout);
           }
         },
       );
@@ -169,8 +165,8 @@ export default class LDClient {
   }
 
   identify(context) {
-    if (validateContext(context, true)) {
-      return LaunchdarklyReactNativeClient.identify(context, isContext(context));
+    if (validateContext(context)) {
+      return LaunchdarklyReactNativeClient.identify(context);
     } else {
       return Promise.reject(new LDInvalidUserError(invalidContext(), null));
     }

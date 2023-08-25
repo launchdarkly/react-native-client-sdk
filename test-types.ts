@@ -8,7 +8,7 @@ import LDClient, {
   LDEvaluationReason,
   LDFailureReason,
   LDFlagSet,
-  LDUser,
+  LDContext,
 } from 'launchdarkly-react-native-client-sdk';
 
 async function tests() {
@@ -25,13 +25,17 @@ async function tests() {
 
   const configWithKeyOnly: LDConfig = {
     mobileKey: '',
+    enableAutoEnvAttributes: true,
   };
   const configWithAllOptions: LDConfig = {
     application: {
       id: 'rn-unit-test',
       version: '0.0.1',
+      name: 'RN app with LD',
+      versionName: 'Beta release 0.0.1',
     },
     mobileKey: '',
+    enableAutoEnvAttributes: true,
     pollUrl: '',
     streamUrl: '',
     eventsUrl: '',
@@ -53,10 +57,11 @@ async function tests() {
     allAttributesPrivate: true,
     privateAttributes: ['abc', 'def'],
   };
-  const userEmpty: LDUser = {};
-  const userWithKeyOnly: LDUser = { key: 'user' };
-  const user: LDUser = {
-    key: 'user',
+  const userEmpty: LDContext = {};
+  const userWithKeyOnly: LDContext = { kind: 'user', key: 'test-user-1' };
+  const user: LDContext = {
+    kind: 'user',
+    key: 'test-user-2',
     name: 'name',
     firstName: 'first',
     lastName: 'last',

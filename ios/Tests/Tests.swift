@@ -71,6 +71,7 @@ final class Tests: XCTestCase {
     let config = #"""
 {
   "mobileKey": "mob-abc",
+  "enableAutoEnvAttributes": true,
   "debugMode": true,
   "application": {
     "id": "rn-unit-test",
@@ -159,5 +160,6 @@ final class Tests: XCTestCase {
         XCTAssertEqual(config.diagnosticRecordingInterval as Double * 1000, configDict["diagnosticRecordingInterval"] as! Double)
         XCTAssertTrue(config.allContextAttributesPrivate)
         XCTAssertEqual(config.privateContextAttributes, [Reference("address"), Reference("email"), Reference("username")])
+        XCTAssertEqual(config.autoEnvAttributes, configDict["enableAutoEnvAttributes"] as! Bool)
     }
 }

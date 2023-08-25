@@ -3,9 +3,9 @@
 
 @interface RCT_EXTERN_MODULE(LaunchdarklyReactNativeClient, RCTEventEmitter)
 
-RCT_EXTERN_METHOD(configure:(NSDictionary *)config context:(NSDictionary *)context isContext:(BOOL *)isContext resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(configure:(NSDictionary *)config context:(NSDictionary *)context resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 
-RCT_EXTERN_METHOD(configureWithTimeout:(NSDictionary *)config context:(NSDictionary *)context timeout:(NSInteger *)timeout isContext:(BOOL *)isContext resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(configureWithTimeout:(NSDictionary *)config context:(NSDictionary *)context timeout:(NSInteger *)timeout resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 
 RCT_EXTERN_METHOD(boolVariation:(NSString *)flagKey defaultValue:(BOOL *)defaultValue environment:(NSString *)environment resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 
@@ -37,7 +37,7 @@ RCT_EXTERN_METHOD(flush)
 
 RCT_EXTERN_METHOD(close:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 
-RCT_EXTERN_METHOD(identify:(NSDictionary *)context isContext:(BOOL *)isContext resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(identify:(NSDictionary *)context resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 
 RCT_EXTERN_METHOD(allFlags:(NSString *)environment resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 

@@ -3,8 +3,8 @@ import LDClient from './index.js';
 
 const defValErr = new Error('Missing or invalid defaultValue for variation call');
 
-var client;
-var addListenerMock;
+let client;
+let addListenerMock;
 let nativeMock = NativeModules.LaunchdarklyReactNativeClient;
 
 function getClientFlagListener() {
@@ -227,7 +227,7 @@ test('identify', () => {
   const testContext = { kind: 'user', key: 'j-smith-key', name: 'John Smith' };
   expect(client.identify(testContext)).toBe('pass1');
   expect(nativeMock.identify).toHaveBeenCalledTimes(1);
-  expect(nativeMock.identify).toHaveBeenNthCalledWith(1, testContext, true);
+  expect(nativeMock.identify).toHaveBeenNthCalledWith(1, testContext);
 });
 
 test('featureFlagListener', () => {
