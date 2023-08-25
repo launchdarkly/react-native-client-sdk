@@ -2,6 +2,14 @@
 
 All notable changes to the LaunchDarkly React Native SDK will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [8.0.0] - 2023-08-25
+### Added:
+- Added Automatic Mobile Environment Attributes functionality which makes it simpler to target your mobile customers based on application name or version, or on device characteristics including manufacturer, model, operating system, locale, and so on. To learn more, read [Automatic environment attributes](https://docs.launchdarkly.com/sdk/features/environment-attributes).
+- Support for RN 0.72.
+
+### Removed
+- Removed LDUser and related functionality. Use LDContext instead. To learn more, read https://docs.launchdarkly.com/home/contexts.
+
 ## [7.1.8] - 2023-08-21
 ### Fixed:
 - In iOS the `defaultValue` argument types for `numberVariation` and `numberVariationDetail` were incorrect so defaultValues were not being passed correctly to the iOS SDK. This affected only iOS the Android counterpart is unaffected.
