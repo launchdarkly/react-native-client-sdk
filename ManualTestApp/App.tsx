@@ -20,8 +20,8 @@ const Wrapper = ({ children }: { children: ReactNode }) => {
 
 const Body = () => {
   const [client, setClient] = useState<LDClient | null>(null);
-  const [flagKey, setFlagKey] = useState('dev-test-flag1');
-  const [flagType, setFlagType] = useState('number');
+  const [flagKey, setFlagKey] = useState('dev-test-flag');
+  const [flagType, setFlagType] = useState('bool');
   const [isOffline, setIsOffline] = useState(false);
   const [contextKey, setContextKey] = useState('context-key');
   const [listenerKey, setListenerKey] = useState('');
@@ -39,17 +39,13 @@ const Body = () => {
           version: '0.0.1',
         },
       };
-      const anonymousUserContext = {
+      const userContext = {
         kind: 'user',
-        key: 'user-key-1',
-        anonymous: true,
+        key: 'test-key',
       };
-
-      // A multi-context can contain both anonymous and non-anonymous contexts.
-      // Here, organization is not anonymous.
       const multiContext: LDMultiKindContext = {
         kind: 'multi',
-        user: anonymousUserContext,
+        user: userContext,
         org: {
           key: 'org-key',
           name: 'Example organization name',

@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@react-native-picker/picker": "^2.2.1",
-    "launchdarkly-react-native-client-sdk": "^7.1.1",
+    "launchdarkly-react-native-client-sdk": "^8.0.0",
     "react": "^18.2.0",
     "react-native": "^0.72.4"
   },
