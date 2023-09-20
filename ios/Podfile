@@ -23,7 +23,7 @@ target 'LaunchdarklyReactNativeClient' do
     __apply_Xcode_12_5_M1_post_install_workaround(installer)
   end
 
-  pod 'LaunchDarkly', '9.0.2'
+  pod 'LaunchDarkly', '9.1.1'
 
   target 'Tests' do
      inherit! :complete
