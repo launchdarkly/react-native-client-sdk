@@ -14,7 +14,6 @@ jobs:
 
     macos:
       xcode: <<parameters.xcode-version>>
-    resource_class: large
 
     environment:
       ANDROID_SDK_ROOT: '/tmp/Android'
@@ -123,11 +122,4 @@ workflows:
           matrix:
             parameters:
               rn-version: ['0.69.12', '0.70.13', '0.71.13', '0.72.4']
-              xcode-version: ['12.5.1', '14.2']
-            exclude:
-              - rn-version: '0.69.12'
-                xcode-version: '12.5.1'
-              - rn-version: '0.70.13'
-                xcode-version: '12.5.1'
-              - rn-version: '0.72.4'
-                xcode-version: '12.5.1'
+              xcode-version: ['14.3.1', '15.0.0']
