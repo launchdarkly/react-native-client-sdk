@@ -169,7 +169,7 @@ declare module 'launchdarkly-react-native-client-sdk' {
      *
      * This can also be specified after the client has been created, using LDClient.setOffline().
      *
-     * The default value is true (the client will make network calls).
+     * The default value is false (the client will make network calls).
      */
     offline?: boolean;
 
