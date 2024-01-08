@@ -1,15 +1,28 @@
-/* eslint-disable no-bitwise */
-import React, { useState, useEffect, ReactNode } from 'react';
-import { SafeAreaView, ScrollView, StyleSheet, Text, View, Button, TextInput, Alert, Switch } from 'react-native';
-import { MOBILE_KEY } from '@env';
-import { Picker } from '@react-native-picker/picker';
-import LDClient, { LDConfig, LDMultiKindContext } from 'launchdarkly-react-native-client-sdk';
+/* eslint-disable no-bitwise,react-native/no-inline-styles */
+import React, {useState, useEffect, ReactNode} from 'react';
+import {
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  Button,
+  TextInput,
+  Alert,
+  Switch,
+} from 'react-native';
+import {MOBILE_KEY} from '@env';
+import {Picker} from '@react-native-picker/picker';
+import LDClient, {
+  LDConfig,
+  LDMultiKindContext,
+} from 'launchdarkly-react-native-client-sdk';
 import MessageQueue from 'react-native/Libraries/BatchedBridge/MessageQueue';
 
-const Wrapper = ({ children }: { children: ReactNode }) => {
+const Wrapper = ({children}: {children: ReactNode}) => {
   const styles = {
-    scroll: { backgroundColor: '#fff', padding: 10 },
-    area: { backgroundColor: '#fff', flex: 1 },
+    scroll: {backgroundColor: '#fff', padding: 10},
+    area: {backgroundColor: '#fff', flex: 1},
   };
   return (
     <SafeAreaView style={styles.area}>
@@ -69,7 +82,9 @@ const Body = () => {
     }
 
     if (client == null) {
-      initializeClient().then(() => console.log('ld client initialized successfully'));
+      initializeClient().then(() =>
+        console.log('ld client initialized successfully'),
+      );
     }
   });
 
@@ -93,23 +108,25 @@ const Body = () => {
   };
 
   const identify = () => {
-    client?.identify({ kind: 'user', key: contextKey });
+    client?.identify({kind: 'user', key: contextKey});
   };
 
   const listen = () => {
     if (listeners.hasOwnProperty(listenerKey)) {
       return;
     }
-    let listener = (value: string | undefined) => Alert.alert('Listener Callback', value);
+    let listener = (value: string | undefined) =>
+      Alert.alert('Listener Callback', value);
     client?.registerFeatureFlagListener(listenerKey, listener);
-    setListeners({ ...listeners, ...{ [listenerKey]: listener } });
+    setListeners({...listeners, ...{[listenerKey]: listener}});
   };
 
   const removeListener = () => {
     // @ts-ignore
     client?.unregisterFeatureFlagListener(listenerKey, listeners[listenerKey]);
     // @ts-ignore
-    let { [listenerKey]: omit, ...newListeners } = listeners;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    let {[listenerKey]: omit, ...newListeners} = listeners;
     setListeners(newListeners);
   };
 
@@ -130,10 +147,20 @@ const Body = () => {
   return (
     <>
       <Text>Feature Key:</Text>
-      <TextInput style={styles.input} onChangeText={setFlagKey} value={flagKey} autoCapitalize="none" />
+      <TextInput
+        style={styles.input}
+        onChangeText={setFlagKey}
+        value={flagKey}
+        autoCapitalize="none"
+      />
       <View style={styles.row}>
         <Button title="Evaluate Flag" onPress={evalFlag} />
-        <Picker style={{ flex: 1 }} selectedValue={flagType} onValueChange={(itemValue) => setFlagType(itemValue)}>
+        <Picker
+          style={{flex: 1}}
+          selectedValue={flagType}
+          onValueChange={(itemValue: React.SetStateAction<string>) =>
+            setFlagType(itemValue)
+          }>
           <Picker.Item label="Number" value="number" />
           <Picker.Item label="Bool" value="bool" />
           <Picker.Item label="String" value="string" />
@@ -143,14 +170,24 @@ const Body = () => {
         <Switch value={isOffline} onValueChange={setOffline} />
       </View>
       <Text>Context key:</Text>
-      <TextInput style={styles.input} onChangeText={setContextKey} value={contextKey} autoCapitalize="none" />
+      <TextInput
+        style={styles.input}
+        onChangeText={setContextKey}
+        value={contextKey}
+        autoCapitalize="none"
+      />
       <View style={styles.row}>
         <Button title="Identify" onPress={identify} />
         <Button title="Track" onPress={track} />
         <Button title="Flush" onPress={flush} />
       </View>
       <Text>Feature Flag Listener Key:</Text>
-      <TextInput style={styles.input} onChangeText={setListenerKey} value={listenerKey} autoCapitalize="none" />
+      <TextInput
+        style={styles.input}
+        onChangeText={setListenerKey}
+        value={listenerKey}
+        autoCapitalize="none"
+      />
       <View style={styles.row}>
         <Button title="Listen" onPress={listen} />
         <Button title="Remove" onPress={removeListener} />
@@ -180,7 +217,7 @@ const App = () => {
   );
 };
 
-MessageQueue.spy((msg) => {
+MessageQueue.spy(msg => {
   if (
     msg.module !== 'LaunchdarklyReactNativeClient' &&
     typeof msg.method === 'string' &&
@@ -208,7 +245,7 @@ MessageQueue.spy((msg) => {
     }
   }
 
-  logMsg += '(' + params.map((p) => JSON.stringify(p)).join(', ') + ')';
+  logMsg += '(' + params.map(p => JSON.stringify(p)).join(', ') + ')';
   console.log(logMsg);
 });
 

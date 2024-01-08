@@ -16,6 +16,7 @@ android {
     compileSdkVersion = 33
     buildToolsVersion = "30.0.3"
 
+    namespace "com.launchdarkly.reactnative"
     defaultConfig {
         minSdkVersion(21)
         targetSdkVersion(33)

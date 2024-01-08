@@ -106,10 +106,7 @@ jobs:
           condition:
             and:
               - equal: [14.3.1, << parameters.xcode-version >>]
-              - or:
-                - equal: [0.71.13, << parameters.rn-version >>]
-                - equal: [0.72.7, << parameters.rn-version >>]
-                
+              - equal: [0.73.1, << parameters.rn-version >>]
           steps:
             - run:
                 name: Build application for Android
@@ -126,5 +123,5 @@ workflows:
           name: rn<<matrix.rn-version>>-xc<<matrix.xcode-version>>-build-apps-using-template
           matrix:
             parameters:
-              rn-version: ['0.69.12', '0.70.13', '0.71.13', '0.72.7']
+              rn-version: ['0.73.1']
               xcode-version: ['14.3.1', '15.1']
