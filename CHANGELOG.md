@@ -2,6 +2,17 @@
 
 All notable changes to the LaunchDarkly React Native SDK will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [9.0.0] - 2024-01-09
+**Version 9.0 includes breaking changes in dependencies**. In version 9.0, there are no changes to the React Native SDK API or functionality. Version 9.0 of the SDK requires Java 17, in order to support React Native 0.73.
+
+The LaunchDarkly [React Native SDK version 10](https://github.com/launchdarkly/js-core/tree/main/packages/sdk/react-native) currently in development is written in pure JavaScript and compatible with Expo. For most customers, we recommend waiting for version 10.
+
+### Added:
+- Support for React Native 0.73.x
+
+### Removed:
+- Support for React Native 0.69.x, 0.70.x, 0.71.x, 0.72.x
+
 ## [8.0.2] - 2023-12-20
 ### Changed:
 - Added tests to ensure the SDK works correctly with Xcode 15 
