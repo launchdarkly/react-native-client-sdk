@@ -1,7 +1,7 @@
 require_relative '../node_modules/react-native/scripts/react_native_pods'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 
-platform :ios, '12.4'
+platform :ios, '13.4'
 
 target 'LaunchdarklyReactNativeClient' do
   config = use_native_modules!
@@ -12,15 +12,8 @@ target 'LaunchdarklyReactNativeClient' do
     :hermes_enabled => false
   )
 
-  # Enables Flipper.
-  #
-  # Note that if you have use_frameworks! enabled, Flipper will not work and
-  # you should disable the next line.
-  use_flipper!()
-
   post_install do |installer|
     react_native_post_install(installer)
-    __apply_Xcode_12_5_M1_post_install_workaround(installer)
   end
 
   pod 'LaunchDarkly', '9.1.1'
