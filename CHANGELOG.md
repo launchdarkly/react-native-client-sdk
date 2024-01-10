@@ -2,6 +2,13 @@
 
 All notable changes to the LaunchDarkly React Native SDK will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [9.0.1] - 2024-01-10
+### Changed:
+- Update the build and ManualTestApp to use React Native 0.73.2.
+
+### Fixed:
+- Readme information about which SDK version works with which React Native version.
+
 ## [9.0.0] - 2024-01-09
 **Version 9.0 includes breaking changes in dependencies**. In version 9.0, there are no changes to the React Native SDK API or functionality. Version 9.0 of the SDK requires Java 17, in order to support React Native 0.73.
 
