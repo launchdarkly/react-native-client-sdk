@@ -2,6 +2,10 @@
 
 All notable changes to the LaunchDarkly React Native SDK will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [9.0.2] - 2024-02-08
+### Changed:
+- The `launchdarkly-react-native-client-sdk` project has been renamed to `@launchdarkly/react-native-client-sdk`. All future releases will be made from the [new repository](https://github.com/launchdarkly/js-core/tree/main/packages/sdk/react-native). Please consider upgrading and filing potential requests in that repository's [issue tracker](https://github.com/launchdarkly/js-core/issues?q=is%3Aissue+is%3Aopen+label%3A%22package%3A+sdk%2Freact-native%22+sort%3Aupdated-desc).
+
 ## [9.0.1] - 2024-01-10
 ### Changed:
 - Update the build and ManualTestApp to use React Native 0.73.2.
