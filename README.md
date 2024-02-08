@@ -1,5 +1,10 @@
 # LaunchDarkly Client-Side SDK for React Native
 
+> [!IMPORTANT]
+> As mentioned in the [repository changelog](https://github.com/launchdarkly/react-native-client-sdk/blob/main/CHANGELOG.md), the `launchdarkly-react-native-client-sdk` project has been renamed to `@launchdarkly/react-native-client-sdk`. All future releases will be made from the [new repository](https://github.com/launchdarkly/js-core/tree/main/packages/sdk/react-native). Please consider upgrading and filing potential requests in that repository's [issue tracker](https://github.com/launchdarkly/js-core/issues?q=is%3Aissue+is%3Aopen+label%3A%22package%3A+sdk%2Freact-native%22+sort%3Aupdated-desc).
+
+## v9.x readme
+
 [![NPM](https://img.shields.io/npm/v/launchdarkly-react-native-client-sdk.svg)](https://www.npmjs.com/package/launchdarkly-react-native-client-sdk)
 [![CircleCI](https://circleci.com/gh/launchdarkly/react-native-client-sdk.svg?style=shield)](https://circleci.com/gh/launchdarkly/react-native-client-sdk)
 [![Documentation](https://img.shields.io/static/v1?label=GitHub+Pages&message=API+reference&color=00add8)](https://launchdarkly.github.io/react-native-client-sdk)
