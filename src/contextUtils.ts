@@ -26,5 +26,9 @@ export function validateContext(context: LDContext) {
     return false;
   }
 
+  if (!('kind' in context)) {
+    return false;
+  }
+
   return true;
 }
