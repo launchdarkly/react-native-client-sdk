@@ -15,21 +15,14 @@
 
 [![Twitter Follow](https://img.shields.io/twitter/follow/launchdarkly.svg?style=social&label=Follow&maxAge=2592000)](https://twitter.com/intent/follow?screen_name=launchdarkly)
 
-## Notice
-
-[React Native SDK version 10](https://github.com/launchdarkly/js-core/tree/main/packages/sdk/react-native) is currently in development.
-
-The LaunchDarkly React Native SDK version 10 will be written in pure JavaScript and compatible with Expo. It will also include support for hot reloading development. For most customers, we recommend staying with 8.x and waiting for version 10.
-
 ## Supported versions
+[React Native SDK version 10](https://github.com/launchdarkly/js-core/tree/main/packages/sdk/react-native) is now released.
 
-This SDK is currently compatible with React Native version 0.73, the minimum iOS deployment target is 13.4, and the minimum Android SDK version is 21. iOS builds are tested with XCode 14.3.1 and 15.1.
+The LaunchDarkly React Native SDK version 10 is written in pure JavaScript and is compatible with Expo. It supports hot reloading. For customers using React Native 0.72.x - 0.73.x, use the latest 10.x release. If you cannot upgrade to the 10.x yet, use RN 8.0.x and 9.0.x respectively.
 
-For React Native 0.69.x - 0.72.x support, use the latest 8.0.x release.
+For React Native 0.71.x, use the latest 8.0.x release.
 
-For React Native 0.64.x - 0.68.x support, use the latest 6.3.x release.
-
-For React Native 0.63.x support, use the latest 5.1.x release.
+For React Native 0.69.x - 0.70.x support, use the latest 7.1.x release.
 
 ## Getting started
 
