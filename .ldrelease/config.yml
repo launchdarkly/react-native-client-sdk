@@ -6,8 +6,9 @@ repo:
 
 branches:
   - name: main
-    description: 7.x
-  - name: 6.x
+    description: 9.x
+  - name: 8.x
+  - name: 7.x
 
 publications:
   - url: https://www.npmjs.com/package/launchdarkly-react-native-client-sdk
