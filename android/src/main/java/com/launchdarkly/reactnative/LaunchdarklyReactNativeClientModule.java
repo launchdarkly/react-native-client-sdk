@@ -324,7 +324,12 @@ public class LaunchdarklyReactNativeClientModule extends ReactContextBaseJavaMod
 
     private LDConfig.Builder buildConfiguration(ReadableMap config) {
         LDConfig.Builder builder = new LDConfig.Builder();
-        builder.generateAnonymousKeys(true);
+
+        if (validateConfig("generateAnonymousKeysAndroid", config, ReadableType.Boolean)) {
+            builder.generateAnonymousKeys(config.getBoolean("generateAnonymousKeysAndroid"));
+        } else {
+            builder.generateAnonymousKeys(true);
+        }
 
         // configure trivial options
         for (ConfigMapping entry : ConfigMapping.values()) {
