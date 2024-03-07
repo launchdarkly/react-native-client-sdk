@@ -208,6 +208,16 @@ declare module 'launchdarkly-react-native-client-sdk' {
      * You can also specify this on a per-context basis with {@link LDContextMeta.privateAttributes}
      */
     privateAttributes?: string[];
+
+    /**
+     * Android only.
+     *
+     * Set to true to make the SDK provide unique keys for anonymous contexts.
+     * Read more at https://launchdarkly.github.io/android-client-sdk/com/launchdarkly/sdk/android/LDConfig.Builder.html#generateAnonymousKeys(boolean).
+     *
+     * The default is true.
+     */
+    generateAnonymousKeysAndroid?: boolean;
   };
 
   /**
