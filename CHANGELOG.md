@@ -2,6 +2,10 @@
 
 All notable changes to the LaunchDarkly React Native SDK will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [8.1.0] - 2024-03-07
+### Added:
+- Added Android only config option generateAnonymousKeysAndroid. This directly maps to the Android SDK config option [generateAnonymousKeys](https://launchdarkly.github.io/android-client-sdk/com/launchdarkly/sdk/android/LDConfig.Builder.html#generateAnonymousKeys(boolean)).
+
 ## [8.0.2] - 2023-12-20
 ### Changed:
 - Added tests to ensure the SDK works correctly with Xcode 15 
