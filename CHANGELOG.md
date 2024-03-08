@@ -2,6 +2,10 @@
 
 All notable changes to the LaunchDarkly React Native SDK will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [7.2.0] - 2024-03-08
+### Added:
+- Added Android only config option generateAnonymousKeysAndroid. This directly maps to the Android SDK config option [generateAnonymousKeys](https://launchdarkly.github.io/android-client-sdk/com/launchdarkly/sdk/android/LDConfig.Builder.html#generateAnonymousKeys(boolean)).
+
 ## [7.1.8] - 2023-08-21
 ### Fixed:
 - In iOS the `defaultValue` argument types for `numberVariation` and `numberVariationDetail` were incorrect so defaultValues were not being passed correctly to the iOS SDK. This affected only iOS the Android counterpart is unaffected.
