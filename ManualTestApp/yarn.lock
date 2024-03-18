@@ -3471,10 +3471,8 @@ launchdarkly-js-sdk-common@5.0.3:
     fast-deep-equal "^2.0.1"
     uuid "^8.0.0"
 
-launchdarkly-react-native-client-sdk@^8.0.0:
-  version "8.0.0"
-  resolved "https://registry.yarnpkg.com/launchdarkly-react-native-client-sdk/-/launchdarkly-react-native-client-sdk-8.0.0.tgz#94f0bdbb08ca3cc7f97e19561a8903824e3ac875"
-  integrity sha512-5UoF6eDOvrvgVgekVk+xpD0u9ikiLuJj5NBrWq4m6c+wzXIcxtM2mDXpMHxLPVKgPljKzCb5JCRfytsq17XLAg==
+"launchdarkly-react-native-client-sdk@file:..":
+  version "8.1.0"
   dependencies:
     launchdarkly-js-sdk-common "5.0.3"
 
