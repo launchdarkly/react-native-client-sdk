@@ -2,6 +2,17 @@
 
 All notable changes to the LaunchDarkly React Native SDK will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [8.2.0] - 2024-03-18
+### Added:
+- iOS: Stores and uses e-tag header between SDK initializations for improved initialization
+
+### Changed:
+- iOS: Calling identify() with a context that is identical to the SDK's current context is now more efficient, and no longer results in re-establishing a connection.
+
+### Fixed:
+- iOS: Prevent null value changes to observe listeners
+- iOS: Fixed issue where flag change listeners were not being triggered when identify() was called.
+
 ## [8.1.0] - 2024-03-07
 ### Added:
 - Added Android only config option generateAnonymousKeysAndroid. This directly maps to the Android SDK config option [generateAnonymousKeys](https://launchdarkly.github.io/android-client-sdk/com/launchdarkly/sdk/android/LDConfig.Builder.html#generateAnonymousKeys(boolean)).
