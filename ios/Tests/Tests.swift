@@ -107,12 +107,12 @@ final class Tests: XCTestCase {
     func testCreateSingleContext() throws {
         let dict = createEmployeeContext()
         let context = try LaunchdarklyReactNativeClient().createSingleContext(dict as NSDictionary, dict["kind"] as! String)
-        let anonymous = Bool.init(fromLDValue: context.getValue(Reference("anonymous"))!)
-        let name = String.init(fromLDValue: context.getValue(Reference("name"))!)
+        let anonymous = context.getValue(Reference("anonymous"))!
+        let name = context.getValue(Reference("name"))!
         
         XCTAssertEqual(context.kind, Kind.custom("employee"))
         XCTAssertEqual(context.contextKeys(), ["employee": "blr123"])
-        XCTAssertTrue(anonymous!)
+        XCTAssertEqual(true, anonymous)
         XCTAssertEqual(name, "Yus")
         XCTAssertEqual(context.attributes, ["employeeNumber": LDValue.number(55.0), "address": LDValue.object(["number": LDValue.number(321.0), "street": LDValue.string("Sunset Blvd")]), "isActive": LDValue.bool(true)])
         XCTAssertEqual(context.privateAttributes, [Reference("address"), Reference("employeeNumber")])
@@ -125,11 +125,10 @@ final class Tests: XCTestCase {
     func testAnonymousNoKey() throws {
         let dict = jsonToDict(anonymousNoKey)
         let context = try LaunchdarklyReactNativeClient().createSingleContext(dict as NSDictionary, dict["kind"] as! String)
-        let anonymous = Bool.init(fromLDValue: context.getValue(Reference("anonymous"))!)
-        let uuid = UUID(uuidString: String(fromLDValue: context.getValue(Reference("key"))!)!)
-        
-        XCTAssertTrue(anonymous!)
-        XCTAssertNotNil(uuid)
+        let anonymous = context.getValue(Reference("anonymous"))!
+        let uuid = context.getValue(Reference("key"))!
+        XCTAssertEqual(true, anonymous)
+        XCTAssertNotEqual(LDValue.null, uuid)
     }
     
     func testCreateMultiContext() throws {
