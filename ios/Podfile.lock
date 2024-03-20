@@ -11,9 +11,9 @@ PODS:
     - ReactCommon/turbomodule/core (= 0.73.2)
   - fmt (6.2.1)
   - glog (0.3.5)
-  - LaunchDarkly (9.1.1):
-    - LaunchDarkly/Core (= 9.1.1)
-  - LaunchDarkly/Core (9.1.1):
+  - LaunchDarkly (9.5.1):
+    - LaunchDarkly/Core (= 9.5.1)
+  - LaunchDarkly/Core (9.5.1):
     - LDSwiftEventSource (= 3.1.1)
   - LDSwiftEventSource (3.1.1)
   - RCT-Folly (2022.05.16.00):
@@ -1029,7 +1029,7 @@ DEPENDENCIES:
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - FBReactNativeSpec (from `../node_modules/react-native/React/FBReactNativeSpec`)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
-  - LaunchDarkly (= 9.1.1)
+  - LaunchDarkly (= 9.5.1)
   - RCT-Folly (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCT-Folly/Fabric (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCTRequired (from `../node_modules/react-native/Libraries/RCTRequired`)
@@ -1185,7 +1185,7 @@ SPEC CHECKSUMS:
   FBReactNativeSpec: 86de768f89901ef6ed3207cd686362189d64ac88
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
   glog: c5d68082e772fa1c511173d6b30a9de2c05a69a2
-  LaunchDarkly: 0f0e975716763d9b6cb911116174d1c81e967962
+  LaunchDarkly: c99ab2dc3d6c8ad1807933de6221b540546fb252
   LDSwiftEventSource: 3f9ff84ca80677f9a4f8596757dcb50026e4a13c
   RCT-Folly: 7169b2b1c44399c76a47b5deaaba715eeeb476c0
   RCTRequired: 9b1e7e262745fb671e33c51c1078d093bd30e322
@@ -1231,6 +1231,6 @@ SPEC CHECKSUMS:
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
   Yoga: 13c8ef87792450193e117976337b8527b49e8c03
 
-PODFILE CHECKSUM: 043fffa47893890e8f85827cb0b6bd7c9021188d
+PODFILE CHECKSUM: 88c57e02cf2991e3e86d687ff9e9cf05f067f2da
 
-COCOAPODS: 1.12.1
+COCOAPODS: 1.15.2
