@@ -2,6 +2,10 @@
 
 All notable changes to the LaunchDarkly React Native SDK will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [9.3.0] - 2024-06-11
+### Fixed:
+- Updates internal dependency ios-client-sdk to version 9.8.2 to incorporate privacy manifest fix
+
 ## [9.2.0] - 2024-03-20
 ### Added:
 - iOS: Stores and uses e-tag header between SDK initializations for improved initialization
