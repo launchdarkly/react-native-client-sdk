@@ -39,7 +39,7 @@ jobs:
   # https://vmois.dev/xcode-github-actions/
   # https://gist.github.com/ricardopereira/10198e68f27c14601d77ebc7a8352da1
   ios-tests:
-    runs-on: macOS-latest
+    runs-on: macos-12
     strategy:
       matrix:
         destination: ['platform=iOS Simulator,name=iPhone 13,OS=16.2']
