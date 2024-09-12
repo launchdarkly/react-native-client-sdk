@@ -2,6 +2,10 @@
 
 All notable changes to the LaunchDarkly React Native SDK will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [8.3.0] - 2024-09-12
+### Changed:
+- Updates underlying iOS Client SDK to 9.10.0. See https://github.com/launchdarkly/ios-client-sdk/releases for more details
+
 ## [8.2.0] - 2024-03-18
 ### Added:
 - iOS: Stores and uses e-tag header between SDK initializations for improved initialization
