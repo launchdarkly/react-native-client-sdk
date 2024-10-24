@@ -73,7 +73,7 @@ PODS:
   - hermes-engine/Pre-built (0.73.4)
   - LaunchDarkly (9.8.2):
     - LaunchDarkly/Core (= 9.8.2)
-  - launchdarkly-react-native-client-sdk (9.2.0):
+  - launchdarkly-react-native-client-sdk (9.3.0):
     - LaunchDarkly (= 9.8.2)
     - React-Core
   - LaunchDarkly/Core (9.8.2):
@@ -1340,7 +1340,7 @@ SPEC CHECKSUMS:
   glog: c5d68082e772fa1c511173d6b30a9de2c05a69a2
   hermes-engine: b2669ce35fc4ac14f523b307aff8896799829fe2
   LaunchDarkly: 07bba0910bffe00d5d6200a1e4ad111bfc4ae673
-  launchdarkly-react-native-client-sdk: da61e3deda2e3f3959ce9444dc17acd039824b5e
+  launchdarkly-react-native-client-sdk: 1e5ad1e0a6f7826472ff705626fec9c064488c26
   LDSwiftEventSource: b0826ca826ca890609a9833a05cae1f357fd3b99
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   OpenSSL-Universal: ebc357f1e6bc71fa463ccb2fe676756aff50e88c
