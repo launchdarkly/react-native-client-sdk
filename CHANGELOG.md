@@ -2,6 +2,10 @@
 
 All notable changes to the LaunchDarkly React Native SDK will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [9.4.0] - 2024-10-25
+### Changed:
+- Updates underlying iOS SDK to 9.11.0 and Android SDK to 5.4.0 to incorporate latest functionality.  For more details see [iOS release notes](https://github.com/launchdarkly/ios-client-sdk/releases) and [Android release notes](https://github.com/launchdarkly/android-client-sdk/releases)
+
 ## [9.3.0] - 2024-06-11
 ### Fixed:
 - Updates internal dependency ios-client-sdk to version 9.8.2 to incorporate privacy manifest fix
