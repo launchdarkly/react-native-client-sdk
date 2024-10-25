@@ -1,5 +1,6 @@
 PODS:
   - boost (1.83.0)
+  - DataCompression (3.8.0)
   - DoubleConversion (1.1.6)
   - FBLazyVector (0.73.2)
   - FBReactNativeSpec (0.73.2):
@@ -11,9 +12,10 @@ PODS:
     - ReactCommon/turbomodule/core (= 0.73.2)
   - fmt (6.2.1)
   - glog (0.3.5)
-  - LaunchDarkly (9.8.2):
-    - LaunchDarkly/Core (= 9.8.2)
-  - LaunchDarkly/Core (9.8.2):
+  - LaunchDarkly (9.11.0):
+    - LaunchDarkly/Core (= 9.11.0)
+  - LaunchDarkly/Core (9.11.0):
+    - DataCompression (= 3.8.0)
     - LDSwiftEventSource (= 3.3.0)
   - LDSwiftEventSource (3.3.0)
   - RCT-Folly (2022.05.16.00):
@@ -1029,7 +1031,7 @@ DEPENDENCIES:
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - FBReactNativeSpec (from `../node_modules/react-native/React/FBReactNativeSpec`)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
-  - LaunchDarkly (= 9.8.2)
+  - LaunchDarkly (= 9.11.0)
   - RCT-Folly (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCT-Folly/Fabric (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCTRequired (from `../node_modules/react-native/Libraries/RCTRequired`)
@@ -1077,6 +1079,7 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - DataCompression
     - fmt
     - LaunchDarkly
     - LDSwiftEventSource
@@ -1180,12 +1183,13 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   boost: d3f49c53809116a5d38da093a8aa78bf551aed09
+  DataCompression: 630f9e7db6360b4d8929fb72fbd23689ca43bc16
   DoubleConversion: fea03f2699887d960129cc54bba7e52542b6f953
   FBLazyVector: fbc4957d9aa695250b55d879c1d86f79d7e69ab4
   FBReactNativeSpec: 86de768f89901ef6ed3207cd686362189d64ac88
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
   glog: c5d68082e772fa1c511173d6b30a9de2c05a69a2
-  LaunchDarkly: 07bba0910bffe00d5d6200a1e4ad111bfc4ae673
+  LaunchDarkly: a208f1d3f7c80fe5520df64243b32ea28f225bf2
   LDSwiftEventSource: b0826ca826ca890609a9833a05cae1f357fd3b99
   RCT-Folly: 7169b2b1c44399c76a47b5deaaba715eeeb476c0
   RCTRequired: 9b1e7e262745fb671e33c51c1078d093bd30e322
@@ -1231,6 +1235,6 @@ SPEC CHECKSUMS:
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
   Yoga: 13c8ef87792450193e117976337b8527b49e8c03
 
-PODFILE CHECKSUM: e0afe198c3bd5ebbc04644c2b1c9baa50a1d1376
+PODFILE CHECKSUM: f3abfd7dd16a6bd7ecf905c851bcbc891ca8e311
 
 COCOAPODS: 1.15.2

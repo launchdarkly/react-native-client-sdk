@@ -16,7 +16,7 @@ target 'LaunchdarklyReactNativeClient' do
     react_native_post_install(installer)
   end
 
-  pod 'LaunchDarkly', '9.8.2'
+  pod 'LaunchDarkly', '9.11.0'
 
   target 'Tests' do
      inherit! :complete

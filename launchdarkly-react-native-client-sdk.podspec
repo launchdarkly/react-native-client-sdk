@@ -15,6 +15,6 @@ Pod::Spec.new do |s|
   s.swift_version = "5.0"
 
   s.dependency "React-Core"
-  s.dependency "LaunchDarkly", "9.8.2"
+  s.dependency "LaunchDarkly", "9.11.0"
 
 end
