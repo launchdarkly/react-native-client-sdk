@@ -1,9 +1,5 @@
 version: 2
 
-repo:
-  public: react-native-client-sdk
-  private: react-native-client-sdk-private
-
 branches:
   - name: main
     description: 9.x
